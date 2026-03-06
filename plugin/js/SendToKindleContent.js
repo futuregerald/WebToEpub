@@ -19,13 +19,13 @@ class SendToKindleContent { // eslint-disable-line no-unused-vars
         return chrome.storage.session.remove(["kindleUpload"]);
     }
 
-    static findFileInput(timeoutMs = 15000) {
+    static findDropZone(timeoutMs = 15000) {
         let timeout = timeoutMs;
         return new Promise(function(resolve) {
-            // Check if file input already exists
-            let input = document.querySelector("input[type='file']");
-            if (input) {
-                resolve(input);
+            let zone = document.querySelector("#s2k-dnd-area") ||
+                       document.querySelector(".s2k-dnd-section");
+            if (zone) {
+                resolve(zone);
                 return;
             }
 
@@ -38,7 +38,8 @@ class SendToKindleContent { // eslint-disable-line no-unused-vars
             }, timeout);
 
             observer = new MutationObserver(function() {
-                let found = document.querySelector("input[type='file']");
+                let found = document.querySelector("#s2k-dnd-area") ||
+                            document.querySelector(".s2k-dnd-section");
                 if (found) {
                     clearTimeout(timer);
                     observer.disconnect();
@@ -53,12 +54,19 @@ class SendToKindleContent { // eslint-disable-line no-unused-vars
         });
     }
 
-    static attachFileToInput(input, file) {
+    static dropFileOnZone(zone, file) {
         let dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
-        input.files = dataTransfer.files;
-        input.dispatchEvent(new Event("change", { bubbles: true }));
-        input.dispatchEvent(new Event("input", { bubbles: true }));
+
+        zone.dispatchEvent(new DragEvent("dragenter", {
+            bubbles: true, dataTransfer: dataTransfer
+        }));
+        zone.dispatchEvent(new DragEvent("dragover", {
+            bubbles: true, cancelable: true, dataTransfer: dataTransfer
+        }));
+        zone.dispatchEvent(new DragEvent("drop", {
+            bubbles: true, dataTransfer: dataTransfer
+        }));
     }
 
     static async run() {
@@ -71,14 +79,14 @@ class SendToKindleContent { // eslint-disable-line no-unused-vars
             await SendToKindleContent.clearStorage();
 
             let file = SendToKindleContent.base64ToFile(data.base64, data.fileName);
-            let input = await SendToKindleContent.findFileInput();
+            let zone = await SendToKindleContent.findDropZone();
 
-            if (!input) {
+            if (!zone) {
                 alert("Could not auto-upload. Please upload manually.");
                 return;
             }
 
-            SendToKindleContent.attachFileToInput(input, file);
+            SendToKindleContent.dropFileOnZone(zone, file);
         } catch (err) {
             alert("Could not auto-upload. Please upload manually.");
             console.error("SendToKindleContent error:", err);

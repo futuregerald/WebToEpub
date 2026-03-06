@@ -98,72 +98,70 @@ QUnit.test("clearStorage removes kindleUpload key", function (assert) {
     });
 });
 
-QUnit.test("attachFileToInput sets files on input element", function (assert) {
-    let input = document.createElement("input");
-    input.type = "file";
-    document.getElementById("qunit-fixture").appendChild(input);
-
-    let base64 = "aGVsbG8gd29ybGQ=";
-    let file = SendToKindleContent.base64ToFile(base64, "test.epub");
-
-    let changeEventFired = false;
-    let inputEventFired = false;
-    input.addEventListener("change", function () { changeEventFired = true; });
-    input.addEventListener("input", function () { inputEventFired = true; });
-
-    SendToKindleContent.attachFileToInput(input, file);
-
-    assert.equal(input.files.length, 1, "input should have 1 file");
-    assert.equal(input.files[0].name, "test.epub");
-    assert.ok(changeEventFired, "change event was dispatched");
-    assert.ok(inputEventFired, "input event was dispatched");
-});
-
-QUnit.test("findFileInput finds existing file input", function (assert) {
+QUnit.test("findDropZone finds element by ID", function (assert) {
     let done = assert.async();
-    let input = document.createElement("input");
-    input.type = "file";
-    document.getElementById("qunit-fixture").appendChild(input);
+    let div = document.createElement("div");
+    div.id = "s2k-dnd-area";
+    document.getElementById("qunit-fixture").appendChild(div);
 
-    SendToKindleContent.findFileInput(100).then(function (foundInput) {
-        assert.ok(foundInput !== null, "should find the input");
-        assert.equal(foundInput.type, "file");
-        done();
-    }).catch(function (err) {
-        assert.ok(false, "findFileInput() threw: " + err.message);
+    SendToKindleContent.findDropZone(100).then(function (zone) {
+        assert.ok(zone !== null, "should find drop zone by ID");
+        assert.equal(zone.id, "s2k-dnd-area");
         done();
     });
 });
 
-QUnit.test("findFileInput times out when no input exists", function (assert) {
+QUnit.test("findDropZone finds element by class fallback", function (assert) {
     let done = assert.async();
-    // qunit-fixture is cleared between tests, so no file input present
+    let div = document.createElement("div");
+    div.className = "s2k-dnd-section";
+    document.getElementById("qunit-fixture").appendChild(div);
 
-    SendToKindleContent.findFileInput(100).then(function (foundInput) {
-        assert.equal(foundInput, null, "should return null on timeout");
-        done();
-    }).catch(function (err) {
-        assert.ok(false, "findFileInput() should not throw, got: " + err.message);
+    SendToKindleContent.findDropZone(100).then(function (zone) {
+        assert.ok(zone !== null, "should find drop zone by class");
         done();
     });
 });
 
-QUnit.test("findFileInput finds dynamically added file input", function (assert) {
+QUnit.test("findDropZone returns null on timeout", function (assert) {
     let done = assert.async();
 
-    // Add the input after a short delay to simulate dynamic page loading
+    SendToKindleContent.findDropZone(100).then(function (zone) {
+        assert.equal(zone, null, "should return null on timeout");
+        done();
+    });
+});
+
+QUnit.test("findDropZone finds dynamically added drop zone", function (assert) {
+    let done = assert.async();
+
     setTimeout(function () {
-        let input = document.createElement("input");
-        input.type = "file";
-        document.getElementById("qunit-fixture").appendChild(input);
+        let div = document.createElement("div");
+        div.id = "s2k-dnd-area";
+        document.getElementById("qunit-fixture").appendChild(div);
     }, 50);
 
-    SendToKindleContent.findFileInput(500).then(function (foundInput) {
-        assert.ok(foundInput !== null, "should find dynamically added input");
-        assert.equal(foundInput.type, "file");
-        done();
-    }).catch(function (err) {
-        assert.ok(false, "findFileInput() threw: " + err.message);
+    SendToKindleContent.findDropZone(500).then(function (zone) {
+        assert.ok(zone !== null, "should find dynamically added drop zone");
         done();
     });
+});
+
+QUnit.test("dropFileOnZone dispatches drag-drop events", function (assert) {
+    let div = document.createElement("div");
+    document.getElementById("qunit-fixture").appendChild(div);
+
+    let events = [];
+    div.addEventListener("dragenter", function () { events.push("dragenter"); });
+    div.addEventListener("dragover", function () { events.push("dragover"); });
+    div.addEventListener("drop", function (e) {
+        events.push("drop");
+        assert.equal(e.dataTransfer.files.length, 1, "drop event should have 1 file");
+        assert.equal(e.dataTransfer.files[0].name, "test.epub");
+    });
+
+    let file = SendToKindleContent.base64ToFile("aGVsbG8gd29ybGQ=", "test.epub");
+    SendToKindleContent.dropFileOnZone(div, file);
+
+    assert.deepEqual(events, ["dragenter", "dragover", "drop"], "all three events fired in order");
 });
