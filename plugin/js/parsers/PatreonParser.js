@@ -9,7 +9,7 @@ class PatreonParser extends Parser {
 
     async getChapterUrls(dom) {
         if (this.isCollectionList(dom)) {
-            return this.getCollectionLinks(dom);
+            return this.getCollectionChapters(dom);
         }
         let cards = [...dom.querySelectorAll("div[data-tag='post-card']")];
         return cards
@@ -17,20 +17,94 @@ class PatreonParser extends Parser {
             .map(s => this.cardToChapter(s)).reverse();
     }
 
+    async getCollectionChapters(dom) {
+        let collectionId = this.extractCollectionId(dom);
+        if (collectionId) {
+            try {
+                let chapters = await this.fetchCollectionFromApi(collectionId);
+                if (0 < chapters.length) {
+                    return chapters.reverse();
+                }
+            } catch (e) {
+                console.log("Patreon API collection fetch failed, falling back to DOM parsing:", e);
+            }
+        }
+        return this.getCollectionLinks(dom).reverse();
+    }
+
+    extractCollectionId(dom) {
+        let url = new URL(dom.baseURI);
+        let match = url.pathname.match(/\/collection\/(\d+)/);
+        return match ? match[1] : null;
+    }
+
+    async fetchCollectionFromApi(collectionId) {
+        let chapters = [];
+        let baseFields = "fields%5Bpost%5D=title%2Curl%2Cpublished_at%2Ccurrent_user_can_view";
+        let url = `https://www.patreon.com/api/posts?filter%5Bcollection_id%5D=${collectionId}&sort=collection_order&${baseFields}&page%5Bcount%5D=50`;
+
+        while (url) {
+            let response = await HttpClient.fetchJson(url);
+            let json = response.json;
+
+            if (!json.data || !Array.isArray(json.data)) {
+                break;
+            }
+
+            for (let post of json.data) {
+                let attrs = post.attributes;
+                // Skip posts the current user can't view (locked)
+                if (attrs.current_user_can_view === false) {
+                    continue;
+                }
+                let postUrl = attrs.url
+                    ? new URL(attrs.url, "https://www.patreon.com").href
+                    : `https://www.patreon.com/posts/${post.id}`;
+                chapters.push({
+                    sourceUrl: postUrl,
+                    title: attrs.title || `Post ${post.id}`,
+                });
+            }
+
+            // Handle pagination cursor
+            url = json.links?.next || null;
+        }
+
+        return chapters;
+    }
+
     getCollectionLinks(dom) {
         let getTitle = (e) => {
+            // Try stable selectors first, then CSS module selectors
+            let titleEl = e.querySelector("[data-tag='post-title']");
+            if (titleEl) {
+                return titleEl.textContent.trim();
+            }
+            // Fallback: look for the single-line-clamped heading text
+            let spans = [...e.querySelectorAll("span[class*='lineClamp1'], span[class*='LineClamp']")];
+            if (spans.length > 0) {
+                return spans.map(s => s.textContent.trim()).join(" ");
+            }
+            // Last resort: CSS module class
             return [...e.querySelectorAll("span.LineClamp-module__N_eOMG__lineClamp1")]
                 .map(s => s.textContent.trim())
                 .join(" ");
         };
+
+        let isLocked = (e) => e.querySelector("svg[data-tag='IconLock']") != null;
 
         if (this.isCondensedView(dom))
         {
             let getLink = (e) => {
                 return e.querySelector("a");
             };
-            // The SVG check skips all locked chapters.
-            let linksContainer = [...dom.querySelectorAll("div.ListPost-module__d2AM5a__listPost:not(:has(svg[data-tag='IconLock']))")];
+            // Try stable attribute selector, then CSS module selector
+            let linksContainer = [...dom.querySelectorAll("div[class*='listPost'], div[class*='ListPost']")]
+                .filter(e => !isLocked(e));
+            if (linksContainer.length === 0) {
+                linksContainer = [...dom.querySelectorAll("div.ListPost-module__d2AM5a__listPost")]
+                    .filter(e => !isLocked(e));
+            }
             return linksContainer.map(linkContainer => {
                 return {
                     sourceUrl: getLink(linkContainer).href,
@@ -38,9 +112,15 @@ class PatreonParser extends Parser {
                 };
             });
         }
-        
-        // The SVG check skips all locked chapters.
-        let links = [...dom.querySelectorAll("a.CollectionPostList-module__IhO0fW__gridCard:not(:has(svg[data-tag='IconLock']))")];
+
+        // Grid/Expanded view: try flexible selectors
+        let links = [...dom.querySelectorAll("a[class*='gridCard']")]
+            .filter(e => !isLocked(e));
+        if (links.length === 0) {
+            // Fallback to exact CSS module class
+            links = [...dom.querySelectorAll("a.CollectionPostList-module__IhO0fW__gridCard")]
+                .filter(e => !isLocked(e));
+        }
         return links.map(link => ({
             sourceUrl: link.href,
             title: getTitle(link),
@@ -60,7 +140,7 @@ class PatreonParser extends Parser {
         let link = this.getUrlOfContent(card);
         return !util.isNullOrEmpty(link?.getAttribute("href"));
     }
- 
+
     getUrlOfContent(card) {
         return card.querySelector("a[data-tag='post-published-at']");
     }
@@ -69,7 +149,26 @@ class PatreonParser extends Parser {
         return Parser.findConstrutedContent(dom);
     }
 
+    extractPostId(url) {
+        let match = url.match(/\/posts\/(?:.*-)?(\d+)/);
+        return match ? match[1] : null;
+    }
+
     async fetchChapter(url) {
+        // Try API first
+        let postId = this.extractPostId(url);
+        if (postId) {
+            try {
+                let apiUrl = `https://www.patreon.com/api/posts/${postId}?fields%5Bpost%5D=title%2Ccontent%2Ccontent_json_string%2Cimage&json-api-version=1.0`;
+                let response = await HttpClient.fetchJson(apiUrl);
+                return this.jsonToHtml(response.json.data.attributes, url);
+            } catch (e) {
+                console.log("Patreon API fetch failed, trying __NEXT_DATA__:", e);
+            }
+        }
+
+        // Fallback to __NEXT_DATA__
+        console.log(`Patreon: falling back to __NEXT_DATA__ for ${url}`);
         let xhr = await HttpClient.wrapFetch(url);
         let script = xhr.responseXML.querySelector("script#__NEXT_DATA__").textContent;
         let json = JSON.parse(script);
@@ -152,14 +251,14 @@ class PatreonParser extends Parser {
                         }
                         break;
 
-                    case "heading": 
+                    case "heading":
                         element = document.createElement(`h${node.attrs.level || 3}`);
                         break;
 
                     case "bulletList":
                         element = document.createElement("ul");
                         break;
-                    
+
                     case "orderedList":
                         element = document.createElement("ol");
                         break;
@@ -168,7 +267,7 @@ class PatreonParser extends Parser {
                         element = document.createElement("li");
                         break;
 
-                    case "image": 
+                    case "image":
                         element = document.createElement("img");
                         element.src = node.attrs.src;
                         element.alt = node.attrs.alt || "";
@@ -177,7 +276,7 @@ class PatreonParser extends Parser {
                     case "blockquote":
                         element = document.createElement("blockquote");
                         break;
-                    
+
                     case "codeBlock": {
                         let pre = document.createElement("pre");
                         element = document.createElement("code");
