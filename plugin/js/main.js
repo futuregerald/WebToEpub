@@ -17,11 +17,11 @@ var main = (function() {
         }
     }
 
-    // details 
+    // details
     let initialWebPage = null;
     let parser = null;
     let userPreferences = null;
-    let library = new Library; 
+    let library = new Library;
 
     // register listener that is invoked when script injected into HTML sends its results
     function addMessageListener() {
@@ -63,7 +63,7 @@ var main = (function() {
 
     function setUiToDefaultState() {
         document.getElementById("highestResolutionImagesRow").hidden = true;
-        document.getElementById("unSuperScriptAlternateTranslations").hidden = true; 
+        document.getElementById("unSuperScriptAlternateTranslations").hidden = true;
         document.getElementById("imageSection").hidden = true;
         document.getElementById("outputSection").hidden = false;
         document.getElementById("translatorRow").hidden = true;
@@ -166,6 +166,9 @@ var main = (function() {
             await library.LibAddToLibrary(content, fileName, document.getElementById("startingUrlInput").value, overwriteExisting, backgroundDownload);
         } else {
             await Download.save(content, fileName, overwriteExisting, backgroundDownload);
+            if (userPreferences.sendToKindle.value) {
+                await SendToKindle.send(content, fileName);
+            }
         }
         try {
             parser.updateReadingList();
@@ -202,7 +205,7 @@ var main = (function() {
     }
 
     function epubVersionFromPreferences() {
-        return userPreferences.createEpub3.value ? 
+        return userPreferences.createEpub3.value ?
             EpubPacker.EPUB_VERSION_3 : EpubPacker.EPUB_VERSION_2;
     }
 
@@ -273,7 +276,7 @@ var main = (function() {
         initialWebPage = dom;
         setUiFieldToValue("startingUrlInput", url);
 
-        // set the base tag, in case server did not supply it 
+        // set the base tag, in case server did not supply it
         util.setBaseTag(url, initialWebPage);
         await processInitialHtml(url, initialWebPage);
         if (document.getElementById("autosearchmetadataCheckbox").checked == true) {
@@ -472,7 +475,7 @@ var main = (function() {
         sbShow();
         ChapterUrlsUI.Filters.init();
         document.getElementById("sbFilters").hidden = false;
-        
+
         let filtersForm = document.getElementById("sbFiltersForm");
         util.removeElements(filtersForm.children);
         filtersForm.appendChild(ChapterUrlsUI.Filters.generateFiltersTable());
@@ -545,8 +548,8 @@ var main = (function() {
         document.getElementById("viewReadingListButton").onclick = () => showReadingList();
         window.addEventListener("beforeunload", onUnloadEvent);
     }
-	
-	
+
+
     // Additional metadata
     async function autosearchadditionalmetadata() {
         getPackEpubButton().disabled = true;
@@ -555,11 +558,11 @@ var main = (function() {
         let url ="https://www.novelupdates.com/series-finder/?sf=1&sh="+titlename;
         if (getValueFromUiField("subjectInput")==null) {
             await autosearchnovelupdates(url, titlename);
-        }   
-        getPackEpubButton().disabled = false; 
-        document.getElementById("LibAddToLibrary").disabled = false;    
+        }
+        getPackEpubButton().disabled = false;
+        document.getElementById("LibAddToLibrary").disabled = false;
     }
-	
+
     async function autosearchnovelupdates(url, titlename) {
         try {
             let xhr = await HttpClient.wrapFetch(url);
@@ -571,7 +574,7 @@ var main = (function() {
     }
 
     async function findnovelupdatesurl(url, dom, titlename) {
-        try {    
+        try {
             let searchurl = [...dom.querySelectorAll("a")].filter(a => a.textContent==titlename)[0];
             setUiFieldToValue("metadataUrlInput", searchurl.href);
             url = getValueFromUiField("metadataUrlInput");
@@ -582,7 +585,7 @@ var main = (function() {
             //
         }
     }
-	
+
     async function onLoadMetadataButtonClick() {
         getPackEpubButton().disabled = true;
         document.getElementById("LibAddToLibrary").disabled = true;
@@ -617,7 +620,7 @@ var main = (function() {
     // actions to do when window opened
     window.onload = async () => {
         userPreferences = UserPreferences.readFromLocalStorage();
-        if (isRunningInTabMode()) { 
+        if (isRunningInTabMode()) {
             ErrorLog.SuppressErrorLog =  false;
             localizeHtmlPage();
             getAdvancedOptionsSection().hidden = !userPreferences.advancedOptionsVisibleByDefault.value;
