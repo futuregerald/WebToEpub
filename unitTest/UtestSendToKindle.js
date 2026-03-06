@@ -115,6 +115,7 @@ QUnit.test("send registers content script", function (assert) {
         assert.equal(registeredScripts[0].id, "sendToKindleContent");
         assert.ok(registeredScripts[0].matches.includes("https://www.amazon.com/sendtokindle*"));
         assert.deepEqual(registeredScripts[0].js, ["js/SendToKindleContent.js"]);
+        assert.equal(registeredScripts[0].persistAcrossSessions, false, "should not persist across sessions");
         // Restore
         chrome.storage = origStorage;
         chrome.scripting = origScripting;

@@ -10,21 +10,17 @@ class SendToKindleContent { // eslint-disable-line no-unused-vars
         return new File([bytes], fileName, { type: "application/epub+zip" });
     }
 
-    static readStorage() {
-        return chrome.storage.session.get("kindleUpload").then(function(result) {
-            if (result.kindleUpload) {
-                return result.kindleUpload;
-            }
-            return null;
-        });
+    static async readStorage() {
+        let result = await chrome.storage.session.get("kindleUpload");
+        return result.kindleUpload || null;
     }
 
     static clearStorage() {
         return chrome.storage.session.remove(["kindleUpload"]);
     }
 
-    static findFileInput(timeoutMs) {
-        let timeout = (timeoutMs === undefined) ? 15000 : timeoutMs;
+    static findFileInput(timeoutMs = 15000) {
+        let timeout = timeoutMs;
         return new Promise(function(resolve) {
             // Check if file input already exists
             let input = document.querySelector("input[type='file']");
@@ -88,15 +84,9 @@ class SendToKindleContent { // eslint-disable-line no-unused-vars
             console.error("SendToKindleContent error:", err);
         }
 
-        // Unregister this content script
-        try {
-            await chrome.scripting.unregisterContentScripts({
-                ids: ["sendToKindleContent"]
-            });
-        } catch (err) {
-            // Content scripts can't call scripting API directly; this is expected
-            // The script will simply not run again since it's a one-time registration
-        }
+        // Content scripts cannot call chrome.scripting.unregisterContentScripts.
+        // The registration uses persistAcrossSessions: false, so it expires
+        // automatically when the browser session ends.
     }
 }
 

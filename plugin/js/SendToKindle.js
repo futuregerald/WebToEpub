@@ -31,7 +31,7 @@ class SendToKindle { // eslint-disable-line no-unused-vars
                 accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS"
             });
             await chrome.storage.session.set({
-                kindleUpload: { base64: base64, fileName: fileName }
+                kindleUpload: { base64, fileName }
             });
         } catch (err) {
             console.warn("SendToKindle: storage error (file may be too large)", err);
@@ -43,7 +43,8 @@ class SendToKindle { // eslint-disable-line no-unused-vars
                 id: "sendToKindleContent",
                 matches: ["https://www.amazon.com/sendtokindle*"],
                 js: ["js/SendToKindleContent.js"],
-                runAt: "document_idle"
+                runAt: "document_idle",
+                persistAcrossSessions: false
             }]);
         } catch (err) {
             // Script may already be registered from a previous attempt
