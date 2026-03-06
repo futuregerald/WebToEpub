@@ -627,6 +627,12 @@ var main = (function() {
             getAdditionalMetadataSection().hidden = !userPreferences.ShowMoreMetadataOptions.value;
             addEventHandlers();
             populateControls();
+            if (SendToKindlePrompt.shouldShow()) {
+                SendToKindlePrompt.show(function() {
+                    userPreferences = UserPreferences.readFromLocalStorage();
+                    userPreferences.writeToUi();
+                });
+            }
             if (util.isFirefox()) {
                 Firefox.startWebRequestListeners();
             }
