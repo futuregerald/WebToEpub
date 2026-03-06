@@ -128,6 +128,7 @@ class UserPreferences { // eslint-disable-line no-unused-vars
         this.disableShiftClickAlert = this.addPreference("disableShiftClickAlert", "disableShiftClickAlertCheckbox", false);
         this.disableImageResError = this.addPreference("disableImageResError", "disableImageResErrorCheckbox", false);
         this.disableWebpImageFormatError = this.addPreference("disableWebpImageFormatError", "disableWebpImageFormatErrorCheckbox", false);
+        this.sendToKindle = this.addPreference("sendToKindle", "sendToKindleCheckbox", false);
 
         document.getElementById("themeColorTag").addEventListener("change", UserPreferences.SetTheme);
     }
@@ -206,7 +207,7 @@ class UserPreferences { // eslint-disable-line no-unused-vars
         }
         obj[ReadingList.storageName] = JSON.parse(this.readingList.toJson());
         for (let p of this.preferences) {
-            obj[p.storageName] = p.value; 
+            obj[p.storageName] = p.value;
         }
         serialized = JSON.stringify(obj);
         let blob = new Blob([serialized], {type : "text"});
@@ -218,13 +219,13 @@ class UserPreferences { // eslint-disable-line no-unused-vars
         if (event.target.files.length == 0) {
             return;
         }
-        
+
         let file = event.target.files[0];
         let reader = new FileReader();
         reader.onload = readerEvent => {
             let content = readerEvent.target.result;
 
-            // reset so triggers if user selects same file again  
+            // reset so triggers if user selects same file again
             event.target.value = null;
             try {
                 let json = JSON.parse(content);

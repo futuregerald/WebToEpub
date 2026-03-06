@@ -158,7 +158,7 @@
 	"__MSG_button_load_Metadata__": {
 		"message": "Load Additional Metadata",
 		"description": "Label on button to toggle Load and Analyse Additional Metadata"
-	},	
+	},
 	"__MSG_button_Pack_EPUB__": {
 		"message": "Pack EPUB",
 		"description": "Label on button to create the EPUB"
@@ -502,6 +502,10 @@
 	"__MSG_label_No_Download_Popup__": {
 		"message": "Don't popup 'SaveAs' dialog when save Epub",
 		"description": "Label for checkbox to download the final epub without a popup"
+	},
+	"__MSG_label_Send_To_Kindle__": {
+		"message": "Send to Kindle after download",
+		"description": "Label for checkbox to send EPUB to Kindle via Amazon's Send to Kindle page"
 	},
     "__MSG_label_Disable_Shift_Click_Alert__": {
       "message": "Disable Shift+Click Selection Alert",
