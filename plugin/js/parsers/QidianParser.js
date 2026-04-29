@@ -21,10 +21,26 @@ class QidianParser extends Parser {
             newURL = newURL.replace(regex, "$1/catalog");
             dom = (await HttpClient.wrapFetch(newURL)).responseXML;
         }
-        let links = Array.from(dom.querySelectorAll("ul.content-list a"));
-        if (links.length === 0) {
-            links = Array.from(dom.querySelectorAll("div.volume-item ol a"));
+
+        // Extract volume structure when div.volume-item containers exist
+        let volumeItems = [...dom.querySelectorAll("div.volume-item")];
+        if (volumeItems.length > 0) {
+            let chapters = [];
+            for (let volumeDiv of volumeItems) {
+                let titleEl = volumeDiv.querySelector("h4");
+                let volumeTitle = titleEl ? titleEl.textContent.trim() : null;
+                let links = [...volumeDiv.querySelectorAll("ol a, ul a")];
+                let volumeChapters = links.map(QidianParser.linkToChapter);
+                if (volumeTitle && volumeChapters.length > 0) {
+                    volumeChapters[0].newArc = volumeTitle;
+                }
+                chapters.push(...volumeChapters);
+            }
+            return chapters;
         }
+
+        // Fallback: flat list (older layout without volume containers)
+        let links = Array.from(dom.querySelectorAll("ul.content-list a"));
         return links.map(QidianParser.linkToChapter);
     }
 
@@ -46,8 +62,8 @@ class QidianParser extends Parser {
                 }
             }
         }
-        return {sourceUrl: link.href, title: title, 
-            isIncludeable: !QidianParser.isLinkLocked(link)
+        return {sourceUrl: link.href, title: title,
+            newArc: null, isIncludeable: !QidianParser.isLinkLocked(link)
         };
     }
 
@@ -121,7 +137,7 @@ class QidianParser extends Parser {
             .map(s => s.textContent)
             .filter(s => s.startsWith(searchString))
             .map(s => util.locateAndExtractJson(this.fixExcaping(s), searchString))[0];
-    } 
+    }
 
     fixExcaping(s) {
         return this.stripBackslash(s)
@@ -167,7 +183,7 @@ class QidianParser extends Parser {
                 if (stripChars.includes(s[i])) {
                     temp += " ";
                 }
-                else { 
+                else {
                     if (singleEscapeChars.includes(s[i])) {
                         temp += "\\";
                     }
@@ -183,8 +199,8 @@ class QidianParser extends Parser {
     }
 
     populateUIImpl() {
-        document.getElementById("removeAuthorNotesRow").hidden = false; 
-        document.getElementById("removeChapterNumberRow").hidden = false; 
+        document.getElementById("removeAuthorNotesRow").hidden = false;
+        document.getElementById("removeChapterNumberRow").hidden = false;
     }
 
     // title of the story
@@ -196,7 +212,7 @@ class QidianParser extends Parser {
     extractAuthor(dom) {
         return dom.querySelector("a.c_primary")?.textContent ?? super.extractAuthor(dom);
     }
- 
+
     removeUnwantedElementsFromContentElement(content) {
         util.removeChildElementsMatchingSelector(content, "form.cha-score, div.cha-bts, pirate, div.cha-content div.user-links-wrap, div.tac");
         this.tagAuthorNotesBySelector(content, "div.m-thou");
@@ -205,7 +221,7 @@ class QidianParser extends Parser {
 
     findCoverImageUrl(dom) {
         let imgs = [...dom.querySelectorAll("div.det-hd i.g_thumb img")];
-        return 0 === imgs.length 
+        return 0 === imgs.length
             ? util.getFirstImgSrc(dom, "div.det-hd")
             : imgs.pop().src;
     }
