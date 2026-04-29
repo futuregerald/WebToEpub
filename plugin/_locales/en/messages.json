@@ -207,6 +207,14 @@
 		"message": "Filters",
 		"description": "Label on button and header to show available filters"
 	},
+	"__MSG_label_Import_Volumes__": {
+		"message": "Import Volumes",
+		"description": "Label for the volume mapping row"
+	},
+	"__MSG_button_Import_Volumes__": {
+		"message": "Import",
+		"description": "Label on button to import volume structure from webnovel.com"
+	},
 	"__MSG_button_View_Reading_List__": {
 		"message": "View Reading List",
 		"description": "Label on button to show Reading List"

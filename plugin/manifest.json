@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
   "name": "WebToEpubPatreon",
-  "version": "1.0.12.4",
+  "version": "1.0.12.5",
+  "description": "Converts web novels to EPUB for offline reading",
   "default_locale": "en",
   "icons": {
     "128": "book128.png"

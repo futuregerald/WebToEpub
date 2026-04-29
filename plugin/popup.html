@@ -527,14 +527,22 @@
                 <table id="rangeSelectTable">
                     <tr id="rangeStartChapterRow">
                         <td>__MSG_label_Range_Start_Chapter__</td>
-                        <td><select id="selectRangeStartChapter" /></td>
+                        <td><input id="chapterSearchStart" type="text" placeholder="Go to ch. #" size="10"> <select id="selectRangeStartChapter" /></td>
                         <td><input id="showChapterUrlsCheckbox" type="checkbox" name="showChapterUrlsCheckbox" value="false"></td>
                         <td>__MSG_label_Show_Chapter_Urls__</td>
                     </tr>
                     <tr id="rangeEndChapterRow">
                         <td>__MSG_label_Range_End_Chapter__</td>
-                        <td><select id="selectRangeEndChapter" /></td>
+                        <td><input id="chapterSearchEnd" type="text" placeholder="Go to ch. #" size="10"> <select id="selectRangeEndChapter" /></td>
                         <td colspan="2">&nbsp; <button id="viewFiltersButton">__MSG_button_View_Filters__</button></td>
+                    </tr>
+                    <tr id="volumeMappingRow">
+                        <td>__MSG_label_Import_Volumes__</td>
+                        <td colspan="3">
+                            <input id="volumeMappingUrl" type="text" placeholder="Paste webnovel.com URL" class="volumeMappingInput">
+                            <button id="volumeMappingButton">__MSG_button_Import_Volumes__</button>
+                            <span id="volumeMappingStatus"></span>
+                        </td>
                     </tr>
                     <tr id="rangeChapterCountRow">
                         <td>__MSG_label_Chapter_Count__</td>
@@ -560,13 +568,28 @@
             <button id="applyChangesButton" hidden="true">__MSG_button_Apply_Changes__</button>
             <p id="editURLsHint" class="i18n" hidden="true">__MSG_label_Edit_URLs_Hint__</p>
             <div id="findingChapterUrlsMessageRow" class="i18n warning">__MSG_Searching_For_URLs_Please_Wait__</div>
-            <table id="chapterUrlsTable" class="chapterlist">
-                <tr>
-                    <th align="left">__MSG_column_Include__</th>
-                    <th align="left">__MSG_column_Title__</th>
-                    <th align="left" hidden="true">__MSG_column_URL__</th>
-                </tr>
-            </table>
+            <div id="chapterUrlsScrollDiv" class="scrollingtable">
+                <table id="chapterUrlsTable" class="chapterlist">
+                    <tr>
+                        <th align="left">__MSG_column_Include__</th>
+                        <th align="left">__MSG_column_Title__</th>
+                        <th align="left" hidden="true">__MSG_column_URL__</th>
+                    </tr>
+                </table>
+            </div>
+            <div id="paginationControls" class="paginationBar">
+                <button id="paginationFirst" title="First page">&laquo;</button>
+                <button id="paginationPrev" title="Previous page">&lsaquo;</button>
+                <span id="paginationInfo">Page 1 of 1</span>
+                <button id="paginationNext" title="Next page">&rsaquo;</button>
+                <button id="paginationLast" title="Last page">&raquo;</button>
+                <select id="paginationPageSize">
+                    <option value="50">50</option>
+                    <option value="100" selected>100</option>
+                    <option value="200">200</option>
+                    <option value="0">All</option>
+                </select>
+            </div>
             <div>
                 <textarea id="editChaptersUrlsInput" class="allSpace" cols="200" rows="20" hidden="true"></textarea>
             </div>
@@ -600,6 +623,7 @@
         <script src="js/Download.js"></script>
         <script src="js/SendToKindle.js"></script>
         <script src="js/HttpClient.js"></script>
+        <script src="js/VolumeMapper.js"></script>
         <script src="js/EpubItem.js"></script>
         <script src="js/ParserFactory.js"></script>
         <script src="js/ImageCollector.js"></script>
