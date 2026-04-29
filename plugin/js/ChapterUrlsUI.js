@@ -242,17 +242,8 @@ class ChapterUrlsUI {
         let scrollDiv = document.getElementById("chapterUrlsScrollDiv");
         if (!scrollDiv) return;
 
-        // Create a temporary row to measure height
-        let tempRow = document.createElement("tr");
-        tempRow.dataset.chapterIndex = "0";
-        ChapterUrlsUI.appendCheckBoxToRow(tempRow, chapters[0]);
-        ChapterUrlsUI.appendInputTextToRow(tempRow, chapters[0]);
-        ChapterUrlsUI.appendColumnDataToRow(tempRow, chapters[0].sourceUrl);
-        linksTable.appendChild(tempRow);
-
-        let rowHeight = tempRow.offsetHeight || 24;
+        let rowHeight = 24;
         ChapterUrlsUI.rowHeight = rowHeight;
-        tempRow.remove();
 
         // Null out all row references initially
         for (let ch of chapters) {
@@ -260,21 +251,28 @@ class ChapterUrlsUI {
         }
 
         let bufferRows = 10;
-        let prevStart = -1;
-        let prevEnd = -1;
 
         let renderVisibleRows = () => {
-            // Remove old data rows
+            // Remove old data rows (keeps header and spacer rows)
             util.removeElements(ChapterUrlsUI.getTableRowsWithChapters());
 
             let scrollTop = scrollDiv.scrollTop;
             let viewportHeight = scrollDiv.clientHeight;
+
+            // Guard: if viewport has no height, render a default window
+            if (!viewportHeight || viewportHeight <= 0) {
+                viewportHeight = 400;
+            }
 
             let firstVisible = Math.floor(scrollTop / rowHeight);
             let lastVisible = Math.ceil((scrollTop + viewportHeight) / rowHeight);
 
             let start = Math.max(0, firstVisible - bufferRows);
             let end = Math.min(chapters.length, lastVisible + bufferRows);
+
+            // Guard against NaN from bad calculations
+            if (!Number.isFinite(start)) start = 0;
+            if (!Number.isFinite(end)) end = Math.min(chapters.length, 50);
 
             // Top spacer
             let topSpacer = linksTable.querySelector("#virtualScrollTopSpacer");
@@ -284,13 +282,7 @@ class ChapterUrlsUI {
                 let td = document.createElement("td");
                 td.colSpan = 3;
                 topSpacer.appendChild(td);
-                // Insert after header row
-                let headerRow = linksTable.querySelector("tr");
-                if (headerRow && headerRow.nextSibling) {
-                    linksTable.insertBefore(topSpacer, headerRow.nextSibling);
-                } else {
-                    linksTable.appendChild(topSpacer);
-                }
+                linksTable.appendChild(topSpacer);
             }
             topSpacer.querySelector("td").style.height = (start * rowHeight) + "px";
 
@@ -318,17 +310,12 @@ class ChapterUrlsUI {
                 linksTable.appendChild(row);
             }
 
-            // Null out row references only for the previous range that's no longer rendered
-            if (prevStart >= 0) {
-                for (let i = prevStart; i < Math.min(prevEnd, start); i++) {
-                    chapters[i].row = null;
-                }
-                for (let i = Math.max(prevStart, end); i < prevEnd; i++) {
+            // Null out row references for chapters not currently rendered
+            for (let i = 0; i < chapters.length; i++) {
+                if (i < start || i >= end) {
                     chapters[i].row = null;
                 }
             }
-            prevStart = start;
-            prevEnd = end;
 
             // Bottom spacer
             let bottomSpacer = linksTable.querySelector("#virtualScrollBottomSpacer");
@@ -343,8 +330,11 @@ class ChapterUrlsUI {
             bottomSpacer.querySelector("td").style.height = Math.max(0, (chapters.length - end) * rowHeight) + "px";
         };
 
-        // Initial render
-        renderVisibleRows();
+        // Defer initial render to next frame so browser layout is complete
+        requestAnimationFrame(() => {
+            renderVisibleRows();
+            ChapterUrlsUI.updatePaginationControls();
+        });
 
         // Scroll handler with requestAnimationFrame
         let ticking = false;
