@@ -16,7 +16,7 @@ class ChapterUrlsUI {
 
         let formElement = document.getElementById("sbFiltersForm");
         if (formElement) {
-            document.getElementById("sbFiltersForm").onsubmit = (event) => {
+            formElement.onsubmit = (event) => {
                 event.preventDefault();
             };
         }
@@ -30,30 +30,349 @@ class ChapterUrlsUI {
         document.getElementById("copyUrlsToClipboardButton").onclick = this.copyUrlsToClipboard.bind(this);
         document.getElementById("showChapterUrlsCheckbox").onclick = this.toggleShowUrlsForChapterRanges.bind(this);
         ChapterUrlsUI.modifyApplyChangesButtons(button => button.onclick = this.setTableMode.bind(this));
+
+        // Pagination controls
+        document.getElementById("paginationFirst").onclick = () => {
+            ChapterUrlsUI.currentPage = 0;
+            ChapterUrlsUI.renderCurrentPage();
+        };
+        document.getElementById("paginationPrev").onclick = () => {
+            if (ChapterUrlsUI.currentPage > 0) {
+                ChapterUrlsUI.currentPage--;
+                ChapterUrlsUI.renderCurrentPage();
+            }
+        };
+        document.getElementById("paginationNext").onclick = () => {
+            let totalPages = ChapterUrlsUI.getTotalPages();
+            if (ChapterUrlsUI.currentPage < totalPages - 1) {
+                ChapterUrlsUI.currentPage++;
+                ChapterUrlsUI.renderCurrentPage();
+            }
+        };
+        document.getElementById("paginationLast").onclick = () => {
+            ChapterUrlsUI.currentPage = Math.max(0, ChapterUrlsUI.getTotalPages() - 1);
+            ChapterUrlsUI.renderCurrentPage();
+        };
+        document.getElementById("paginationPageSize").onchange = (e) => {
+            ChapterUrlsUI.pageSize = parseInt(e.target.value);
+            ChapterUrlsUI.currentPage = 0;
+            ChapterUrlsUI.renderCurrentPage();
+        };
+
+        // Chapter number search inputs
+        let searchStartTimer = null;
+        let searchStartInput = document.getElementById("chapterSearchStart");
+        if (searchStartInput) {
+            searchStartInput.oninput = () => {
+                clearTimeout(searchStartTimer);
+                searchStartTimer = setTimeout(() => {
+                    let num = parseInt(searchStartInput.value);
+                    if (!isNaN(num)) {
+                        ChapterUrlsUI.findChapterByNumber(num, ChapterUrlsUI.getRangeStartChapterSelect());
+                    }
+                }, 300);
+            };
+        }
+
+        let searchEndTimer = null;
+        let searchEndInput = document.getElementById("chapterSearchEnd");
+        if (searchEndInput) {
+            searchEndInput.oninput = () => {
+                clearTimeout(searchEndTimer);
+                searchEndTimer = setTimeout(() => {
+                    let num = parseInt(searchEndInput.value);
+                    if (!isNaN(num)) {
+                        ChapterUrlsUI.findChapterByNumber(num, ChapterUrlsUI.getRangeEndChapterSelect());
+                    }
+                }, 300);
+            };
+        }
+
+        // Volume mapping button
+        let volumeBtn = document.getElementById("volumeMappingButton");
+        if (volumeBtn) {
+            volumeBtn.onclick = async () => {
+                let urlInput = document.getElementById("volumeMappingUrl");
+                let statusSpan = document.getElementById("volumeMappingStatus");
+                let url = urlInput.value.trim();
+                if (!url) return;
+
+                try {
+                    statusSpan.textContent = "Fetching...";
+                    volumeBtn.disabled = true;
+
+                    let volumes = await VolumeMapper.fetchVolumes(url);
+                    if (volumes.length === 0) {
+                        statusSpan.textContent = "No volumes found";
+                        return;
+                    }
+
+                    let result = VolumeMapper.mapVolumesToChapters(volumes, ChapterUrlsUI.allChapters);
+                    statusSpan.textContent = `Mapped ${result.matchedCount}/${result.totalChapters} chapters to ${result.volumeCount} volumes`;
+
+                    if (result.unmatchedCount > 0) {
+                        statusSpan.textContent += ` (${result.unmatchedCount} unmatched)`;
+                    }
+
+                    ChapterUrlsUI.renderCurrentPage();
+                } catch (err) {
+                    statusSpan.textContent = "Error: " + err.message;
+                } finally {
+                    volumeBtn.disabled = false;
+                }
+            };
+        }
     }
 
     populateChapterUrlsTable(chapters) {
         ChapterUrlsUI.getPleaseWaitMessageRow().hidden = true;
-        ChapterUrlsUI.clearChapterUrlsTable();
-        let linksTable = ChapterUrlsUI.getChapterUrlsTable();
-        let index = 0;
+        ChapterUrlsUI.allChapters = chapters;
+        ChapterUrlsUI.currentPage = 0;
+        ChapterUrlsUI.virtualScrollEnabled = false;
+
+        // Clear existing select options
+        util.removeElements([...ChapterUrlsUI.getRangeStartChapterSelect().options]);
+        util.removeElements([...ChapterUrlsUI.getRangeEndChapterSelect().options]);
+
+        // Rebuild range selects (lightweight)
         let rangeStart = ChapterUrlsUI.getRangeStartChapterSelect();
         let rangeEnd = ChapterUrlsUI.getRangeEndChapterSelect();
         let memberForTextOption = ChapterUrlsUI.textToShowInRange();
-        chapters.forEach((chapter) => {
-            let row = document.createElement("tr");
-            ChapterUrlsUI.appendCheckBoxToRow(row, chapter);
-            ChapterUrlsUI.appendInputTextToRow(row, chapter);
-            chapter.row = row;
-            ChapterUrlsUI.appendColumnDataToRow(row, chapter.sourceUrl);
-            linksTable.appendChild(row);
+        chapters.forEach((chapter, index) => {
+            chapter.isIncludeable = chapter.isIncludeable ?? true;
             ChapterUrlsUI.appendOptionToSelect(rangeStart, index, chapter, memberForTextOption);
             ChapterUrlsUI.appendOptionToSelect(rangeEnd, index, chapter, memberForTextOption);
-            ++index;
         });
+
+        // Build chapter number map for search inputs
+        ChapterUrlsUI.chapterNumberMap = new Map();
+        chapters.forEach((chapter, index) => {
+            let num = VolumeMapper.extractChapterNumber(chapter.title);
+            if (num !== null) {
+                if (!ChapterUrlsUI.chapterNumberMap.has(num)) {
+                    ChapterUrlsUI.chapterNumberMap.set(num, []);
+                }
+                ChapterUrlsUI.chapterNumberMap.get(num).push(index);
+            }
+        });
+
         ChapterUrlsUI.setRangeOptionsToFirstAndLastChapters();
+        ChapterUrlsUI.renderCurrentPage();
         this.showHideChapterUrlsColumn();
+    }
+
+    /** @private */
+    static getTotalPages() {
+        if (ChapterUrlsUI.pageSize === 0) {
+            return 1;
+        }
+        return Math.max(1, Math.ceil(ChapterUrlsUI.allChapters.length / ChapterUrlsUI.pageSize));
+    }
+
+    static renderCurrentPage() {
+        let chapters = ChapterUrlsUI.allChapters;
+        let linksTable = ChapterUrlsUI.getChapterUrlsTable();
+
+        // Remove existing data rows (keep header)
+        util.removeElements(ChapterUrlsUI.getTableRowsWithChapters());
+
+        let pageSize = ChapterUrlsUI.pageSize;
+        let useVirtualScroll = (pageSize === 0) && (chapters.length > 200);
+
+        if (useVirtualScroll) {
+            ChapterUrlsUI.virtualScrollEnabled = true;
+            ChapterUrlsUI.renderVirtualScroll(linksTable, chapters);
+        } else {
+            ChapterUrlsUI.virtualScrollEnabled = false;
+            let scrollDiv = document.getElementById("chapterUrlsScrollDiv");
+            if (scrollDiv) {
+                scrollDiv.onscroll = null;
+                // Remove spacer rows if any
+                linksTable.querySelector("#virtualScrollTopSpacer")?.remove();
+                linksTable.querySelector("#virtualScrollBottomSpacer")?.remove();
+            }
+
+            let start, end;
+            if (pageSize === 0) {
+                // "All" mode with <= 200 chapters: render everything
+                start = 0;
+                end = chapters.length;
+            } else {
+                start = ChapterUrlsUI.currentPage * pageSize;
+                end = Math.min(start + pageSize, chapters.length);
+            }
+
+            for (let i = start; i < end; i++) {
+                let chapter = chapters[i];
+
+                // Insert volume header if this chapter starts a new volume/arc
+                if (chapter.newArc) {
+                    let headerRow = document.createElement("tr");
+                    headerRow.className = "volumeHeader";
+                    let headerTd = document.createElement("td");
+                    headerTd.colSpan = 3;
+                    headerTd.textContent = chapter.newArc;
+                    headerRow.appendChild(headerTd);
+                    linksTable.appendChild(headerRow);
+                }
+
+                let row = document.createElement("tr");
+                row.dataset.chapterIndex = i;
+                ChapterUrlsUI.appendCheckBoxToRow(row, chapter);
+                ChapterUrlsUI.appendInputTextToRow(row, chapter);
+                ChapterUrlsUI.appendColumnDataToRow(row, chapter.sourceUrl);
+                chapter.row = row;
+                linksTable.appendChild(row);
+            }
+
+            // Null out row references for chapters not on this page
+            for (let i = 0; i < chapters.length; i++) {
+                if (i < start || i >= end) {
+                    chapters[i].row = null;
+                }
+            }
+        }
+
+        ChapterUrlsUI.updatePaginationControls();
         ChapterUrlsUI.resizeTitleColumnToFit(linksTable);
+    }
+
+    /** @private */
+    static renderVirtualScroll(linksTable, chapters) {
+        let scrollDiv = document.getElementById("chapterUrlsScrollDiv");
+        if (!scrollDiv) return;
+
+        // Create a temporary row to measure height
+        let tempRow = document.createElement("tr");
+        tempRow.dataset.chapterIndex = "0";
+        ChapterUrlsUI.appendCheckBoxToRow(tempRow, chapters[0]);
+        ChapterUrlsUI.appendInputTextToRow(tempRow, chapters[0]);
+        ChapterUrlsUI.appendColumnDataToRow(tempRow, chapters[0].sourceUrl);
+        linksTable.appendChild(tempRow);
+
+        let rowHeight = tempRow.offsetHeight || 24;
+        ChapterUrlsUI.rowHeight = rowHeight;
+        tempRow.remove();
+
+        // Null out all row references initially
+        for (let ch of chapters) {
+            ch.row = null;
+        }
+
+        let bufferRows = 10;
+
+        let renderVisibleRows = () => {
+            // Remove old data rows
+            util.removeElements(ChapterUrlsUI.getTableRowsWithChapters());
+
+            let scrollTop = scrollDiv.scrollTop;
+            let viewportHeight = scrollDiv.clientHeight;
+
+            let firstVisible = Math.floor(scrollTop / rowHeight);
+            let lastVisible = Math.ceil((scrollTop + viewportHeight) / rowHeight);
+
+            let start = Math.max(0, firstVisible - bufferRows);
+            let end = Math.min(chapters.length, lastVisible + bufferRows);
+
+            // Top spacer
+            let topSpacer = linksTable.querySelector("#virtualScrollTopSpacer");
+            if (!topSpacer) {
+                topSpacer = document.createElement("tr");
+                topSpacer.id = "virtualScrollTopSpacer";
+                let td = document.createElement("td");
+                td.colSpan = 3;
+                topSpacer.appendChild(td);
+                // Insert after header row
+                let headerRow = linksTable.querySelector("tr");
+                if (headerRow && headerRow.nextSibling) {
+                    linksTable.insertBefore(topSpacer, headerRow.nextSibling);
+                } else {
+                    linksTable.appendChild(topSpacer);
+                }
+            }
+            topSpacer.querySelector("td").style.height = (start * rowHeight) + "px";
+
+            // Data rows
+            for (let i = start; i < end; i++) {
+                let chapter = chapters[i];
+
+                // Insert volume header if this chapter starts a new volume/arc
+                if (chapter.newArc) {
+                    let headerRow = document.createElement("tr");
+                    headerRow.className = "volumeHeader";
+                    let headerTd = document.createElement("td");
+                    headerTd.colSpan = 3;
+                    headerTd.textContent = chapter.newArc;
+                    headerRow.appendChild(headerTd);
+                    linksTable.appendChild(headerRow);
+                }
+
+                let row = document.createElement("tr");
+                row.dataset.chapterIndex = i;
+                ChapterUrlsUI.appendCheckBoxToRow(row, chapter);
+                ChapterUrlsUI.appendInputTextToRow(row, chapter);
+                ChapterUrlsUI.appendColumnDataToRow(row, chapter.sourceUrl);
+                chapter.row = row;
+                linksTable.appendChild(row);
+            }
+
+            // Null out row references for non-rendered chapters
+            for (let i = 0; i < chapters.length; i++) {
+                if (i < start || i >= end) {
+                    chapters[i].row = null;
+                }
+            }
+
+            // Bottom spacer
+            let bottomSpacer = linksTable.querySelector("#virtualScrollBottomSpacer");
+            if (!bottomSpacer) {
+                bottomSpacer = document.createElement("tr");
+                bottomSpacer.id = "virtualScrollBottomSpacer";
+                let td = document.createElement("td");
+                td.colSpan = 3;
+                bottomSpacer.appendChild(td);
+            }
+            linksTable.appendChild(bottomSpacer);
+            bottomSpacer.querySelector("td").style.height = Math.max(0, (chapters.length - end) * rowHeight) + "px";
+        };
+
+        // Initial render
+        renderVisibleRows();
+
+        // Scroll handler with requestAnimationFrame
+        let ticking = false;
+        scrollDiv.onscroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    renderVisibleRows();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+    }
+
+    /** @private */
+    static updatePaginationControls() {
+        let controls = document.getElementById("paginationControls");
+        if (!controls) return;
+
+        let totalPages = ChapterUrlsUI.getTotalPages();
+        let current = ChapterUrlsUI.currentPage;
+        let pageSize = ChapterUrlsUI.pageSize;
+
+        document.getElementById("paginationFirst").disabled = (pageSize === 0) || (current === 0);
+        document.getElementById("paginationPrev").disabled = (pageSize === 0) || (current === 0);
+        document.getElementById("paginationNext").disabled = (pageSize === 0) || (current >= totalPages - 1);
+        document.getElementById("paginationLast").disabled = (pageSize === 0) || (current >= totalPages - 1);
+
+        let infoText;
+        if (pageSize === 0) {
+            infoText = "All " + ChapterUrlsUI.allChapters.length + " chapters";
+        } else {
+            infoText = "Page " + (current + 1) + " of " + totalPages;
+        }
+        document.getElementById("paginationInfo").textContent = infoText;
     }
 
     showTocProgress(chapters) {
@@ -129,15 +448,14 @@ class ChapterUrlsUI {
 
     static limitNumOfChapterS(maxChapters) {
         let max = util.isNullOrEmpty(maxChapters) ? 10000 : parseInt(maxChapters.replace(",", ""));
-        let selectedRows = [...ChapterUrlsUI.getChapterUrlsTable().querySelectorAll("[type='checkbox'")]
-            .filter(c => c.checked)
-            .map(c => c.parentElement.parentElement);
-        if (max< selectedRows.length ) {
-            let message = UIText.Chapter.maxChaptersSelected(selectedRows.length, max);
+        let selected = ChapterUrlsUI.allChapters.filter(c => c.isIncludeable);
+        if (max < selected.length) {
+            let message = UIText.Chapter.maxChaptersSelected(selected.length, max);
             if (confirm(message) === false) {
-                for (let row of selectedRows.slice(max)) {
-                    ChapterUrlsUI.setRowCheckboxState(row, false);
+                for (let ch of selected.slice(max)) {
+                    ch.isIncludeable = false;
                 }
+                ChapterUrlsUI.renderCurrentPage();
             }
         }
     }
@@ -150,32 +468,30 @@ class ChapterUrlsUI {
 
         rangeStart.onchange = null;
         rangeEnd.onchange = null;
-        
+
         rangeStart.selectedIndex = 0;
         rangeEnd.selectedIndex = rangeEnd.length - 1;
-        ChapterUrlsUI.setChapterCount(rangeStart.selectedIndex, rangeEnd.selectedIndex);
-        
+        ChapterUrlsUI.setChapterCount(0, ChapterUrlsUI.allChapters.length - 1);
+
         rangeStart.onchange = ChapterUrlsUI.onRangeChanged;
         rangeEnd.onchange = ChapterUrlsUI.onRangeChanged;
     }
- 
+
     /** @private */
     static onRangeChanged() {
         let startIndex = ChapterUrlsUI.selectionToRowIndex(ChapterUrlsUI.getRangeStartChapterSelect());
         let endIndex = ChapterUrlsUI.selectionToRowIndex(ChapterUrlsUI.getRangeEndChapterSelect());
-        let rc = new ChapterUrlsUI.RangeCalculator();
 
-        for (let row of ChapterUrlsUI.getTableRowsWithChapters()) {
-            let inRange = rc.rowInRange(row);
-            ChapterUrlsUI.setRowCheckboxState(row, rc.rowInRange(row));
-            row.hidden = !inRange;
+        for (let i = 0; i < ChapterUrlsUI.allChapters.length; i++) {
+            ChapterUrlsUI.allChapters[i].isIncludeable = (i >= startIndex && i <= endIndex);
         }
+        ChapterUrlsUI.currentPage = 0;
+        ChapterUrlsUI.renderCurrentPage();
         ChapterUrlsUI.setChapterCount(startIndex, endIndex);
     }
 
     static selectionToRowIndex(selectElement) {
-        let selectedIndex = selectElement.selectedIndex;
-        return selectedIndex + 1;
+        return parseInt(selectElement.value);
     }
 
     /** @private */
@@ -183,8 +499,8 @@ class ChapterUrlsUI {
         let count = Math.max(0, 1 + endIndex - startIndex);
         document.getElementById("spanChapterCount").textContent = count;
     }
-    
-    /** 
+
+    /**
     * @private
     */
     static getChapterUrlsTable() {
@@ -201,6 +517,30 @@ class ChapterUrlsUI {
         return document.getElementById("selectRangeEndChapter");
     }
 
+    /** Find a chapter by number and select it in the given select element */
+    static findChapterByNumber(chapterNum, selectElement) {
+        let indices = ChapterUrlsUI.chapterNumberMap.get(chapterNum);
+        if (!indices || indices.length === 0) return false;
+
+        // For start select, use first occurrence; for end select, use last
+        let isStart = (selectElement === ChapterUrlsUI.getRangeStartChapterSelect());
+        let targetIndex = isStart ? indices[0] : indices[indices.length - 1];
+
+        // Find the option with this value and select it
+        for (let i = 0; i < selectElement.options.length; i++) {
+            if (parseInt(selectElement.options[i].value) === targetIndex) {
+                selectElement.selectedIndex = i;
+                // Navigate to the page containing this chapter
+                if (ChapterUrlsUI.pageSize > 0) {
+                    ChapterUrlsUI.currentPage = Math.floor(targetIndex / ChapterUrlsUI.pageSize);
+                }
+                ChapterUrlsUI.onRangeChanged();
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** @private */
     static textToShowInRange() {
         return document.getElementById("showChapterUrlsCheckbox").checked
@@ -208,7 +548,7 @@ class ChapterUrlsUI {
             : "title";
     }
 
-    /** 
+    /**
     * @private
     */
     static modifyApplyChangesButtons(mutator) {
@@ -216,7 +556,7 @@ class ChapterUrlsUI {
         mutator(document.getElementById("applyChangesButton2"));
     }
 
-    /** 
+    /**
     * @private
     */
     static getEditChaptersUrlsInput() {
@@ -230,11 +570,11 @@ class ChapterUrlsUI {
 
     /** @private */
     static setAllUrlsSelectState(select) {
-        for (let row of ChapterUrlsUI.getTableRowsWithChapters()) {
-            ChapterUrlsUI.setRowCheckboxState(row, select);
-            row.hidden = false;
+        for (let chapter of ChapterUrlsUI.allChapters) {
+            chapter.isIncludeable = select;
         }
         ChapterUrlsUI.setRangeOptionsToFirstAndLastChapters();
+        ChapterUrlsUI.renderCurrentPage();
     }
 
     /** @private */
@@ -249,10 +589,13 @@ class ChapterUrlsUI {
     static getTableRowsWithChapters() {
         let linksTable = ChapterUrlsUI.getChapterUrlsTable();
         return [...linksTable.querySelectorAll("tr")]
-            .filter(r => r.querySelector("th") === null);
+            .filter(r => r.querySelector("th") === null
+                && r.id !== "virtualScrollTopSpacer"
+                && r.id !== "virtualScrollBottomSpacer"
+                && !r.classList.contains("volumeHeader"));
     }
 
-    /** 
+    /**
     * @private
     */
     static appendCheckBoxToRow(row, chapter) {
@@ -263,16 +606,17 @@ class ChapterUrlsUI {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.checked = chapter.isIncludeable;
-        checkbox.onclick = (event) => { 
+        checkbox.onclick = (event) => {
             chapter.isIncludeable = checkbox.checked;
             if (!event) return;
 
             ChapterUrlsUI.tellUserAboutShiftClick(event, row);
 
+            let chapterIdx = parseInt(row.dataset.chapterIndex);
             if (event.shiftKey && (ChapterUrlsUI.lastSelectedRow !== null)) {
-                ChapterUrlsUI.updateRange(ChapterUrlsUI.lastSelectedRow, row.rowIndex, checkbox.checked);
+                ChapterUrlsUI.updateRange(ChapterUrlsUI.lastSelectedRow, chapterIdx, checkbox.checked);
             } else {
-                ChapterUrlsUI.lastSelectedRow = row.rowIndex;
+                ChapterUrlsUI.lastSelectedRow = chapterIdx;
             }
         };
         col.appendChild(checkbox);
@@ -293,7 +637,7 @@ class ChapterUrlsUI {
         col.appendChild(downloadStateDiv);
     }
 
-    /** 
+    /**
     * @private
     */
     static appendInputTextToRow(row, chapter) {
@@ -317,11 +661,11 @@ class ChapterUrlsUI {
         let inputs = [...linksTable.querySelectorAll("input[type='text']")];
         let width = inputs.reduce((acc, element) => Math.max(acc, element.value.length), 0);
         if (0 < width) {
-            inputs.forEach(i => i.size = width); 
+            inputs.forEach(i => i.size = width);
         }
     }
 
-    /** 
+    /**
     * @private
     */
     static appendColumnDataToRow(row, textData) {
@@ -332,7 +676,7 @@ class ChapterUrlsUI {
         return col;
     }
 
-    /** 
+    /**
     * @public
     */
     static setVisibleUI(toTable) {
@@ -344,9 +688,13 @@ class ChapterUrlsUI {
         document.getElementById("chapterSelectControlsDiv").hidden = !toTable;
         ChapterUrlsUI.modifyApplyChangesButtons(button => button.hidden = toTable);
         document.getElementById("editURLsHint").hidden = toTable;
+        let paginationControls = document.getElementById("paginationControls");
+        if (paginationControls) {
+            paginationControls.hidden = !toTable;
+        }
     }
 
-    /** 
+    /**
     * @private
     */
     setTableMode() {
@@ -381,7 +729,7 @@ class ChapterUrlsUI {
         }
     }
 
-    /** 
+    /**
     * @private
     */
     htmlToChapters(innerHtml) {
@@ -390,7 +738,7 @@ class ChapterUrlsUI {
         return [...doc.body.querySelectorAll("a")].map(a => util.hyperLinkToChapter(a));
     }
 
-    /** 
+    /**
     * @private
     */
     URLsToChapters(URLs) {
@@ -414,7 +762,7 @@ class ChapterUrlsUI {
         this.toggleShowUrlsForChapterRange(ChapterUrlsUI.getRangeEndChapterSelect(), chapters);
         this.showHideChapterUrlsColumn();
     }
-    
+
     showHideChapterUrlsColumn() {
         let hidden = !document.getElementById("showChapterUrlsCheckbox").checked;
         let table = ChapterUrlsUI.getChapterUrlsTable();
@@ -424,7 +772,7 @@ class ChapterUrlsUI {
     }
 
     toggleShowUrlsForChapterRange(select, chapters) {
-        
+
         select.onchange = null;
         let memberForTextOption = ChapterUrlsUI.textToShowInRange();
         for (let o of [...select.querySelectorAll("Option")]) {
@@ -435,7 +783,7 @@ class ChapterUrlsUI {
         select.onchange = ChapterUrlsUI.onRangeChanged;
     }
 
-    /** 
+    /**
     * @private
     */
     setEditInputMode() {
@@ -463,13 +811,14 @@ class ChapterUrlsUI {
     }
 
     /** @private */
-    static updateRange(startRowIndex, endRowIndex, state) {
-        let direction = startRowIndex < endRowIndex ? 1 : -1;
-        let linkTable = ChapterUrlsUI.getChapterUrlsTable();
-        for (let rowIndex = startRowIndex; rowIndex != endRowIndex; rowIndex += direction) {
-            let row = linkTable.rows[rowIndex];
-            ChapterUrlsUI.setRowCheckboxState(row, state);
+    static updateRange(startChapterIndex, endChapterIndex, state) {
+        let direction = startChapterIndex < endChapterIndex ? 1 : -1;
+        for (let i = startChapterIndex; i !== endChapterIndex; i += direction) {
+            if (ChapterUrlsUI.allChapters[i]) {
+                ChapterUrlsUI.allChapters[i].isIncludeable = state;
+            }
         }
+        ChapterUrlsUI.renderCurrentPage();
     }
 
     /** @private */
@@ -492,7 +841,7 @@ class ChapterUrlsUI {
         if (ChapterUrlsUI.ConsecutiveRowClicks == 5) {
             return;
         }
-        let distance = Math.abs(row.rowIndex - ChapterUrlsUI.lastSelectedRow);
+        let distance = Math.abs(parseInt(row.dataset.chapterIndex) - ChapterUrlsUI.lastSelectedRow);
         if (distance !== 1) {
             ChapterUrlsUI.ConsecutiveRowClicks = 0;
             return;
@@ -510,35 +859,37 @@ class ChapterUrlsUI {
             let rc = new ChapterUrlsUI.RangeCalculator();
             var filterTermsFrequency = {};
             let constantTerms = false; // To become a collection of all terms used in every link.
-            var chapterList = ChapterUrlsUI.getTableRowsWithChapters().filter(item => rc.rowInRange(item)).map(item => {
-                let filterObj = 
-                { 
-                    row: item, 
-                    values: Array.from(item.querySelectorAll("td")).map(item => item.innerText).join("/").split("/"),
-                    valueString: ""
-                };
-                filterObj.values.push(item.querySelector("input[type='text']").value);
-                filterObj.values = filterObj.values.filter(item => item.length > 3 && !item.startsWith("http"));
-                filterObj.valueString = filterObj.values.join(" ");
-                
-                let recordFilterTerms = filterObj.valueString.toLowerCase().split(" ");
-                recordFilterTerms.forEach(item => {
-                    filterTermsFrequency[item] = (parseInt(filterTermsFrequency[item]) || 0) + 1;
-                });
+            var chapterList = ChapterUrlsUI.allChapters
+                .map((chapter, index) => ({ chapter: chapter, index: index }))
+                .filter(item => rc.chapterInRange(item.index))
+                .map(item => {
+                    let filterObj =
+                    {
+                        chapter: item.chapter,
+                        chapterIndex: item.index,
+                        values: [item.chapter.title].filter(v => v && v.length > 3),
+                        valueString: ""
+                    };
+                    filterObj.valueString = filterObj.values.join(" ");
 
-                if (!constantTerms)
-                {
-                    constantTerms = recordFilterTerms;
-                }
-                else
-                {
-                    constantTerms.filter(item => recordFilterTerms.indexOf(item) == -1).forEach(item =>{
-                        constantTerms.splice(constantTerms.indexOf(item), 1);
+                    let recordFilterTerms = filterObj.valueString.toLowerCase().split(" ");
+                    recordFilterTerms.forEach(item => {
+                        filterTermsFrequency[item] = (parseInt(filterTermsFrequency[item]) || 0) + 1;
                     });
-                }
 
-                return filterObj;
-            });
+                    if (!constantTerms)
+                    {
+                        constantTerms = recordFilterTerms;
+                    }
+                    else
+                    {
+                        constantTerms.filter(item => recordFilterTerms.indexOf(item) == -1).forEach(item =>{
+                            constantTerms.splice(constantTerms.indexOf(item), 1);
+                        });
+                    }
+
+                    return filterObj;
+                });
             let minFilterTermCount = Math.min( 3, chapterList.length * 0.10 );
             filterTermsFrequency = Object.keys(filterTermsFrequency)
                 .filter(key => constantTerms.indexOf(key) == -1 && filterTermsFrequency[key] > minFilterTermCount)
@@ -577,8 +928,8 @@ class ChapterUrlsUI {
                 excludeChaps = new RegExp(formResults.filter(item => item.searchType == -1).map(item => item.value).join("|"), "i");
             }
 
-            ChapterUrlsUI.Filters.chapterList.forEach(item =>{
-                let showChapter = rc.rowInRange(item.row);
+            ChapterUrlsUI.Filters.chapterList.forEach(item => {
+                let showChapter = rc.chapterInRange(item.chapterIndex);
                 if (includeChaps)
                 {
                     showChapter = showChapter && includeChaps.test(item.valueString);
@@ -587,10 +938,11 @@ class ChapterUrlsUI {
                 {
                     showChapter = showChapter && !excludeChaps.test(item.valueString);
                 }
-                ChapterUrlsUI.setRowCheckboxState(item.row, showChapter);
-                item.row.hidden = !showChapter;
+                item.chapter.isIncludeable = showChapter;
             });
-            document.getElementById("spanChapterCount").textContent = ChapterUrlsUI.Filters.chapterList.filter(item => !item.row.hidden).length;
+            ChapterUrlsUI.renderCurrentPage();
+            let visibleCount = ChapterUrlsUI.Filters.chapterList.filter(item => item.chapter.isIncludeable).length;
+            document.getElementById("spanChapterCount").textContent = visibleCount;
         },
         generateFiltersTable() {
             let retVal = document.createElement("table");
@@ -655,7 +1007,7 @@ class ChapterUrlsUI {
                 row = document.createElement("tr");
                 col = document.createElement("td");
                 col.setAttribute("width", "10px");
-                
+
                 checkboxId = "chkFilter" + id;
                 let el = document.createElement("input");
                 el.type = "checkbox";
@@ -664,7 +1016,7 @@ class ChapterUrlsUI {
                 el.value = 1;
                 el.onclick = onClickEvent;
                 col.appendChild(el);
-                
+
                 el = document.createElement("input");
                 el.type = "hidden";
                 el.name = checkboxId+"Hidden";
@@ -695,8 +1047,11 @@ ChapterUrlsUI.RangeCalculator = class {
         this.endIndex = ChapterUrlsUI.selectionToRowIndex(ChapterUrlsUI.getRangeEndChapterSelect());
     }
     rowInRange(row) {
-        let index = row.rowIndex;
+        let index = parseInt(row.dataset.chapterIndex);
         return (this.startIndex <= index) && (index <= this.endIndex);
+    }
+    chapterInRange(chapterIndex) {
+        return (this.startIndex <= chapterIndex) && (chapterIndex <= this.endIndex);
     }
 };
 
@@ -724,3 +1079,13 @@ ChapterUrlsUI.TooltipForSate = [
 
 ChapterUrlsUI.lastSelectedRow = null;
 ChapterUrlsUI.ConsecutiveRowClicks = 0;
+
+// Pagination state
+ChapterUrlsUI.allChapters = [];
+ChapterUrlsUI.currentPage = 0;
+ChapterUrlsUI.pageSize = 100;
+ChapterUrlsUI.virtualScrollEnabled = false;
+ChapterUrlsUI.rowHeight = 24;
+
+// Chapter number search map
+ChapterUrlsUI.chapterNumberMap = new Map();
