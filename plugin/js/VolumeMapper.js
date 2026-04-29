@@ -5,9 +5,11 @@ class VolumeMapper { // eslint-disable-line no-unused-vars
     // Extract a chapter number from a title string
     static extractChapterNumber(title) {
         let match = title.match(/(?:chapter|ch\.?|#)\s*(\d+)/i);
-        if (match) return parseInt(match[1]);
-        match = title.match(/^\s*(\d+)/);
-        if (match) return parseInt(match[1]);
+        if (match) return parseInt(match[1], 10);
+        // Fallback: leading digits followed by a separator (., :, -, whitespace+word)
+        // Avoids false matches on titles like "2023 New Year Special"
+        match = title.match(/^\s*(\d+)\s*[.:)-]\s*/);
+        if (match) return parseInt(match[1], 10);
         return null;
     }
 

@@ -54,7 +54,7 @@ class ChapterUrlsUI {
             ChapterUrlsUI.renderCurrentPage();
         };
         document.getElementById("paginationPageSize").onchange = (e) => {
-            ChapterUrlsUI.pageSize = parseInt(e.target.value);
+            ChapterUrlsUI.pageSize = parseInt(e.target.value, 10);
             ChapterUrlsUI.currentPage = 0;
             ChapterUrlsUI.renderCurrentPage();
         };
@@ -66,7 +66,7 @@ class ChapterUrlsUI {
             searchStartInput.oninput = () => {
                 clearTimeout(searchStartTimer);
                 searchStartTimer = setTimeout(() => {
-                    let num = parseInt(searchStartInput.value);
+                    let num = parseInt(searchStartInput.value, 10);
                     if (!isNaN(num)) {
                         ChapterUrlsUI.findChapterByNumber(num, ChapterUrlsUI.getRangeStartChapterSelect());
                     }
@@ -80,7 +80,7 @@ class ChapterUrlsUI {
             searchEndInput.oninput = () => {
                 clearTimeout(searchEndTimer);
                 searchEndTimer = setTimeout(() => {
-                    let num = parseInt(searchEndInput.value);
+                    let num = parseInt(searchEndInput.value, 10);
                     if (!isNaN(num)) {
                         ChapterUrlsUI.findChapterByNumber(num, ChapterUrlsUI.getRangeEndChapterSelect());
                     }
@@ -260,6 +260,8 @@ class ChapterUrlsUI {
         }
 
         let bufferRows = 10;
+        let prevStart = -1;
+        let prevEnd = -1;
 
         let renderVisibleRows = () => {
             // Remove old data rows
@@ -316,12 +318,17 @@ class ChapterUrlsUI {
                 linksTable.appendChild(row);
             }
 
-            // Null out row references for non-rendered chapters
-            for (let i = 0; i < chapters.length; i++) {
-                if (i < start || i >= end) {
+            // Null out row references only for the previous range that's no longer rendered
+            if (prevStart >= 0) {
+                for (let i = prevStart; i < Math.min(prevEnd, start); i++) {
+                    chapters[i].row = null;
+                }
+                for (let i = Math.max(prevStart, end); i < prevEnd; i++) {
                     chapters[i].row = null;
                 }
             }
+            prevStart = start;
+            prevEnd = end;
 
             // Bottom spacer
             let bottomSpacer = linksTable.querySelector("#virtualScrollBottomSpacer");
@@ -491,7 +498,7 @@ class ChapterUrlsUI {
     }
 
     static selectionToRowIndex(selectElement) {
-        return parseInt(selectElement.value);
+        return parseInt(selectElement.value, 10);
     }
 
     /** @private */
@@ -528,7 +535,7 @@ class ChapterUrlsUI {
 
         // Find the option with this value and select it
         for (let i = 0; i < selectElement.options.length; i++) {
-            if (parseInt(selectElement.options[i].value) === targetIndex) {
+            if (parseInt(selectElement.options[i].value, 10) === targetIndex) {
                 selectElement.selectedIndex = i;
                 // Navigate to the page containing this chapter
                 if (ChapterUrlsUI.pageSize > 0) {
@@ -577,22 +584,12 @@ class ChapterUrlsUI {
         ChapterUrlsUI.renderCurrentPage();
     }
 
-    /** @private */
-    static setRowCheckboxState(row, checked) {
-        let input = row.querySelector("input[type='checkbox']");
-        if (input.checked !== checked) {
-            input.checked = checked;
-            input.onclick();
-        }
-    }
-
     static getTableRowsWithChapters() {
         let linksTable = ChapterUrlsUI.getChapterUrlsTable();
         return [...linksTable.querySelectorAll("tr")]
             .filter(r => r.querySelector("th") === null
                 && r.id !== "virtualScrollTopSpacer"
-                && r.id !== "virtualScrollBottomSpacer"
-                && !r.classList.contains("volumeHeader"));
+                && r.id !== "virtualScrollBottomSpacer");
     }
 
     /**
@@ -612,7 +609,7 @@ class ChapterUrlsUI {
 
             ChapterUrlsUI.tellUserAboutShiftClick(event, row);
 
-            let chapterIdx = parseInt(row.dataset.chapterIndex);
+            let chapterIdx = parseInt(row.dataset.chapterIndex, 10);
             if (event.shiftKey && (ChapterUrlsUI.lastSelectedRow !== null)) {
                 ChapterUrlsUI.updateRange(ChapterUrlsUI.lastSelectedRow, chapterIdx, checkbox.checked);
             } else {
@@ -841,7 +838,7 @@ class ChapterUrlsUI {
         if (ChapterUrlsUI.ConsecutiveRowClicks == 5) {
             return;
         }
-        let distance = Math.abs(parseInt(row.dataset.chapterIndex) - ChapterUrlsUI.lastSelectedRow);
+        let distance = Math.abs(parseInt(row.dataset.chapterIndex, 10) - ChapterUrlsUI.lastSelectedRow);
         if (distance !== 1) {
             ChapterUrlsUI.ConsecutiveRowClicks = 0;
             return;
@@ -1047,7 +1044,7 @@ ChapterUrlsUI.RangeCalculator = class {
         this.endIndex = ChapterUrlsUI.selectionToRowIndex(ChapterUrlsUI.getRangeEndChapterSelect());
     }
     rowInRange(row) {
-        let index = parseInt(row.dataset.chapterIndex);
+        let index = parseInt(row.dataset.chapterIndex, 10);
         return (this.startIndex <= index) && (index <= this.endIndex);
     }
     chapterInRange(chapterIndex) {
