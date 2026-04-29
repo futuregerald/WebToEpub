@@ -1,114 +1,204 @@
-.expandedButton {
-    padding: 5px 10px;
+/* ============================================================
+   WebToEpub Design System
+   OKLCH color tokens, 4pt spacing scale, system fonts
+   Base theme: light (warm). Dark tokens in autoDark/alwaysDark.
+   ============================================================ */
+
+/* --- Design Tokens --- */
+:root {
+    /* Surface scale: warm light */
+    --surface-0: oklch(97% 0.005 65);
+    --surface-1: oklch(94% 0.006 65);
+    --surface-2: oklch(90% 0.008 65);
+    --surface-3: oklch(85% 0.01 65);
+
+    /* Primary accent: warm amber */
+    --primary: oklch(55% 0.16 75);
+    --primary-hover: oklch(50% 0.17 75);
+    --primary-active: oklch(45% 0.15 75);
+    --primary-subtle: oklch(92% 0.04 75);
+
+    /* Text hierarchy */
+    --text-1: oklch(18% 0.01 65);
+    --text-2: oklch(40% 0.008 65);
+    --text-3: oklch(60% 0.006 65);
+
+    /* Borders */
+    --border: oklch(82% 0.008 65);
+    --border-subtle: oklch(88% 0.006 65);
+
+    /* Semantic */
+    --success: oklch(52% 0.14 155);
+    --error: oklch(55% 0.2 25);
+    --warning: oklch(62% 0.16 85);
+    --info: oklch(52% 0.1 240);
+
+    /* Volume header: jewel purple */
+    --volume-bg: oklch(92% 0.03 290);
+    --volume-border: oklch(82% 0.04 290);
+    --volume-text: oklch(30% 0.06 290);
+
+    /* Button text on primary */
+    --on-primary: oklch(98% 0.005 75);
+
+    /* Scroll track */
+    --scroll-track: var(--surface-1);
+    --scroll-thumb: var(--surface-3);
+
+    /* Selection */
+    --selection-bg: oklch(55% 0.16 75 / 0.2);
+
+    /* Spacing: 4pt base */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --space-2xl: 32px;
+    --space-3xl: 48px;
+
+    /* Typography */
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.5rem;
+    --leading-tight: 1.3;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.6;
+
+    /* Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Motion */
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 400ms;
+
+    /* Z-index scale */
+    --z-base: 0;
+    --z-sticky: 100;
+    --z-sidebar: 200;
+    --z-tooltip: 300;
 }
 
-.warning {
-    color: #ff0000;
-    font-size: 2em;
-    font-weight: bold;
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --duration-fast: 0.01ms;
+        --duration-normal: 0.01ms;
+        --duration-slow: 0.01ms;
+    }
 }
 
-.scrollingtable {
-    overflow: scroll;
-    height: max(300px, calc(100vh - 420px));
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-#progressString {
-    width: 36px;
-    display: inline-block;
-    position: absolute;
-    left: 46%;
-    color: white;
-    z-index: 1000;
-    font-weight: bolder;
-    margin-top: 7px;
-}
-
-#advancedOptionsSection {
-    margin-top: 3px;
-    margin-bottom: 20px;
-    border-bottom: 1px #CCC solid;
-}
-
-
-progress {
-    width: 56%;
-    height: 31px;
+body {
     margin: 0;
-    padding: 0;
-    border-radius: 5px;
-    margin-left: 4px;
-    margin-right: 4px;
+    font-family: var(--font-family);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--text-1);
+    background: var(--surface-0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
-
-    progress::-webkit-progress-bar {
-        border: 0;
-        height: 31px;
-        border-radius: 5px;
-    }
-
-    progress::-webkit-progress-value {
-        border: 0;
-        height: 31px;
-        border-radius: 8px;
-    }
-
-    progress::-moz-progress-bar {
-        border: 0;
-        height: 31px;
-        border-radius: 5px;
-    }
 
 [hidden] {
-    display: none;
+    display: none !important;
 }
 
-table.chapterList {
-    width: 100%;
+/* --- Typography --- */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    line-height: var(--leading-tight);
+    color: var(--text-1);
+    text-wrap: balance;
+}
+
+p {
+    margin: 0;
+    color: var(--text-2);
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* --- Layout: App Shell --- */
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: var(--space-xl);
+    gap: var(--space-xl);
+    position: relative;
 }
 
 section.minWidth {
-    min-width: 600px;
+    min-width: 0;
 }
 
-.withBorder {
-    border: 1px solid black;
+/* --- Form Controls --- */
+input[type=text],
+input[type=url],
+input[type=number],
+textarea,
+select,
+#manualDelayPerChapterTag {
+    font-family: var(--font-family);
+    font-size: var(--text-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--surface-0);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--duration-fast) var(--ease-out-quart);
+    max-width: 420px;
+    min-width: 280px;
 }
 
-.withMargin {
-    margin-left: 5px;
+input[type=text]:focus,
+input[type=url]:focus,
+input[type=number]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary);
 }
 
-td.disabled {
-    opacity: 0.5;
+input[type=text]::placeholder,
+input[type=url]::placeholder {
+    color: var(--text-3);
 }
 
-button:disabled {
-    opacity: 0.5;
+input[type=checkbox] {
+    accent-color: var(--primary);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
 }
 
-/*----------------------------------------------------*/
-
-.container {
-    border: 1px #CCC solid;
-    display: table;
-    padding: 10px;
-    margin: auto;
-    border-radius: 5px;
-    position:relative;
-}
-
-
-input[type=text], input[type=url], textarea, select, #manualDelayPerChapterTag {
-    padding: 4px;
-    border: 1px #CCC solid;
-    border-radius: 3px;
-    max-width: 400px;
-    min-width: 356px;
-}
-
-#advancedOptionsSection textarea, #advancedOptionsSection select, #manualDelayPerChapterTag {
-    min-width: inherit !important;
+input[type=file] {
+    font-family: var(--font-family);
+    font-size: var(--text-sm);
+    color: var(--text-2);
 }
 
 textarea.allSpace {
@@ -116,115 +206,533 @@ textarea.allSpace {
     height: 100%;
     box-sizing: border-box;
     max-width: none;
+    min-width: 0;
 }
 
-#inputSection input {
-    width: 69%;
+#advancedOptionsSection textarea,
+#advancedOptionsSection select,
+#manualDelayPerChapterTag {
+    min-width: 0 !important;
 }
 
-#inputSection table, #chapterUrlsTable {
+#compressImagesMaxResolutionTag,
+#manualDelayPerChapterTag {
+    width: 61px;
+}
+
+select {
+    cursor: pointer;
+}
+
+/* --- Buttons --- */
+button {
+    font-family: var(--font-family);
+    font-size: var(--text-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--surface-1);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    white-space: nowrap;
+    transition:
+        background var(--duration-fast) var(--ease-out-quart),
+        border-color var(--duration-fast) var(--ease-out-quart),
+        color var(--duration-fast) var(--ease-out-quart);
+    text-decoration: none;
+    line-height: 1;
+}
+
+button:hover {
+    background: var(--surface-2);
+    border-color: var(--border);
+    color: var(--text-1);
+}
+
+button:active {
+    background: var(--surface-3);
+}
+
+button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.expandedButton {
+    padding: var(--space-sm) var(--space-xl);
+    font-weight: 500;
+}
+
+/* Primary action button (Pack EPUB) */
+#packEpubButton {
+    background: var(--primary);
+    color: var(--on-primary);
+    border-color: var(--primary);
+    font-weight: 600;
+    padding: var(--space-md) var(--space-2xl);
+    font-size: var(--text-base);
+    border-radius: var(--radius-lg);
+}
+
+#packEpubButton:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: var(--on-primary);
+}
+
+#packEpubButton:active {
+    background: var(--primary-active);
+    border-color: var(--primary-active);
+}
+
+/* Library buttons */
+#LibAddToLibrary,
+#LibPauseToLibrary {
+    font-weight: 500;
+}
+
+/* --- Tables --- */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
     width: 100%;
 }
 
-    #chapterUrlsTable input[type=checkbox],
-    #chapterUrlsTable img,
-    #chapterUrlsTable .tooltip {
-        float: left;
-    }
-
-    img.downloadState {
-        height: 1em;
-        margin-top: 3px;
-    }
-
-    .downloadStateDiv {
-        position: relative;
-        display: inline-block;
-    }
-
-    .downloadStateDiv .tooltipText {
-        visibility: hidden;
-        width: 120px;
-        background-color: #808080;
-        color: white;
-        text-align: center;
-        padding: 5px;
-        border-radius: 5px;
-        position: absolute;
-        z-index: 1;
-        top: -5px;
-        left: 105%;
-    }
-
-    .downloadStateDiv:hover .tooltipText {
-        visibility: visible;
-    }
-
-    #chapterUrlsTable input[type=text] {
-        width: 101.5%;
-        position: relative;
-        left: -16px;
-        max-width: 580px;
-    }
-
-    #chapterUrlsTable tbody > tr > th {
-        text-align: center;
-        border-bottom: 1px #CCC solid;
-        padding: 0;
-    }
-
-#inputSection tbody > tr > td:first-child {
-    width: 75px;
+td, th {
+    padding: var(--space-xs) var(--space-sm);
+    text-align: left;
+    vertical-align: middle;
 }
 
-#chapterUrlsTable > tr > td:first-child, #chapterUrlsTable > tbody > tr > td:nth-child(2) {
+td.disabled {
+    opacity: 0.4;
+}
+
+/* --- Input Section (Hero Zone) --- */
+#inputSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+#inputSection table,
+#inputTable {
+    width: 100%;
+}
+
+#inputSection input {
+    width: 100%;
+}
+
+#inputSection tbody > tr > td:first-child {
+    width: 90px;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    white-space: nowrap;
+    padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+}
+
+/* Cover image URL input shares row with Clear button */
+#coverImageUrlInput {
+    width: 68%;
+    min-width: 180px;
+}
+
+/* Cover image: prominent display */
+#coverUrlSection img {
+    max-height: 180px;
+    max-width: 135px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 24px oklch(0% 0 0 / 0.15);
+    object-fit: cover;
+}
+
+#sampleCoverImg {
+    display: block;
+}
+
+/* --- Progress Section --- */
+.progressSection {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    position: relative;
+    width: 100%;
+}
+
+progress {
+    flex: 1;
+    height: 28px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--surface-2);
+    overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+    border: 0;
+    height: 28px;
+}
+
+progress::-webkit-progress-value {
+    background: var(--primary);
+    border-radius: var(--radius-md);
+    border: 0;
+    height: 28px;
+    transition: width var(--duration-normal) var(--ease-out-quart);
+}
+
+progress::-moz-progress-bar {
+    background: var(--primary);
+    border-radius: var(--radius-md);
+    border: 0;
+    height: 28px;
+}
+
+#progressString {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-1);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* --- Action Buttons Row --- */
+.HiddenButtonSection {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+}
+
+/* --- Advanced Options Section --- */
+#advancedOptionsSection {
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+#advancedOptionsSection table {
+    width: 100%;
+}
+
+#advancedOptionsSection td {
+    padding: var(--space-xs) var(--space-sm);
+}
+
+#advancedOptionsSection tr > td:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+/* --- Output Section (Chapter Workspace) --- */
+#outputSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    flex: 1;
+}
+
+/* Chapter select controls */
+#chapterSelectControlsDiv {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+#rangeSelectTable td {
+    padding: var(--space-xs) var(--space-sm);
+    color: var(--text-2);
+}
+
+#rangeSelectTable td:first-child {
+    white-space: nowrap;
+    width: 100px;
+}
+
+#rangeSelectTable select {
+    min-width: 200px;
+}
+
+#rangeSelectTable input[type=text] {
+    min-width: 100px;
+    max-width: 120px;
+}
+
+/* Chapter button bar */
+#chapterSelectControlsDiv > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+/* Volume mapping */
+.volumeMappingInput {
+    width: 60%;
+    min-width: 200px;
+}
+
+/* --- Scrolling Chapter Table --- */
+.scrollingtable {
+    overflow: auto;
+    height: max(300px, calc(100vh - 420px));
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+}
+
+table.chapterList,
+#chapterUrlsTable {
+    width: 100%;
+}
+
+#chapterUrlsTable input[type=checkbox],
+#chapterUrlsTable img,
+#chapterUrlsTable .tooltip {
+    float: left;
+}
+
+#chapterUrlsTable tbody > tr > th {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-2);
+    font-weight: 500;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    position: sticky;
+    top: 0;
+    background: var(--surface-1);
+    z-index: var(--z-sticky);
+}
+
+#chapterUrlsTable tbody > tr > td {
+    padding: var(--space-xs) var(--space-md);
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: var(--text-sm);
+    transition: background var(--duration-fast) var(--ease-out-quart);
+}
+
+#chapterUrlsTable tbody > tr:hover > td {
+    background: var(--surface-2);
+}
+
+#chapterUrlsTable > tbody > tr > td:first-child,
+#chapterUrlsTable > tbody > tr > td:nth-child(2) {
     width: 3px;
 }
 
-button {
-    box-shadow: inset 0px 1px 0px 0px #ffffff;
-    background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
-    background-color: #ffffff;
-    border-radius: 6px;
-    border: 1px solid #dcdcdc;
-    display: inline-block;
-    cursor: pointer;
-    color: #666666;
-    font-family: Arial;
-    font-size: 12px;
-    padding: 4px 8px;
-    text-decoration: none;
-    max-height: 30px;
-}
-
-    button:hover {
-        background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
-        background-color: #f6f6f6;
-    }
-
-    button:active {
-        position: relative;
-        top: 1px;
-    }
-
-.progressSection {
-    width: 94%;
+#chapterUrlsTable input[type=text] {
+    width: 100%;
     position: relative;
-    display: flex;
-    height: 60px;
-    border: 1px #CCC solid;
-    padding-top: 30px;
-    padding-left: 39px;
-    border-radius: 8px;
-    max-width: 648px;
+    left: -8px;
+    max-width: 580px;
 }
 
-#coverUrlSection img {
-    max-height: 142px;
-    max-width: 106.5px;
+/* Volume headers */
+.volumeHeader td {
+    font-weight: 600;
+    font-size: var(--text-sm);
+    padding: var(--space-md);
+    background: var(--volume-bg);
+    color: var(--volume-text);
+    border-bottom: 2px solid var(--volume-border);
+    letter-spacing: 0.02em;
+}
+
+/* Download state indicators */
+img.downloadState {
+    height: 1em;
+    margin-top: 3px;
+}
+
+.downloadStateDiv {
+    position: relative;
+    display: inline-block;
+}
+
+.downloadStateDiv .tooltipText {
+    visibility: hidden;
+    width: 120px;
+    background: var(--surface-3);
+    color: var(--text-1);
+    text-align: center;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
     position: absolute;
-    top: 14px;
-    right: 7%;
+    z-index: var(--z-tooltip);
+    top: -5px;
+    left: 105%;
+    font-size: var(--text-xs);
+    box-shadow: 0 4px 12px oklch(0% 0 0 / 0.15);
+}
+
+.downloadStateDiv:hover .tooltipText {
+    visibility: visible;
+}
+
+/* --- Pagination --- */
+.paginationBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) 0;
+}
+
+.paginationBar button {
+    padding: var(--space-xs) var(--space-md);
+    min-width: 32px;
+}
+
+.paginationBar button:disabled {
+    cursor: default;
+}
+
+#paginationInfo {
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    padding: 0 var(--space-sm);
+}
+
+#paginationPageSize {
+    margin-left: var(--space-md);
+    min-width: auto;
+}
+
+/* --- Error Section --- */
+#errorSection {
+    background: oklch(96% 0.02 25);
+    border: 1px solid oklch(85% 0.06 25);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+}
+
+#errorSection button {
+    margin-right: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+#errorMessageText {
+    color: var(--text-1);
+    font-size: var(--text-sm);
+}
+
+#errorMessageText pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    background: var(--surface-2);
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+    max-height: 200px;
+    overflow: auto;
+}
+
+.warning {
+    color: var(--error);
+    font-size: var(--text-lg);
+    font-weight: 600;
+}
+
+/* --- Image Section --- */
+#imageSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+#imagesTableDiv {
+    border-radius: var(--radius-md);
+}
+
+/* --- Default Parser Section --- */
+#defaultParserSection {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+}
+
+#defaultParserSection p.i18n {
+    color: var(--text-2);
+    margin-bottom: var(--space-lg);
+}
+
+#defaultParserSection button {
+    margin-right: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+#defaultParserInstructions {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+}
+
+#defaultParserInstructions h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-md);
+}
+
+#defaultParserInstructions p {
+    margin-bottom: var(--space-sm);
+    line-height: var(--leading-relaxed);
+}
+
+.withBorder {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.withMargin {
+    margin-left: var(--space-sm);
+}
+
+/* --- Reading List Section --- */
+#readingListSection {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+}
+
+#readingListSection button {
+    margin-bottom: var(--space-lg);
+}
+
+/* --- Library Section --- */
+#hiddenBibSection {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+    margin-top: var(--space-lg);
 }
 
 .LibCover {
@@ -233,120 +741,184 @@ button {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    border-radius: var(--radius-sm);
 }
 
 .LibCoverCompact {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    border-radius: var(--radius-sm);
 }
 
-.HiddenButtonSection {
-    position: relative;
-    display: flex;
-  justify-content: center;
-    border-radius: 8px;
-}
-
+/* --- Sidebar (Filters) --- */
 .sidebar {
-    background-color:rgba(40, 40, 40, 0.85);
-    float:left;
-    margin-right:5px;
+    background: var(--surface-1);
+    border-left: 1px solid var(--border);
     height: 100%;
-    width: 0px;
+    width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: var(--z-sidebar);
     top: 0;
     right: 0;
     overflow-x: hidden;
-    box-sizing: border-box;
-    margin: 0 auto;
-    transition: 0.25s;
-  }
-
-    .sidebar.sidebarOpen {
-        width: 30%;
-        min-width: 300px;
-    }
-
-    .sidebar .closebtn {
-        width: calc(100% - 10px);
-        padding-top: 5px;
-        padding-bottom: 5px;
-        border: 2px;
-        border-color: #dcdcdc75;
-        border-style: solid;
-        border-radius: 10px;
-        text-align: center;
-    }
-    .sidebar .closebtn:hover {
-        background-color: #cccccc75;
-    }
-
-    .sidebar th {
-        text-align: center;
-    }
-
-    .sidebar input.exclude {
-        accent-color: #bb0000;
-    }
-    .sidebar input[type=text], .sidebar input[type=url], .sidebar textarea, .sidebar select {
-        padding: 4px;
-        border: 1px #CCC solid;
-        border-radius: 3px;
-        max-width: 100%;
-        min-width: 100px;
-    }
-    .sidebar label {
-        display: block;
-        width: 100%;
-        font-size: 16px;
-        padding-bottom: 5px;
-        user-select: none;
-    }
-    .sidebar tr label:hover {
-        background-color:rgba(40, 40, 40);
-    }
-    #sbFilters {
-        max-height: calc(50% - 30px);
-        overflow-y: scroll;
-    }
-    #sbFilters input[type=text], #sbFilters input[type=url], #sbFilters textarea, #sbFilters select {
-        width: calc(100% - 15px);
-    }
-
-.paginationBar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    padding: 5px 0;
+    overflow-y: auto;
+    transition: width var(--duration-slow) var(--ease-out-expo);
+    padding: 0;
 }
 
-.paginationBar button {
-    padding: 2px 8px;
+.sidebar.sidebarOpen {
+    width: 30%;
+    min-width: 300px;
+    padding: var(--space-lg);
+}
+
+.sidebar .closebtn {
+    width: 100%;
+    padding: var(--space-sm) var(--space-lg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-align: center;
     cursor: pointer;
+    background: var(--surface-2);
+    color: var(--text-1);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-lg);
+    transition: background var(--duration-fast) var(--ease-out-quart);
 }
 
-.paginationBar button:disabled {
-    cursor: default;
+.sidebar .closebtn:hover {
+    background: var(--surface-3);
 }
 
-#paginationPageSize {
-    margin-left: 10px;
-    min-width: auto;
+.sidebar th {
+    text-align: center;
+    color: var(--text-2);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-md) var(--space-sm);
 }
 
-.volumeMappingInput {
-    width: 60%;
+.sidebar input.exclude {
+    accent-color: var(--error);
 }
 
-.volumeHeader td {
-    font-weight: bold;
-    padding: 8px 5px;
-    background-color: #333;
-    color: #fff;
-    border-bottom: 2px solid #555;
+.sidebar input[type=text],
+.sidebar input[type=url],
+.sidebar textarea,
+.sidebar select {
+    padding: var(--space-sm);
+    background: var(--surface-0);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    max-width: 100%;
+    min-width: 80px;
+    font-family: var(--font-family);
+    font-size: var(--text-sm);
+}
+
+.sidebar label {
+    display: block;
+    width: 100%;
+    font-size: var(--text-sm);
+    padding: var(--space-xs) var(--space-sm);
+    user-select: none;
+    color: var(--text-2);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background var(--duration-fast) var(--ease-out-quart);
+}
+
+.sidebar tr label:hover {
+    background: var(--surface-2);
+}
+
+#sbFilters {
+    max-height: calc(50% - 30px);
+    overflow-y: auto;
+}
+
+#sbFilters input[type=text],
+#sbFilters input[type=url],
+#sbFilters textarea,
+#sbFilters select {
+    width: calc(100% - 15px);
+}
+
+/* --- Textarea (Edit Chapter URLs) --- */
+#editChaptersUrlsInput {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    background: var(--surface-1);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+/* --- Chapter count / parser info row --- */
+#rangeChapterCountRow td table {
+    width: 100%;
+}
+
+#rangeChapterCountRow td table td {
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+}
+
+#spanChapterCount {
+    color: var(--text-1);
+    font-weight: 600;
+}
+
+#spanParserName {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+#spanDelayMs {
+    color: var(--text-3);
+}
+
+/* --- Searching message --- */
+#findingChapterUrlsMessageRow {
+    color: var(--warning);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    padding: var(--space-xl) 0;
+    text-align: center;
+}
+
+/* --- Scrollbar styling --- */
+.scrollingtable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollingtable::-webkit-scrollbar-track {
+    background: var(--scroll-track);
+}
+
+.scrollingtable::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 4px;
+}
+
+.scrollingtable::-webkit-scrollbar-thumb:hover {
+    background: var(--surface-3);
+}
+
+.scrollingtable {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+
+/* --- Selection --- */
+::selection {
+    background: var(--selection-bg);
+    color: var(--text-1);
 }
 
 .stk-modal-overlay {
