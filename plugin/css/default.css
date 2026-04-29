@@ -10,7 +10,7 @@
 
 .scrollingtable {
     overflow: scroll;
-    height: 300px;
+    height: max(300px, calc(100vh - 420px));
 }
 
 #progressString {
