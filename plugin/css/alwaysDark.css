@@ -25,6 +25,7 @@
     --volume-bg: oklch(22% 0.05 290);
     --volume-border: oklch(32% 0.06 290);
     --volume-text: oklch(82% 0.06 290);
+    --volume-hover-bg: oklch(26% 0.06 290);
 
     /* Semantic: lifted for dark backgrounds */
     --error: oklch(70% 0.18 25);
