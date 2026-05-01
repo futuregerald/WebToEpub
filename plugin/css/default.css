@@ -351,9 +351,14 @@ td.disabled {
 
 /* --- Zone 2: Book Identity --- */
 .bookIdentityZone {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-xs) 0;
+    align-items: start;
+}
+
+.bookIdentityZone > * {
+    grid-column: 1;
 }
 
 /* --- Form Grid & Field/Option Rows --- */
@@ -408,10 +413,7 @@ td.disabled {
 
 /* --- Cover Section --- */
 .coverSection {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-    padding-top: var(--space-md);
+    padding-top: var(--space-xs);
 }
 
 #coverImageUrlInput {
@@ -420,17 +422,22 @@ td.disabled {
     max-width: none;
 }
 
-.coverSection img,
-#coverUrlSection img {
-    max-height: 180px;
-    max-width: 135px;
+/* Cover image: right column of bookIdentityZone grid */
+#sampleCoverImg {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    display: block;
+    max-height: 280px;
+    max-width: 200px;
+    margin-left: var(--space-lg);
     border-radius: var(--radius-md);
     box-shadow: 0 4px 24px oklch(0% 0 0 / 0.15);
     object-fit: cover;
 }
 
-#sampleCoverImg {
-    display: block;
+/* Hide cover image when cover URL section is hidden */
+.bookIdentityZone:has(#coverUrlSection[hidden]) > #sampleCoverImg {
+    display: none;
 }
 
 /* --- Progress Section --- */
