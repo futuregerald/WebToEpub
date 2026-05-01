@@ -110,7 +110,7 @@
                     </div>
                     <div>
                         <div class="wordmark">web<em>2</em>epub</div>
-                        <div class="tagline">The bindery for serial fiction</div>
+                        <div class="tagline">__MSG_label_Tagline__</div>
                     </div>
                 </div>
                 <span class="parserChip" id="parserChip"><span id="spanParserName"></span> <span id="spanDelayMs"></span></span>
@@ -139,8 +139,8 @@
             <div>
                 <div class="sectionHead">
                     <span class="num">&sect;01</span>
-                    <span class="title">Book identity</span>
-                    <span class="subtitle">Metadata baked into the EPUB spine</span>
+                    <span class="title">__MSG_label_Book_Identity__</span>
+                    <span class="subtitle">__MSG_label_Book_Identity_Subtitle__</span>
                 </div>
                 <div class="formGrid">
                     <div class="field">
@@ -216,8 +216,8 @@
             <div>
                 <div class="sectionHead">
                     <span class="num">&sect;02</span>
-                    <span class="title">Cover</span>
-                    <span class="subtitle">Front matter</span>
+                    <span class="title">__MSG_label_Cover__</span>
+                    <span class="subtitle">__MSG_label_Front_Matter__</span>
                 </div>
                 <div class="coverWrap">
                     <div class="coverStage">
@@ -226,11 +226,11 @@
                                 <div class="placeholder" id="bookPlaceholder">
                                     <div><div class="ph-mark">~</div></div>
                                     <div>
-                                        <div class="ph-title" id="phTitle">Untitled</div>
+                                        <div class="ph-title" id="phTitle">__MSG_label_Untitled__</div>
                                         <div class="ph-rule"></div>
-                                        <div class="ph-author" id="phAuthor">Anonymous</div>
+                                        <div class="ph-author" id="phAuthor">__MSG_label_Anonymous__</div>
                                     </div>
-                                    <div class="ph-empty">no cover</div>
+                                    <div class="ph-empty">__MSG_label_No_Cover__</div>
                                 </div>
                             </div>
                             <div class="shelfShadow"></div>
@@ -264,7 +264,7 @@
                             <div id="progressFill" class="progressFill"></div>
                         </div>
                         <div class="progressMeta">
-                            <span id="progressLabel">Ready to bind</span>
+                            <span id="progressLabel">__MSG_label_Progress_Ready__</span>
                             <span id="progressPct"></span>
                             <span id="progressString" hidden="true"></span>
                         </div>
@@ -287,8 +287,8 @@
         <section class="chaptersSection" id="outputSection">
             <div class="sectionHead">
                 <span class="num">&sect;03</span>
-                <span class="title">Chapters</span>
-                <span class="subtitle" id="chapterSubtitle"><span id="spanChapterCount">0</span> chapters</span>
+                <span class="title">__MSG_label_Chapters__</span>
+                <span class="subtitle" id="chapterSubtitle"><span id="spanChapterCount">0</span> __MSG_label_Chapters_Suffix__</span>
             </div>
 
             <div id="chapterSelectControlsDiv" class="rangeBox">
@@ -366,16 +366,16 @@
 
             <!-- Pagination -->
             <div id="paginationControls" class="paginationBar pagination">
-                <button class="btn bare sm" id="paginationFirst" title="First page">&laquo;</button>
-                <button class="btn bare sm" id="paginationPrev" title="Previous page">&lsaquo;</button>
-                <span id="paginationInfo">Page 1 of 1</span>
-                <button class="btn bare sm" id="paginationNext" title="Next page">&rsaquo;</button>
-                <button class="btn bare sm" id="paginationLast" title="Last page">&raquo;</button>
+                <button class="btn bare sm" id="paginationFirst" title="__MSG_label_First_Page__">&laquo;</button>
+                <button class="btn bare sm" id="paginationPrev" title="__MSG_label_Previous_Page__">&lsaquo;</button>
+                <span id="paginationInfo">__MSG_label_Page_1_of_1__</span>
+                <button class="btn bare sm" id="paginationNext" title="__MSG_label_Next_Page__">&rsaquo;</button>
+                <button class="btn bare sm" id="paginationLast" title="__MSG_label_Last_Page__">&raquo;</button>
                 <select id="paginationPageSize">
                     <option value="50">50</option>
                     <option value="100" selected>100</option>
                     <option value="200">200</option>
-                    <option value="0">All</option>
+                    <option value="0">__MSG_label_All__</option>
                 </select>
             </div>
 
@@ -546,7 +546,7 @@
                 </svg>
             </span>
             <span class="title">__MSG_button_Advanced_Options__</span>
-            <span class="subtitle">Tinker, customize, override</span>
+            <span class="subtitle">__MSG_label_Advanced_Options_Subtitle__</span>
             <span class="chev">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 4.5 6 7.5l3-3" />
@@ -556,17 +556,17 @@
         <section id="advancedOptionsSection" hidden="true">
             <div class="advancedBody open">
                 <nav class="settingsNav" id="settingsNav">
-                    <button data-tab="metadata"><span>Metadata</span><span class="mono">/meta</span></button>
-                    <button data-tab="output" class="active"><span>Output</span><span class="mono">/out</span></button>
-                    <button data-tab="images"><span>Images</span><span class="mono">/img</span></button>
-                    <button data-tab="content"><span>Content</span><span class="mono">/doc</span></button>
-                    <button data-tab="behavior"><span>Behavior</span><span class="mono">/beh</span></button>
+                    <button data-tab="metadata"><span>__MSG_label_Tab_Metadata__</span><span class="mono">/meta</span></button>
+                    <button data-tab="output" class="active"><span>__MSG_label_Tab_Output__</span><span class="mono">/out</span></button>
+                    <button data-tab="images"><span>__MSG_label_Tab_Images__</span><span class="mono">/img</span></button>
+                    <button data-tab="content"><span>__MSG_label_Tab_Content__</span><span class="mono">/doc</span></button>
+                    <button data-tab="behavior"><span>__MSG_label_Tab_Behavior__</span><span class="mono">/beh</span></button>
                 </nav>
                 <div>
                     <!-- ── Tab: Metadata /meta ── -->
                     <div class="settingsPanel" data-panel="metadata" hidden>
                         <div id="AdditionalMetadatatable">
-                        <div class="blockTitle">Additional bibliographic metadata</div>
+                        <div class="blockTitle">__MSG_label_Block_Additional_Metadata__</div>
                         <div class="stack">
                             <div class="field">
                                 <label>__MSG_label_Metadata_URL__</label>
@@ -583,7 +583,7 @@
                             <label class="checkRow">
                                 <input id="autosearchmetadataCheckbox" type="checkbox" name="autosearchmetadataCheckbox" value="true">
                                 <span class="checkbox"></span>
-                                <span><span class="label">__MSG_label_auto_search_metadata__</span><span class="hint">Try to find descriptions, tags, and series info from the source.</span></span>
+                                <span><span class="label">__MSG_label_auto_search_metadata__</span><span class="hint">__MSG_hint_Auto_Search_Metadata__</span></span>
                             </label>
                             <label class="checkRow">
                                 <input id="lesstagsCheckbox" type="checkbox" name="lesstagsCheckbox" value="true">
@@ -625,7 +625,7 @@
 
                     <!-- ── Tab: Output /out (DEFAULT ACTIVE) ── -->
                     <div class="settingsPanel active" data-panel="output">
-                        <div class="blockTitle">How the EPUB file is assembled</div>
+                        <div class="blockTitle">__MSG_label_Block_Output_Settings__</div>
                         <div class="stack">
                             <div class="field">
                                 <label>__MSG_label_Custom_Filename__</label>
@@ -654,12 +654,12 @@
                             <label class="checkRow">
                                 <input id="createEpub3Checkbox" type="checkbox" name="createEpub3Checkbox" value="false">
                                 <span class="checkbox"></span>
-                                <span><span class="label">__MSG_label_Create_Epub_3__</span><span class="hint">Use the modern format.</span></span>
+                                <span><span class="label">__MSG_label_Create_Epub_3__</span><span class="hint">__MSG_hint_Create_Epub_3__</span></span>
                             </label>
                             <label class="checkRow">
                                 <input id="addInformationPageToEpubCheckbox" type="checkbox" name="addInformationPageToEpubCheckbox" value="true">
                                 <span class="checkbox"></span>
-                                <span><span class="label">__MSG_label_Add_Information_Page_To_Epub__</span><span class="hint">Insert a page with source URL, fetch date, and credits.</span></span>
+                                <span><span class="label">__MSG_label_Add_Information_Page_To_Epub__</span><span class="hint">__MSG_hint_Add_Information_Page__</span></span>
                             </label>
                             <label class="checkRow">
                                 <input id="overwriteEpubWhenDuplicateFilenameCheckbox" type="checkbox" name="overwriteEpubWhenDuplicateFilenameCheckbox" value="false">
@@ -704,12 +704,12 @@
 
                     <!-- ── Tab: Images /img ── -->
                     <div class="settingsPanel" data-panel="images" hidden>
-                        <div class="blockTitle">How illustrations are handled</div>
+                        <div class="blockTitle">__MSG_label_Block_Image_Settings__</div>
                         <div class="stack">
                             <label class="checkRow">
                                 <input id="skipImagesCheckbox" type="checkbox" name="skipImagesCheckbox" value="true">
                                 <span class="checkbox"></span>
-                                <span><span class="label">__MSG_label_Skip_Images__</span><span class="hint">Strip all images from chapters.</span></span>
+                                <span><span class="label">__MSG_label_Skip_Images__</span><span class="hint">__MSG_hint_Skip_Images__</span></span>
                             </label>
                             <label class="checkRow">
                                 <input id="compressImagesCheckbox" type="checkbox" name="compressImagesCheckbox" value="false">
@@ -744,7 +744,7 @@
                             <label class="checkRow">
                                 <input id="useSvgForImagesInput" type="checkbox" name="useSvgForImagesInput" value="true">
                                 <span class="checkbox"></span>
-                                <span><span class="label">__MSG_label_Use_SVG_for_Images__</span><span class="hint">Better scaling on small screens.</span></span>
+                                <span><span class="label">__MSG_label_Use_SVG_for_Images__</span><span class="hint">__MSG_hint_Use_SVG_Images__</span></span>
                             </label>
                             <div id="highestResolutionImagesRow" hidden="true">
                                 <label class="checkRow">
@@ -758,7 +758,7 @@
 
                     <!-- ── Tab: Content /doc ── -->
                     <div class="settingsPanel" data-panel="content" hidden>
-                        <div class="blockTitle">Stylesheet and chapter cleanup</div>
+                        <div class="blockTitle">__MSG_label_Block_Content_Settings__</div>
                         <div class="stack">
                             <div class="field" id="styleSheetRow">
                                 <label>__MSG_label_Stylesheet__</label>
@@ -789,7 +789,7 @@
                                 <label class="checkRow">
                                     <input type="checkbox" disabled>
                                     <span class="checkbox"></span>
-                                    <span><span class="label">__MSG_label_Remove_Author_Notes__</span><span class="hint">Controlled from Book identity section.</span></span>
+                                    <span><span class="label">__MSG_label_Remove_Author_Notes__</span><span class="hint">__MSG_hint_Remove_Author_Notes__</span></span>
                                 </label>
                             </div>
                             <div id="unSuperScriptAlternateTranslations" hidden="true">
@@ -809,7 +809,7 @@
 
                     <!-- ── Tab: Behavior /beh ── -->
                     <div class="settingsPanel" data-panel="behavior" hidden>
-                        <div class="blockTitle">Fetching and reading-list behavior</div>
+                        <div class="blockTitle">__MSG_label_Block_Behavior_Settings__</div>
                         <div class="stack">
                             <div class="field">
                                 <label>__MSG_label_Manual_Delay_Per_Chapter__</label>
@@ -821,7 +821,7 @@
                             <label class="checkRow">
                                 <input id="overrideMinimumDelayCheckbox" type="checkbox" name="overrideMinimumDelayCheckbox" value="false">
                                 <span class="checkbox"></span>
-                                <span><span class="label">__MSG_label_Override_Default_Minimum_Delay__</span><span class="hint">Aggressive fetching can get you rate-limited or banned.</span></span>
+                                <span><span class="label">__MSG_label_Override_Default_Minimum_Delay__</span><span class="hint">__MSG_hint_Override_Minimum_Delay__</span></span>
                             </label>
                             <label class="checkRow">
                                 <input id="includeInReadingListCheckbox" type="checkbox" name="includeInReadingListCheckbox" value="false">
@@ -888,7 +888,7 @@
     <!-- ═══ Colophon footer ═══ -->
     <div class="colophon">
         <span class="uppercase">WebToEpub</span>
-        <span class="status">Ready to bind.</span>
+        <span class="status">__MSG_label_Progress_Ready_Period__</span>
     </div>
 
     <!-- ═══ ALL script imports ═══ -->

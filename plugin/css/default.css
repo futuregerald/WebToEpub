@@ -950,56 +950,6 @@ td.disabled {
     min-width: 0;
 }
 
-/* Book identity zone (new markup compat) */
-.bookIdentityZone {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: var(--space-xs) 0;
-    align-items: start;
-}
-
-.bookIdentityZone > * {
-    grid-column: 1;
-}
-
-.bookIdentityZone > #sampleCoverImg {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    margin-left: var(--space-lg);
-}
-
-.bookIdentityZone:has(#coverUrlSection[hidden]) > #sampleCoverImg {
-    display: none;
-}
-
-/* Field rows (new markup compat) */
-.fieldRow {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-xs) 0;
-}
-
-.fieldRow > label {
-    min-width: 90px;
-    color: var(--ink-soft);
-    font-size: 12px;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.fieldRow > input,
-.fieldRow > select {
-    flex: 1;
-    min-width: 0;
-}
-
-.fieldRow > textarea {
-    flex: 1;
-    min-width: 0;
-    max-width: none;
-}
-
 /* Option rows */
 .optionRow {
     padding: var(--space-xs) 0;

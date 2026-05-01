@@ -68,11 +68,11 @@ class ProgressBar { // eslint-disable-line no-unused-vars
 
         if (label) {
             if (element.value <= 0 || element.max <= 1) {
-                label.textContent = "Ready to bind";
+                label.textContent = (typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Progress_Ready")) || "Ready to bind";
             } else if (element.value >= element.max) {
-                label.textContent = "Done. EPUB ready to download.";
+                label.textContent = (typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Progress_Done")) || "Done. EPUB ready to download.";
             } else {
-                label.textContent = `Fetching chapter ${element.value} of ${element.max}\u2026`;
+                label.textContent = (typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Progress_Fetching", [String(element.value), String(element.max)])) || `Fetching chapter ${element.value} of ${element.max}\u2026`;
             }
         }
     }

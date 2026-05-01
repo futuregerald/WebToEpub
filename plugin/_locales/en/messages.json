@@ -837,5 +837,181 @@
 			    "content": "$1"
 			}
 		}
+	},
+	"label_Tagline": {
+		"message": "The bindery for serial fiction",
+		"description": "Tagline text beneath the web2epub wordmark"
+	},
+	"label_Book_Identity": {
+		"message": "Book identity",
+		"description": "Section heading for the book identity form"
+	},
+	"label_Book_Identity_Subtitle": {
+		"message": "Metadata baked into the EPUB spine",
+		"description": "Subtitle under the Book identity section heading"
+	},
+	"label_Cover": {
+		"message": "Cover",
+		"description": "Section heading for the cover image area"
+	},
+	"label_Front_Matter": {
+		"message": "Front matter",
+		"description": "Subtitle under the Cover section heading"
+	},
+	"label_Chapters": {
+		"message": "Chapters",
+		"description": "Section heading for the chapters list"
+	},
+	"label_Advanced_Options_Subtitle": {
+		"message": "Tinker, customize, override",
+		"description": "Subtitle under the Advanced Options panel header"
+	},
+	"label_Tab_Metadata": {
+		"message": "Metadata",
+		"description": "Label for the Metadata settings tab"
+	},
+	"label_Tab_Output": {
+		"message": "Output",
+		"description": "Label for the Output settings tab"
+	},
+	"label_Tab_Images": {
+		"message": "Images",
+		"description": "Label for the Images settings tab"
+	},
+	"label_Tab_Content": {
+		"message": "Content",
+		"description": "Label for the Content settings tab"
+	},
+	"label_Tab_Behavior": {
+		"message": "Behavior",
+		"description": "Label for the Behavior settings tab"
+	},
+	"label_Block_Additional_Metadata": {
+		"message": "Additional bibliographic metadata",
+		"description": "Block title for the additional metadata settings group"
+	},
+	"label_Block_Output_Settings": {
+		"message": "How the EPUB file is assembled",
+		"description": "Block title for the output settings group"
+	},
+	"label_Block_Image_Settings": {
+		"message": "How illustrations are handled",
+		"description": "Block title for the image settings group"
+	},
+	"label_Block_Content_Settings": {
+		"message": "Stylesheet and chapter cleanup",
+		"description": "Block title for the content settings group"
+	},
+	"label_Block_Behavior_Settings": {
+		"message": "Fetching and reading-list behavior",
+		"description": "Block title for the behavior settings group"
+	},
+	"hint_Auto_Search_Metadata": {
+		"message": "Try to find descriptions, tags, and series info from the source.",
+		"description": "Hint text for the auto-search metadata checkbox"
+	},
+	"hint_Create_Epub_3": {
+		"message": "Use the modern format.",
+		"description": "Hint text for the Create EPUB 3 checkbox"
+	},
+	"hint_Add_Information_Page": {
+		"message": "Insert a page with source URL, fetch date, and credits.",
+		"description": "Hint text for the Add Information Page checkbox"
+	},
+	"hint_Skip_Images": {
+		"message": "Strip all images from chapters.",
+		"description": "Hint text for the Skip Images checkbox"
+	},
+	"hint_Use_SVG_Images": {
+		"message": "Better scaling on small screens.",
+		"description": "Hint text for the Use SVG for Images checkbox"
+	},
+	"hint_Remove_Author_Notes": {
+		"message": "Controlled from Book identity section.",
+		"description": "Hint text for the disabled Remove Author Notes checkbox in Content tab"
+	},
+	"hint_Override_Minimum_Delay": {
+		"message": "Aggressive fetching can get you rate-limited or banned.",
+		"description": "Hint text for the Override Minimum Delay checkbox"
+	},
+	"placeholder_Starting_URL": {
+		"message": "Paste a chapter or table-of-contents URL...",
+		"description": "Placeholder text for the starting URL input field"
+	},
+	"placeholder_Go_To_Chapter": {
+		"message": "Go to ch. #",
+		"description": "Placeholder text for the chapter search input fields"
+	},
+	"placeholder_Volume_Mapping_URL": {
+		"message": "Paste webnovel.com URL",
+		"description": "Placeholder text for the volume mapping URL input"
+	},
+	"label_Untitled": {
+		"message": "Untitled",
+		"description": "Placeholder title text shown on the book cover when no title is set"
+	},
+	"label_Anonymous": {
+		"message": "Anonymous",
+		"description": "Placeholder author text shown on the book cover when no author is set"
+	},
+	"label_No_Cover": {
+		"message": "no cover",
+		"description": "Text shown on the book cover placeholder when no cover image is set"
+	},
+	"label_Progress_Ready": {
+		"message": "Ready to bind",
+		"description": "Progress bar label when idle and ready to start"
+	},
+	"label_Progress_Done": {
+		"message": "Done. EPUB ready to download.",
+		"description": "Progress bar label when fetching is complete"
+	},
+	"label_Progress_Fetching": {
+		"message": "Fetching chapter $value$ of $max$\u2026",
+		"description": "Progress bar label during chapter fetch",
+		"placeholders": {
+			"value": { "content": "$1" },
+			"max": { "content": "$2" }
+		}
+	},
+	"label_Page_1_of_1": {
+		"message": "Page 1 of 1",
+		"description": "Default pagination info text"
+	},
+	"label_All": {
+		"message": "All",
+		"description": "Option label for showing all chapters without pagination"
+	},
+	"label_Progress_Ready_Period": {
+		"message": "Ready to bind.",
+		"description": "Colophon status text when idle"
+	},
+	"label_First_Page": {
+		"message": "First page",
+		"description": "Title attribute for the first page pagination button"
+	},
+	"label_Previous_Page": {
+		"message": "Previous page",
+		"description": "Title attribute for the previous page pagination button"
+	},
+	"label_Next_Page": {
+		"message": "Next page",
+		"description": "Title attribute for the next page pagination button"
+	},
+	"label_Last_Page": {
+		"message": "Last page",
+		"description": "Title attribute for the last page pagination button"
+	},
+	"label_Chapters_Suffix": {
+		"message": "chapters",
+		"description": "Suffix text after chapter count number in the chapters section subtitle"
+	},
+	"label_Selected": {
+		"message": "selected",
+		"description": "Suffix text after chapter count in the chapter subtitle (e.g. 42 selected)"
+	},
+	"label_Parsers": {
+		"message": "parsers",
+		"description": "Suffix text after parser count in the colophon (e.g. 150 parsers)"
 	}
 }

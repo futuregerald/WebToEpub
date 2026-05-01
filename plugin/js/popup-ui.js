@@ -203,11 +203,11 @@ var PopupUI = (function() {  // eslint-disable-line no-unused-vars
 
         if (phTitle) {
             let title = titleInput ? titleInput.value.trim() : "";
-            phTitle.textContent = title || "Untitled";
+            phTitle.textContent = title || (typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Untitled")) || "Untitled";
         }
         if (phAuthor) {
             let author = authorInput ? authorInput.value.trim() : "";
-            phAuthor.textContent = author || "Anonymous";
+            phAuthor.textContent = author || (typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Anonymous")) || "Anonymous";
         }
     }
 
@@ -283,7 +283,7 @@ var PopupUI = (function() {  // eslint-disable-line no-unused-vars
         let chapterCountEl = document.getElementById("spanChapterCount");
         let countText = chapterCountEl ? chapterCountEl.textContent.trim() : "0";
 
-        subtitle.textContent = countText + " selected";
+        subtitle.textContent = countText + " " + ((typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Selected")) || "selected");
     }
 
     // ── 7. Colophon Version ─────────────────────────────────────────
@@ -315,7 +315,7 @@ var PopupUI = (function() {  // eslint-disable-line no-unused-vars
             parts.push("v" + version);
         }
         if (parserCount > 0) {
-            parts.push(parserCount + " parsers");
+            parts.push(parserCount + " " + ((typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Parsers")) || "parsers"));
         }
         colophon.textContent = parts.join(" \u00B7 ");
     }
