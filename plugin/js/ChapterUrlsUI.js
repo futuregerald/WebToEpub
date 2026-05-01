@@ -108,11 +108,13 @@ class ChapterUrlsUI {
                     }
 
                     let result = VolumeMapper.mapVolumesToChapters(volumes, ChapterUrlsUI.allChapters);
-                    statusSpan.textContent = `Mapped ${result.matchedCount}/${result.totalChapters} chapters to ${result.volumeCount} volumes`;
+                    ChapterUrlsUI.volumeRanges = result.volumeRanges;
 
-                    if (result.unmatchedCount > 0) {
-                        statusSpan.textContent += ` (${result.unmatchedCount} unmatched)`;
+                    let statusMsg = `${result.volumeCount} volumes, ${result.totalChapters} chapters`;
+                    if (result.chapterCountDiff > 0) {
+                        statusMsg += ` (${result.chapterCountDiff} chapter difference)`;
                     }
+                    statusSpan.textContent = statusMsg;
 
                     ChapterUrlsUI.renderCurrentPage();
                 } catch (err) {
@@ -207,12 +209,7 @@ class ChapterUrlsUI {
 
                 // Insert volume header if this chapter starts a new volume/arc
                 if (chapter.newArc) {
-                    let headerRow = document.createElement("tr");
-                    headerRow.className = "volumeHeader";
-                    let headerTd = document.createElement("td");
-                    headerTd.colSpan = 3;
-                    headerTd.textContent = chapter.newArc;
-                    headerRow.appendChild(headerTd);
+                    let headerRow = ChapterUrlsUI.createVolumeHeaderRow(chapter.newArc);
                     linksTable.appendChild(headerRow);
                 }
 
@@ -292,12 +289,7 @@ class ChapterUrlsUI {
 
                 // Insert volume header if this chapter starts a new volume/arc
                 if (chapter.newArc) {
-                    let headerRow = document.createElement("tr");
-                    headerRow.className = "volumeHeader";
-                    let headerTd = document.createElement("td");
-                    headerTd.colSpan = 3;
-                    headerTd.textContent = chapter.newArc;
-                    headerRow.appendChild(headerTd);
+                    let headerRow = ChapterUrlsUI.createVolumeHeaderRow(chapter.newArc);
                     linksTable.appendChild(headerRow);
                 }
 
@@ -641,6 +633,32 @@ class ChapterUrlsUI {
     static appendOptionToSelect(select, value, chapter, memberForTextOption) {
         let option = new Option(chapter[memberForTextOption], value);
         select.add(option);
+    }
+
+    /** @private */
+    static createVolumeHeaderRow(arcTitle) {
+        let headerRow = document.createElement("tr");
+        headerRow.className = "volumeHeader";
+        let headerTd = document.createElement("td");
+        headerTd.colSpan = 3;
+        headerTd.textContent = arcTitle;
+        headerRow.appendChild(headerTd);
+
+        let range = ChapterUrlsUI.volumeRanges.find(r => r.title === arcTitle);
+        if (range) {
+            headerRow.dataset.volumeStart = range.startIndex;
+            headerRow.dataset.volumeEnd = range.endIndex;
+            headerRow.title = "Click to select this volume";
+            headerRow.onclick = () => {
+                let startSelect = ChapterUrlsUI.getRangeStartChapterSelect();
+                let endSelect = ChapterUrlsUI.getRangeEndChapterSelect();
+                startSelect.value = String(range.startIndex);
+                endSelect.value = String(range.endIndex);
+                ChapterUrlsUI.onRangeChanged();
+            };
+        }
+
+        return headerRow;
     }
 
     /** @private */
@@ -1076,3 +1094,6 @@ ChapterUrlsUI.rowHeight = 24;
 
 // Chapter number search map
 ChapterUrlsUI.chapterNumberMap = new Map();
+
+// Volume ranges for click-to-select
+ChapterUrlsUI.volumeRanges = [];

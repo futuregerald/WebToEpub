@@ -213,7 +213,7 @@
 	},
 	"__MSG_button_Import_Volumes__": {
 		"message": "Import",
-		"description": "Label on button to import volume structure from webnovel.com"
+		"description": "Label on button to import volume structure from a supported site"
 	},
 	"__MSG_button_View_Reading_List__": {
 		"message": "View Reading List",

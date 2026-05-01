@@ -37,6 +37,7 @@
     --volume-bg: oklch(92% 0.03 290);
     --volume-border: oklch(82% 0.04 290);
     --volume-text: oklch(30% 0.06 290);
+    --volume-hover-bg: oklch(88% 0.04 290);
 
     /* Button text on primary */
     --on-primary: oklch(98% 0.005 75);
@@ -725,7 +726,7 @@ table.chapterList,
 }
 
 .volumeHeader[data-volume-start]:hover td {
-    background: oklch(88% 0.04 290);
+    background: var(--volume-hover-bg);
 }
 
 /* Download state indicators */
