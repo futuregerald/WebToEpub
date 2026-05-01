@@ -821,6 +821,18 @@ img.downloadState {
     overflow: auto;
 }
 
+.errorLayout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.errorButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
 .warning {
     color: var(--error);
     font-size: var(--text-lg);
@@ -901,6 +913,10 @@ img.downloadState {
     border-radius: var(--radius-md);
     padding: var(--space-xl);
     margin-top: var(--space-lg);
+}
+
+#hiddenBibSection input {
+    width: 100%;
 }
 
 .LibCover {

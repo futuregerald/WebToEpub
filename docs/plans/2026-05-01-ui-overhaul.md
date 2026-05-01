@@ -166,3 +166,13 @@ Dark mode updates. Scrollbar refinement. Transition timing. Focus states. Final 
 3. **Test i18n** after restructuring: verify all `__MSG_` labels still get localized
 4. **Test parser-specific rows**: verify conditional show/hide still works after moving to settings groups
 5. **Test Library toggle**: verify Library.js can still render into its container
+
+## Implementation Notes
+
+The following deviations from the original plan were made during implementation:
+
+1. **Image options not moved** -- `duplicateImagesRow` and `coverFromUrlRow` remain in `#imageSection` instead of moving to Settings > Images. Reason: `CoverImageUI.showCoverImageUrlInput()` toggles `#imageSection` visibility dynamically; moving options would require JS changes.
+2. **"Send to Kindle" in Output group** instead of Content. Output is a better fit since it relates to post-EPUB-creation behavior.
+3. **"File Author as" in Metadata group** instead of Content. Metadata is a better fit since it is a metadata field.
+4. **"Show more metadata options" as standalone toggle** above all settings groups, not inside Metadata. Controls visibility of the entire `AdditionalMetadatatable` div.
+5. **"Translator" and "File Author as" moved into Metadata details group** from old advancedOptionsTable position. Logical improvement since they are metadata fields.
