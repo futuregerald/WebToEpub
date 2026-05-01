@@ -359,6 +359,34 @@
 		"message": "Show more Metadata options",
 		"description": "Show more Metadata options to user"
 	},
+	"__MSG_label_Metadata_Settings__": {
+		"message": "Metadata",
+		"description": "Settings group heading for metadata options"
+	},
+	"__MSG_label_Output_Settings__": {
+		"message": "Output",
+		"description": "Settings group heading for output options"
+	},
+	"__MSG_label_Images_Settings__": {
+		"message": "Images",
+		"description": "Settings group heading for image options"
+	},
+	"__MSG_label_Content_Settings__": {
+		"message": "Content",
+		"description": "Settings group heading for content options"
+	},
+	"__MSG_label_Behavior_Settings__": {
+		"message": "Behavior",
+		"description": "Settings group heading for behavior options"
+	},
+	"__MSG_label_Appearance_Settings__": {
+		"message": "Appearance",
+		"description": "Settings group heading for appearance options"
+	},
+	"__MSG_label_Developer_Settings__": {
+		"message": "Developer",
+		"description": "Settings group heading for developer options"
+	},
 	"__MSG_label_Manual_Delay_Per_Chapter__": {
 		"message": "Delay per chapter in ms",
 		"description": "Delay per chapter in ms"
