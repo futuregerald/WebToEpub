@@ -52,3 +52,13 @@
 .downloadStateDiv .tooltipText {
     box-shadow: 0 4px 12px oklch(0% 0 0 / 0.4);
 }
+
+/* Disclosure summary hover */
+summary:hover {
+    background: var(--surface-2);
+}
+
+/* Clickable volume headers */
+.volumeHeader[data-volume-start]:hover td {
+    background: oklch(26% 0.06 290);
+}

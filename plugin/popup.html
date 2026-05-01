@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -16,55 +16,43 @@
             </table>
         </section>
         <section id="errorSection" class="minWidth" hidden="true">
-            <table id="errorSectionTable">
-                <tr>
-                    <td>
-                        <button class="expandedButton" id="errorButtonOk">__MSG_button_error_OK__</button>
-                        <button class="expandedButton" id="errorButtonRetry">__MSG_button_error_Retry__</button>
-                        <button class="expandedButton" id="errorButtonCancel">__MSG_button_error_Cancel__</button>
-                        <button class="expandedButton" id="errorButtonOpenURL">__MSG_button_error_Open_URL__</button>
-                        <button class="expandedButton" id="errorButtonBlockURL">__MSG_button_error_Block_URL__</button>
-                    </td>
-                </tr>
-                <tr id="errorMessageRow">
-                    <td id="errorMessageText"><pre></pre></td>
-                </tr>
-            </table>
+            <div id="errorSectionTable" class="errorLayout">
+                <div class="errorButtons">
+                    <button class="expandedButton" id="errorButtonOk">__MSG_button_error_OK__</button>
+                    <button class="expandedButton" id="errorButtonRetry">__MSG_button_error_Retry__</button>
+                    <button class="expandedButton" id="errorButtonCancel">__MSG_button_error_Cancel__</button>
+                    <button class="expandedButton" id="errorButtonOpenURL">__MSG_button_error_Open_URL__</button>
+                    <button class="expandedButton" id="errorButtonBlockURL">__MSG_button_error_Block_URL__</button>
+                </div>
+                <div id="errorMessageRow" class="errorMessageRow">
+                    <div id="errorMessageText"><pre></pre></div>
+                </div>
+            </div>
         </section>
         <section id="defaultParserSection" hidden="true">
             <p class="i18n">__MSG_label_Using_Default_Parser__</p>
-            <table>
-                <tr>
-                    <td>__MSG_label_Default_Parser_HostName__</td>
-                    <td>
-                        <input id="defaultParserHostName" type="text" name="defaultParserHostNameInput" size="30" value="" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>__MSG_label_Default_Parser_Test_Chapter_Url__</td>
-                    <td>
-                        <input id="defaultParserTestChapterUrl" type="text" name="defaultParserTestChapterUrlInput" size="30" value="" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>__MSG_label_Default_Parser_Content_CSS__</td>
-                    <td>
-                        <input id="defaultParserContentCss" type="text" name="defaultParserContentCssInput" size="30" value="" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>__MSG_label_Default_Parser_Chapter_Title_CSS__</td>
-                    <td>
-                        <input id="defaultParserChapterTitleCss" type="text" name="defaultParserChapterTitleCssInput" size="30" value="" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>__MSG_label_Default_Parser_Unwanted_Elements_CSS__</td>
-                    <td>
-                        <input id="defaultParserUnwantedElementsCss" type="text" name="defaultParserUnwantedElementsCssInput" size="30" value="" />
-                    </td>
-                </tr>
-            </table>
+            <div class="formGrid">
+                <div class="fieldRow">
+                    <label class="i18n" for="defaultParserHostName">__MSG_label_Default_Parser_HostName__</label>
+                    <input id="defaultParserHostName" type="text" name="defaultParserHostNameInput" size="30" value="" />
+                </div>
+                <div class="fieldRow">
+                    <label class="i18n" for="defaultParserTestChapterUrl">__MSG_label_Default_Parser_Test_Chapter_Url__</label>
+                    <input id="defaultParserTestChapterUrl" type="text" name="defaultParserTestChapterUrlInput" size="30" value="" />
+                </div>
+                <div class="fieldRow">
+                    <label class="i18n" for="defaultParserContentCss">__MSG_label_Default_Parser_Content_CSS__</label>
+                    <input id="defaultParserContentCss" type="text" name="defaultParserContentCssInput" size="30" value="" />
+                </div>
+                <div class="fieldRow">
+                    <label class="i18n" for="defaultParserChapterTitleCss">__MSG_label_Default_Parser_Chapter_Title_CSS__</label>
+                    <input id="defaultParserChapterTitleCss" type="text" name="defaultParserChapterTitleCssInput" size="30" value="" />
+                </div>
+                <div class="fieldRow">
+                    <label class="i18n" for="defaultParserUnwantedElementsCss">__MSG_label_Default_Parser_Unwanted_Elements_CSS__</label>
+                    <input id="defaultParserUnwantedElementsCss" type="text" name="defaultParserUnwantedElementsCssInput" size="30" value="" />
+                </div>
+            </div>
             <button id="testDefaultParserButton">__MSG_button_test_default_parser__</button>
             <button id="finisheddefaultParserButton">__MSG_button_finished_default_parser__</button>
             <button id="defaultParserHelpButton">__MSG_button_Help__</button>
@@ -84,70 +72,72 @@
             </div>
         </section>
         <section id="inputSection">
-            <table id="inputTable">
-                <tr>
-                    <td>__MSG_label_Starting_URL__</td>
-                    <td>
-                        <input id="startingUrlInput" type="url" name="startingUrlInput" />
-                    </td>
-                    <td>
-                        <button id="loadAndAnalyseButton">__MSG_button_load_and_analyse__</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>__MSG_label_Title__</td>
-                    <td><input id="titleInput" type="text" name="titleInput" /></td>
-                </tr>
-                <tr>
-                    <td>__MSG_label_Author__</td>
-                    <td><input id="authorInput" type="text" name="authorInput" /></td>
-                </tr>
-                <tr>
-                    <td>__MSG_label_Language__</td>
-                    <td><input id="languageInput" type="text" name="languageInput" /></td>
-                </tr>
-                <tr>
-                    <td>__MSG_label_Filename__</td>
-                    <td><input id="fileNameInput" type="text" name="fileNameInput" /></td>
-                </tr>
-                <tr id="removeAuthorNotesRow" hidden="true">
-                    <td><input id="removeAuthorNotesCheckbox" type="checkbox" name="removeAuthorNotesCheckbox" value="false"></td>
-                    <td>__MSG_label_Remove_Author_Notes__</td>
-                </tr>
-                <tr id="removeChapterNumberRow" hidden="true">
-                    <td><input id="removeChapterNumberCheckbox" type="checkbox" name="removeChapterNumberCheckbox" value="false"></td>
-                    <td>__MSG_label_Remove_Chapter_Number__</td>
-                </tr>
-                <tr id="removeOriginalRow" hidden="true">
-                    <td><input id="removeOriginalCheckbox" type="checkbox" name="removeOriginalCheckbox" value="true"></td>
-                    <td>__MSG_label_Remove_Original__</td>
-                </tr>
-                <tr id="selectTranslationAiRow" hidden="true">
-                    <td><input id="selectTranslationAiCheckbox" type="checkbox" name="selectTranslationAiCheckbox" value="false"></td>
-                    <td>__MSG_label_Select_Translation_Google__</td>
-                </tr>
-                <tr id="selectRetryLongerRow" hidden="true">
-                    <td><input id="selectRetryLongerCheckbox" type="checkbox" name="selectRetryLongerCheckbox" value="false"></td>
-                    <td>__MSG_label_Select_Retry_Longer__</td>
-                </tr>
-                <tr id="removeTranslatedRow" hidden="true">
-                    <td><input id="removeTranslatedCheckbox" type="checkbox" name="removeTranslatedCheckbox" value="false"></td>
-                    <td>__MSG_label_Remove_Translated__</td>
-                </tr>
-                <tr  id="passwordRow" hidden="true">
-                    <td>__MSG_label_Password__</td>
-                    <td><input id="passwordInput" type="text" name="passwordInput" /></td>
-                </tr>
-                <tr id="coverUrlSection">
-                    <td>__MSG_label_Cover_Image_URL__</td>
-                    <td colspan="2">
+            <!-- Zone 1: Source -->
+            <div class="sourceZone">
+                <div class="fieldRow sourceRow">
+                    <label class="i18n" for="startingUrlInput">__MSG_label_Starting_URL__</label>
+                    <input id="startingUrlInput" type="url" name="startingUrlInput" />
+                    <button id="loadAndAnalyseButton">__MSG_button_load_and_analyse__</button>
+                </div>
+            </div>
+
+            <!-- Zone 2: Book Identity -->
+            <div class="bookIdentityZone">
+                <div class="formGrid">
+                    <div class="fieldRow">
+                        <label class="i18n" for="titleInput">__MSG_label_Title__</label>
+                        <input id="titleInput" type="text" name="titleInput" />
+                    </div>
+                    <div class="fieldRow">
+                        <label class="i18n" for="authorInput">__MSG_label_Author__</label>
+                        <input id="authorInput" type="text" name="authorInput" />
+                    </div>
+                    <div class="fieldRow">
+                        <label class="i18n" for="languageInput">__MSG_label_Language__</label>
+                        <input id="languageInput" type="text" name="languageInput" />
+                    </div>
+                    <div class="fieldRow">
+                        <label class="i18n" for="fileNameInput">__MSG_label_Filename__</label>
+                        <input id="fileNameInput" type="text" name="fileNameInput" />
+                    </div>
+                </div>
+
+                <!-- Parser-specific conditional rows -->
+                <div id="removeAuthorNotesRow" class="optionRow" hidden="true">
+                    <label><input id="removeAuthorNotesCheckbox" type="checkbox" name="removeAuthorNotesCheckbox" value="false"> <span class="i18n">__MSG_label_Remove_Author_Notes__</span></label>
+                </div>
+                <div id="removeChapterNumberRow" class="optionRow" hidden="true">
+                    <label><input id="removeChapterNumberCheckbox" type="checkbox" name="removeChapterNumberCheckbox" value="false"> <span class="i18n">__MSG_label_Remove_Chapter_Number__</span></label>
+                </div>
+                <div id="removeOriginalRow" class="optionRow" hidden="true">
+                    <label><input id="removeOriginalCheckbox" type="checkbox" name="removeOriginalCheckbox" value="true"> <span class="i18n">__MSG_label_Remove_Original__</span></label>
+                </div>
+                <div id="selectTranslationAiRow" class="optionRow" hidden="true">
+                    <label><input id="selectTranslationAiCheckbox" type="checkbox" name="selectTranslationAiCheckbox" value="false"> <span class="i18n">__MSG_label_Select_Translation_Google__</span></label>
+                </div>
+                <div id="selectRetryLongerRow" class="optionRow" hidden="true">
+                    <label><input id="selectRetryLongerCheckbox" type="checkbox" name="selectRetryLongerCheckbox" value="false"> <span class="i18n">__MSG_label_Select_Retry_Longer__</span></label>
+                </div>
+                <div id="removeTranslatedRow" class="optionRow" hidden="true">
+                    <label><input id="removeTranslatedCheckbox" type="checkbox" name="removeTranslatedCheckbox" value="false"> <span class="i18n">__MSG_label_Remove_Translated__</span></label>
+                </div>
+                <div id="passwordRow" class="fieldRow" hidden="true">
+                    <label class="i18n" for="passwordInput">__MSG_label_Password__</label>
+                    <input id="passwordInput" type="text" name="passwordInput" />
+                </div>
+
+                <!-- Cover image -->
+                <div id="coverUrlSection" class="coverSection">
+                    <div class="fieldRow">
+                        <label class="i18n" for="coverImageUrlInput">__MSG_label_Cover_Image_URL__</label>
                         <input id="coverImageUrlInput" type="text" name="coverImageUrlInput">
                         <button id="clearCoverImageUrlButton">__MSG_button_Clear_Url__</button>
-                    </td>
-                    <td rowspan="2">   <img id="sampleCoverImg" /></td>
-                </tr>
-            </table>
+                    </div>
+                    <img id="sampleCoverImg" />
+                </div>
+            </div>
 
+            <!-- Zone 3: Action Bar -->
             <div class="progressSection">
                 <button id="packEpubButton" class="expandedButton">__MSG_button_Pack_EPUB__</button>
                 <progress id="fetchProgress" value=" 0" max="1"></progress>
@@ -259,205 +249,73 @@
                 </div>
             </section>
 
+            <!-- Zone 5: Settings (Advanced Options) -->
             <section id="advancedOptionsSection" hidden="true">
-                <table id="AdditionalMetadatatable">
-                    <tr>
-                        <td>__MSG_label_Metadata_URL__</td>
-                        <td><input id="metadataUrlInput" type="text" name="metadataUrlInput" />
-                        <button id="loadMetadataButton">__MSG_button_load_Metadata__</button></td>
-                    </tr>
-                    <tr>
-                        <td><input id="noAdditionalMetadataCheckbox" type="checkbox" name="noAdditionalMetadataCheckbox" checked="true"></td>
-                        <td>__MSG_label_no_additional_metadata__</td>
-                    </tr>
-                    <tr>
-                        <td><input id="autosearchmetadataCheckbox" type="checkbox" name="autosearchmetadataCheckbox" value="true"></td>
-                        <td>__MSG_label_auto_search_metadata__</td>
-                    </tr>
-                    <tr>
-                        <td><input id="lesstagsCheckbox" type="checkbox" name="lesstagsCheckbox" value="true"></td>
-                        <td>__MSG_label_less_tags__</td>
-                    </tr>
-                    <tr>
-                        <td>__MSG_label_Metadata_subject__</td>
-                        <td><textarea rows="2" cols="60" id="subjectInput" type="text" name="subjectInput"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>__MSG_label_Metadata_description__</td>
-                        <td><textarea rows="2" cols="60" id="descriptionInput" type="text" name="descriptionInput"></textarea></td>
-                    </tr>
-                    <tr id="seriesRow">
-                        <td>__MSG_label_Series__</td>
-                        <td><input id="seriesNameInput" type="text" name="titleInput" /></td>
-                    </tr>
-                    <tr id="volumeRow">
-                        <td>__MSG_label_Volume__</td>
-                        <td><input id="seriesIndexInput" type="text" name="titleInput" /></td>
-                    </tr>
-                </table>
-                <table id="advancedOptionsTable">
-                    <tr>
-                        <td><input id="ShowMoreMetadataOptionsCheckbox" type="checkbox" name="ShowMoreMetadataOptionsCheckbox" value="true"></td>
-                        <td>__MSG_label_Show_More_Metadata_Options__</td>
-                    </tr>
-                    <tr>
-                        <td>__MSG_label_Custom_Filename__</td>
-                        <td><input id="CustomFilenameInput" type="text" name="CustomFilenameInput"></td>
-                        <td><button id="CustomFilenameHelpButton">__MSG_button_Help__</button></td>
-                    </tr>
-                    <tr id="translatorRow" hidden="true">
-                        <td>__MSG_label_Translator__</td>
-                        <td><input id="translatorInput" type="text" name="translatorInput" size="80" /></td>
-                    </tr>
-                    <tr>
-                        <td>__MSG_label_Theme__</td>
-                        <td>
-                            <select id="themeColorTag">
-                                <option class="i18n" value="LightMode">__MSG_option_ID_Theme_Always_Light__</option>
-                                <option class="i18n" value="DarkMode">__MSG_option_ID_Theme_Always_Dark__</option>
-                                <option class="i18n" selected="true" value="">__MSG_option_ID_Theme_OS_Selection__</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr id="fileAuthorAsRow" hidden="true">
-                        <td>__MSG_label_File_Author_as__</td>
-                        <td><input id="fileAuthorAsInput" type="text" name="fileAuthorAsInput" size="80"></td>
-                    </tr>
-                    <tr id="styleSheetRow">
-                        <td>__MSG_label_Stylesheet__</td>
-                        <td><textarea id="stylesheetInput" rows="6" cols="60"></textarea></td>
-                    </tr>
-                    <tr id="stylesheetToDefaultRow">
-                        <td></td>
-                        <td><button id="stylesheetToDefaultButton">__MSG_button_Reset_stylesheet__</button></td>
-                    </tr>
-                    <tr id="skipImagesRow">
-                        <td><input id="skipImagesCheckbox" type="checkbox" name="skipImagesCheckbox" value="true"></td>
-                        <td>__MSG_label_Skip_Images__</td>
-                    </tr>
-                    <tr id="includeImageSourceUrlRow">
-                        <td><input id="includeImageSourceUrlCheckboxInput" type="checkbox" name="includeImageSourceUrlCheckboxInput" value="true"></td>
-                        <td>__MSG_label_Include_URL_of_Images__</td>
-                    </tr>
-                    <tr id="highestResolutionImagesRow" hidden="true">
-                        <td><input id="highestResolutionImagesCheckboxInput" type="checkbox" name="highestResolutionImagesCheckboxInput" value="true"></td>
-                        <td>__MSG_label_Fetch_Highest_Resolution_Images__</td>
-                    </tr>
-                    <tr id="compressImagesRow">
-                        <td><input id="compressImagesCheckbox" type="checkbox" name="compressImagesCheckbox" value="false"></td>
-                        <td>__MSG_label_Compress_Images__</td>
-                    </tr>
-                    <tr>
-                    <td></td>
-                    <td>
-                        <table>
-                            <tr>
-                                <td>
-                                    <input id="compressImagesMaxResolutionTag" type="number" name="compressImagesMaxResolutionTag" value="1080" min="100">
-                                </td>
-                                <td>__MSG_label_Compress_Images_Resolution__</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select id="compressImagesType" name="compressImagesType">
-                                        <option value="auto">__MSG_option_value_auto__</option>
-                                        <option value="jpg">jpg</option>
-                                        <option value="webp">webp</option>
-                                        <option value="png">png</option>
-                                    </select>
-                                </td>
-                                <td>__MSG_label_Compress_Images_Format__</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input id="compressImagesJpgCoverCheckbox" type="checkbox" name="compressImagesJpgCover" value="false">
-                                </td>
-                                <td>__MSG_label_Compress_Images_JPG_Cover__</td>
-                            </tr>
-                        </table>
-                    </td>
-                    </tr>
-                    <tr id="unSuperScriptAlternateTranslations" hidden="true">
-                        <td><input id="unSuperScriptCheckboxInput" type="checkbox" name="unSuperScriptCheckboxInput" value="true"></td>
-                        <td>__MSG_label_Remove_Superscript_From_Alternate_Translations__</td>
-                    </tr>
-                    <tr id="useSvgForImages">
-                        <td><input id="useSvgForImagesInput" type="checkbox" name="useSvgForImagesInput" value="true"></td>
-                        <td>__MSG_label_Use_SVG_for_Images__</td>
-                    </tr>
-                    <tr id="removeNextAndPreviousChapterHyperlinks">
-                        <td><input id="removeNextAndPreviousChapterHyperlinksInput" type="checkbox" name="removeNextAndPreviousChapterHyperlinksInput" value="true"></td>
-                        <td>__MSG_label_Remove_Next_and_Previous_Chapter_Hyperlinks__</td>
-                    </tr>
-                    <tr id="advancedOptionsVisibleByDefaultRow">
-                        <td><input id="advancedOptionsVisibleByDefaultCheckbox" type="checkbox" name="advancedOptionsVisibleByDefaultCheckbox" value="true"></td>
-                        <td>__MSG_label_Advanced_Options_Visible_By_Default__</td>
-                    </tr>
-                    <tr>
-                        <td>__MSG_label_Manually_Select_Parser__</td>
-                        <td>
-                            <select id="manuallySelectParserTag" />
-                        </td>
-                    </tr>
-                    <tr id="resetRow">
-                        <td></td>
-                        <td><button id="resetButton">__MSG_button_Reset__</button></td>
-                    </tr>
-                    <tr id="noDownloadPopupFileRow">
-                        <td><input id="noDownloadPopupCheckbox" type="checkbox" name="noDownloadPopupCheckbox" value="false"></td>
-                        <td>__MSG_label_No_Download_Popup__</td>
-                    </tr>
-                    <tr id="sendToKindleRow">
-                        <td><input id="sendToKindleCheckbox" type="checkbox" name="sendToKindleCheckbox" value="false"></td>
-                        <td>__MSG_label_Send_To_Kindle__</td>
-                    </tr>
-                    <tr id="disableShiftClickAlertRow">
-                      <td><input id="disableShiftClickAlertCheckbox" type="checkbox" name="disableShiftClickAlertCheckbox" value="false"></td>
-                      <td>__MSG_label_Disable_Shift_Click_Alert__</td>
-                    </tr>
-                    <tr id="disableImageResErrorRow">
-                      <td><input id="disableImageResErrorCheckbox" type="checkbox" name="disableImageResErrorCheckbox" value="false"></td>
-                      <td>__MSG_label_Disable_Image_Res_Error__</td>
-                    </tr>
-                    <tr id="disableWebpImageFormatErrorRow">
-                      <td><input id="disableWebpImageFormatErrorCheckbox" type="checkbox" name="disableWebpImageFormatErrorCheckbox" value="false"></td>
-                      <td>__MSG_label_Disable_Webp_Image_Format_Error__</td>
-                    </tr>
-                    <tr id="writeErrorHistoryToFileRow">
-                        <td><input id="writeErrorHistoryToFileCheckbox" type="checkbox" name="writeErrorHistoryToFileCheckbox" value="false"></td>
-                        <td>__MSG_label_Write_Error_History_To_File__</td>
-                    </tr>
-                    <tr id="createEpub3FileRow">
-                        <td><input id="createEpub3Checkbox" type="checkbox" name="createEpub3Checkbox" value="false"></td>
-                        <td>__MSG_label_Create_Epub_3__</td>
-                    </tr>
-                    <tr id="useFullTitleAsFileName">
-                        <td><input id="useFullTitleAsFileNameCheckbox" type="checkbox" name="useFullTitleAsFileNameCheckbox" value="false"></td>
-                        <td>__MSG_label_Use_Full_Title_As_File_Name__</td>
-                    </tr>
-                    <tr id="overwriteEpubWhenDuplicateFilename">
-                        <td><input id="overwriteEpubWhenDuplicateFilenameCheckbox" type="checkbox" name="overwriteEpubWhenDuplicateFilenameCheckbox" value="false"></td>
-                        <td>__MSG_label_Overwrite_Epub_When_Filename_Duplicte__</td>
-                    </tr>
-                    <tr id="addInformationPageToEpub">
-                        <td><input id="addInformationPageToEpubCheckbox" type="checkbox" name="addInformationPageToEpubCheckbox" value="true"></td>
-                        <td>__MSG_label_Add_Information_Page_To_Epub__</td>
-                    </tr>
-                    <tr id="chaptersPageInChapterListRow">
-                        <td><input id="chaptersPageInChapterListCheckbox" type="checkbox" name="chaptersPageInChapterListbox" value="false"></td>
-                        <td>__MSG_label_Chapters_Page_In_Chapters_List__</td>
-                    </tr>
-                    <tr id="autoParserSelectIncludesBTSeriesPageRow">
-                        <td><input id="autoParserSelectIncludesBTSeriesPageCheckbox" type="checkbox" name="autoParserSelectIncludesBTSeriesPage" value="false"></td>
-                        <td>__MSG_label_Auto_Parser_Select_Includes_Baka_Tsuki_Series_Page_Parser__</td>
-                        <td><button id="seriesPageHelpButton">__MSG_button_Help__</button></td>
-                    </tr>
-                    <tr id="skipChaptersThatFailFetch">
-                        <td><input id="skipChaptersThatFailFetchCheckbox" type="checkbox" name="skipChaptersThatFailFetchCheckbox" value="false"></td>
-                        <td>__MSG_label_Skip_Chapters_That_Fail_Fetch__</td>
-                    </tr>
-                    <tr id="maxChaptersPerEpub">
-                        <td>
+                <div id="AdditionalMetadatatable" class="settingsGroup">
+                    <details open>
+                        <summary class="i18n">__MSG_label_Metadata_Settings__</summary>
+                        <div class="fieldRow">
+                            <label class="i18n" for="metadataUrlInput">__MSG_label_Metadata_URL__</label>
+                            <input id="metadataUrlInput" type="text" name="metadataUrlInput" />
+                            <button id="loadMetadataButton">__MSG_button_load_Metadata__</button>
+                        </div>
+                        <div class="optionRow">
+                            <label><input id="noAdditionalMetadataCheckbox" type="checkbox" name="noAdditionalMetadataCheckbox" checked="true"> <span class="i18n">__MSG_label_no_additional_metadata__</span></label>
+                        </div>
+                        <div class="optionRow">
+                            <label><input id="autosearchmetadataCheckbox" type="checkbox" name="autosearchmetadataCheckbox" value="true"> <span class="i18n">__MSG_label_auto_search_metadata__</span></label>
+                        </div>
+                        <div class="optionRow">
+                            <label><input id="lesstagsCheckbox" type="checkbox" name="lesstagsCheckbox" value="true"> <span class="i18n">__MSG_label_less_tags__</span></label>
+                        </div>
+                        <div class="fieldRow">
+                            <label class="i18n" for="subjectInput">__MSG_label_Metadata_subject__</label>
+                            <textarea rows="2" cols="60" id="subjectInput" type="text" name="subjectInput"></textarea>
+                        </div>
+                        <div class="fieldRow">
+                            <label class="i18n" for="descriptionInput">__MSG_label_Metadata_description__</label>
+                            <textarea rows="2" cols="60" id="descriptionInput" type="text" name="descriptionInput"></textarea>
+                        </div>
+                        <div id="seriesRow" class="fieldRow">
+                            <label class="i18n" for="seriesNameInput">__MSG_label_Series__</label>
+                            <input id="seriesNameInput" type="text" name="titleInput" />
+                        </div>
+                        <div id="volumeRow" class="fieldRow">
+                            <label class="i18n" for="seriesIndexInput">__MSG_label_Volume__</label>
+                            <input id="seriesIndexInput" type="text" name="titleInput" />
+                        </div>
+                        <div id="translatorRow" class="fieldRow" hidden="true">
+                            <label class="i18n" for="translatorInput">__MSG_label_Translator__</label>
+                            <input id="translatorInput" type="text" name="translatorInput" size="80" />
+                        </div>
+                        <div id="fileAuthorAsRow" class="fieldRow" hidden="true">
+                            <label class="i18n" for="fileAuthorAsInput">__MSG_label_File_Author_as__</label>
+                            <input id="fileAuthorAsInput" type="text" name="fileAuthorAsInput" size="80">
+                        </div>
+                    </details>
+                </div>
+
+                <div id="advancedOptionsTable" class="settingsGroups">
+                    <div class="optionRow">
+                        <label><input id="ShowMoreMetadataOptionsCheckbox" type="checkbox" name="ShowMoreMetadataOptionsCheckbox" value="true"> <span class="i18n">__MSG_label_Show_More_Metadata_Options__</span></label>
+                    </div>
+
+                    <!-- Output -->
+                    <details>
+                        <summary class="i18n">__MSG_label_Output_Settings__</summary>
+                        <div class="fieldRow">
+                            <label class="i18n" for="CustomFilenameInput">__MSG_label_Custom_Filename__</label>
+                            <input id="CustomFilenameInput" type="text" name="CustomFilenameInput">
+                            <button id="CustomFilenameHelpButton">__MSG_button_Help__</button>
+                        </div>
+                        <div id="useFullTitleAsFileName" class="optionRow">
+                            <label><input id="useFullTitleAsFileNameCheckbox" type="checkbox" name="useFullTitleAsFileNameCheckbox" value="false"> <span class="i18n">__MSG_label_Use_Full_Title_As_File_Name__</span></label>
+                        </div>
+                        <div id="overwriteEpubWhenDuplicateFilename" class="optionRow">
+                            <label><input id="overwriteEpubWhenDuplicateFilenameCheckbox" type="checkbox" name="overwriteEpubWhenDuplicateFilenameCheckbox" value="false"> <span class="i18n">__MSG_label_Overwrite_Epub_When_Filename_Duplicte__</span></label>
+                        </div>
+                        <div id="maxChaptersPerEpub" class="fieldRow">
+                            <label class="i18n" for="maxChaptersPerEpubTag">__MSG_label_Max_chapters_per_epub__</label>
                             <select id="maxChaptersPerEpubTag">
                                 <option value="100">100</option>
                                 <option value="200">200</option>
@@ -467,43 +325,157 @@
                                 <option value="5,000">5,000</option>
                                 <option value="10,000" selected>10,000</option>
                             </select>
-                        </td>
-                        <td>__MSG_label_Max_chapters_per_epub__</td>
-                    </tr>
-                    <tr id="manualDelayPerChapter">
-                        <td>
+                        </div>
+                        <div id="createEpub3FileRow" class="optionRow">
+                            <label><input id="createEpub3Checkbox" type="checkbox" name="createEpub3Checkbox" value="false"> <span class="i18n">__MSG_label_Create_Epub_3__</span></label>
+                        </div>
+                        <div id="addInformationPageToEpub" class="optionRow">
+                            <label><input id="addInformationPageToEpubCheckbox" type="checkbox" name="addInformationPageToEpubCheckbox" value="true"> <span class="i18n">__MSG_label_Add_Information_Page_To_Epub__</span></label>
+                        </div>
+                        <div id="noDownloadPopupFileRow" class="optionRow">
+                            <label><input id="noDownloadPopupCheckbox" type="checkbox" name="noDownloadPopupCheckbox" value="false"> <span class="i18n">__MSG_label_No_Download_Popup__</span></label>
+                        </div>
+                        <div id="sendToKindleRow" class="optionRow">
+                            <label><input id="sendToKindleCheckbox" type="checkbox" name="sendToKindleCheckbox" value="false"> <span class="i18n">__MSG_label_Send_To_Kindle__</span></label>
+                        </div>
+                    </details>
+
+                    <!-- Images -->
+                    <details>
+                        <summary class="i18n">__MSG_label_Images_Settings__</summary>
+                        <div id="skipImagesRow" class="optionRow">
+                            <label><input id="skipImagesCheckbox" type="checkbox" name="skipImagesCheckbox" value="true"> <span class="i18n">__MSG_label_Skip_Images__</span></label>
+                        </div>
+                        <div id="includeImageSourceUrlRow" class="optionRow">
+                            <label><input id="includeImageSourceUrlCheckboxInput" type="checkbox" name="includeImageSourceUrlCheckboxInput" value="true"> <span class="i18n">__MSG_label_Include_URL_of_Images__</span></label>
+                        </div>
+                        <div id="highestResolutionImagesRow" class="optionRow" hidden="true">
+                            <label><input id="highestResolutionImagesCheckboxInput" type="checkbox" name="highestResolutionImagesCheckboxInput" value="true"> <span class="i18n">__MSG_label_Fetch_Highest_Resolution_Images__</span></label>
+                        </div>
+                        <div id="compressImagesRow" class="optionRow">
+                            <label><input id="compressImagesCheckbox" type="checkbox" name="compressImagesCheckbox" value="false"> <span class="i18n">__MSG_label_Compress_Images__</span></label>
+                        </div>
+                        <div class="subOptions">
+                            <div class="fieldRow">
+                                <input id="compressImagesMaxResolutionTag" type="number" name="compressImagesMaxResolutionTag" value="1080" min="100">
+                                <span class="i18n">__MSG_label_Compress_Images_Resolution__</span>
+                            </div>
+                            <div class="fieldRow">
+                                <select id="compressImagesType" name="compressImagesType">
+                                    <option value="auto">__MSG_option_value_auto__</option>
+                                    <option value="jpg">jpg</option>
+                                    <option value="webp">webp</option>
+                                    <option value="png">png</option>
+                                </select>
+                                <span class="i18n">__MSG_label_Compress_Images_Format__</span>
+                            </div>
+                            <div class="optionRow">
+                                <label><input id="compressImagesJpgCoverCheckbox" type="checkbox" name="compressImagesJpgCover" value="false"> <span class="i18n">__MSG_label_Compress_Images_JPG_Cover__</span></label>
+                            </div>
+                        </div>
+                        <div id="useSvgForImages" class="optionRow">
+                            <label><input id="useSvgForImagesInput" type="checkbox" name="useSvgForImagesInput" value="true"> <span class="i18n">__MSG_label_Use_SVG_for_Images__</span></label>
+                        </div>
+                    </details>
+
+                    <!-- Content -->
+                    <details>
+                        <summary class="i18n">__MSG_label_Content_Settings__</summary>
+                        <div id="styleSheetRow" class="fieldRow">
+                            <label class="i18n" for="stylesheetInput">__MSG_label_Stylesheet__</label>
+                            <textarea id="stylesheetInput" rows="6" cols="60"></textarea>
+                        </div>
+                        <div id="stylesheetToDefaultRow" class="fieldRow">
+                            <button id="stylesheetToDefaultButton">__MSG_button_Reset_stylesheet__</button>
+                        </div>
+                        <div id="removeNextAndPreviousChapterHyperlinks" class="optionRow">
+                            <label><input id="removeNextAndPreviousChapterHyperlinksInput" type="checkbox" name="removeNextAndPreviousChapterHyperlinksInput" value="true"> <span class="i18n">__MSG_label_Remove_Next_and_Previous_Chapter_Hyperlinks__</span></label>
+                        </div>
+                        <div id="unSuperScriptAlternateTranslations" class="optionRow" hidden="true">
+                            <label><input id="unSuperScriptCheckboxInput" type="checkbox" name="unSuperScriptCheckboxInput" value="true"> <span class="i18n">__MSG_label_Remove_Superscript_From_Alternate_Translations__</span></label>
+                        </div>
+                        <div id="chaptersPageInChapterListRow" class="optionRow">
+                            <label><input id="chaptersPageInChapterListCheckbox" type="checkbox" name="chaptersPageInChapterListbox" value="false"> <span class="i18n">__MSG_label_Chapters_Page_In_Chapters_List__</span></label>
+                        </div>
+                        <div id="skipChaptersThatFailFetch" class="optionRow">
+                            <label><input id="skipChaptersThatFailFetchCheckbox" type="checkbox" name="skipChaptersThatFailFetchCheckbox" value="false"> <span class="i18n">__MSG_label_Skip_Chapters_That_Fail_Fetch__</span></label>
+                        </div>
+                        <div id="autoParserSelectIncludesBTSeriesPageRow" class="optionRow">
+                            <label><input id="autoParserSelectIncludesBTSeriesPageCheckbox" type="checkbox" name="autoParserSelectIncludesBTSeriesPage" value="false"> <span class="i18n">__MSG_label_Auto_Parser_Select_Includes_Baka_Tsuki_Series_Page_Parser__</span></label>
+                            <button id="seriesPageHelpButton">__MSG_button_Help__</button>
+                        </div>
+                    </details>
+
+                    <!-- Behavior -->
+                    <details>
+                        <summary class="i18n">__MSG_label_Behavior_Settings__</summary>
+                        <div id="manualDelayPerChapter" class="fieldRow">
+                            <label class="i18n" for="manualDelayPerChapterTag">__MSG_label_Manual_Delay_Per_Chapter__</label>
                             <input id="manualDelayPerChapterTag" type="number" name="manualDelayPerChapterTag">
-                        </td>
-                        <td>__MSG_label_Manual_Delay_Per_Chapter__</td>
-                    </tr>
-                    <tr id="overrideParserDelayWithManualDelay">
-                        <td><input id="overrideMinimumDelayCheckbox" type="checkbox" name="overrideMinimumDelayCheckbox" value="false"></td>
-                        <td>__MSG_label_Override_Default_Minimum_Delay__</td>
-                    </tr>
-                    <tr id="IncludeInReadingListRow">
-                        <td><input id="includeInReadingListCheckbox" type="checkbox" name="includeInReadingListCheckbox" value="false"></td>
-                        <td>__MSG_label_Include_in_Reading_List__</td>
-                    </tr>
-                    <tr id="viewReadingListRow">
-                        <td></td>
-                        <td><button id="viewReadingListButton">__MSG_button_View_Reading_List__</button></td>
-                    </tr>
-                    <tr id="developerStuffRow">
-                        <td>__MSG_label_Developer_Stuff__</td>
-                        <td>
+                        </div>
+                        <div id="overrideParserDelayWithManualDelay" class="optionRow">
+                            <label><input id="overrideMinimumDelayCheckbox" type="checkbox" name="overrideMinimumDelayCheckbox" value="false"> <span class="i18n">__MSG_label_Override_Default_Minimum_Delay__</span></label>
+                        </div>
+                        <div id="IncludeInReadingListRow" class="optionRow">
+                            <label><input id="includeInReadingListCheckbox" type="checkbox" name="includeInReadingListCheckbox" value="false"> <span class="i18n">__MSG_label_Include_in_Reading_List__</span></label>
+                        </div>
+                        <div id="viewReadingListRow" class="fieldRow">
+                            <button id="viewReadingListButton">__MSG_button_View_Reading_List__</button>
+                        </div>
+                        <div id="disableShiftClickAlertRow" class="optionRow">
+                            <label><input id="disableShiftClickAlertCheckbox" type="checkbox" name="disableShiftClickAlertCheckbox" value="false"> <span class="i18n">__MSG_label_Disable_Shift_Click_Alert__</span></label>
+                        </div>
+                        <div id="disableImageResErrorRow" class="optionRow">
+                            <label><input id="disableImageResErrorCheckbox" type="checkbox" name="disableImageResErrorCheckbox" value="false"> <span class="i18n">__MSG_label_Disable_Image_Res_Error__</span></label>
+                        </div>
+                        <div id="disableWebpImageFormatErrorRow" class="optionRow">
+                            <label><input id="disableWebpImageFormatErrorCheckbox" type="checkbox" name="disableWebpImageFormatErrorCheckbox" value="false"> <span class="i18n">__MSG_label_Disable_Webp_Image_Format_Error__</span></label>
+                        </div>
+                    </details>
+
+                    <!-- Appearance -->
+                    <details>
+                        <summary class="i18n">__MSG_label_Appearance_Settings__</summary>
+                        <div class="fieldRow">
+                            <label class="i18n" for="themeColorTag">__MSG_label_Theme__</label>
+                            <select id="themeColorTag">
+                                <option class="i18n" value="LightMode">__MSG_option_ID_Theme_Always_Light__</option>
+                                <option class="i18n" value="DarkMode">__MSG_option_ID_Theme_Always_Dark__</option>
+                                <option class="i18n" selected="true" value="">__MSG_option_ID_Theme_OS_Selection__</option>
+                            </select>
+                        </div>
+                        <div id="advancedOptionsVisibleByDefaultRow" class="optionRow">
+                            <label><input id="advancedOptionsVisibleByDefaultCheckbox" type="checkbox" name="advancedOptionsVisibleByDefaultCheckbox" value="true"> <span class="i18n">__MSG_label_Advanced_Options_Visible_By_Default__</span></label>
+                        </div>
+                        <div class="fieldRow">
+                            <label class="i18n" for="manuallySelectParserTag">__MSG_label_Manually_Select_Parser__</label>
+                            <select id="manuallySelectParserTag" />
+                        </div>
+                    </details>
+
+                    <!-- Developer -->
+                    <details>
+                        <summary class="i18n">__MSG_label_Developer_Settings__</summary>
+                        <div id="developerStuffRow" class="fieldRow">
+                            <label class="i18n" for="diagnosticsCheckBoxInput">__MSG_label_Developer_Stuff__</label>
                             <input id="diagnosticsCheckBoxInput" type="checkbox" name="diagnosticsCheckBoxInput" value="false">
                             <button id="reloadButton" hidden="true">__MSG_button_Reload__</button>
-                        </td>
-                    </tr>
-                    <tr id="writeOptionsRow">
-                        <td></td>
-                        <td><button id="writeOptionsButton">__MSG_button_Write_Options_to_file__</button></td>
-                    </tr>
-                    <tr id="readOptionsRow">
-                        <td>__MSG_label_Read_Options_from_file__</td>
-                        <td><input id="readOptionsInput" type="file" name="readOptionsInput"></td>
-                    </tr>
-                </table>
+                        </div>
+                        <div id="writeOptionsRow" class="fieldRow">
+                            <button id="writeOptionsButton">__MSG_button_Write_Options_to_file__</button>
+                        </div>
+                        <div id="readOptionsRow" class="fieldRow">
+                            <label class="i18n" for="readOptionsInput">__MSG_label_Read_Options_from_file__</label>
+                            <input id="readOptionsInput" type="file" name="readOptionsInput">
+                        </div>
+                        <div id="writeErrorHistoryToFileRow" class="optionRow">
+                            <label><input id="writeErrorHistoryToFileCheckbox" type="checkbox" name="writeErrorHistoryToFileCheckbox" value="false"> <span class="i18n">__MSG_label_Write_Error_History_To_File__</span></label>
+                        </div>
+                        <div id="resetRow" class="fieldRow">
+                            <button id="resetButton">__MSG_button_Reset__</button>
+                        </div>
+                    </details>
+                </div>
             </section>
         </section>
         <section id="testSection"></section>
@@ -524,39 +496,34 @@
         </section>
         <section id="outputSection" class="minWidth">
             <div id="chapterSelectControlsDiv">
-                <table id="rangeSelectTable">
-                    <tr id="rangeStartChapterRow">
-                        <td>__MSG_label_Range_Start_Chapter__</td>
-                        <td><input id="chapterSearchStart" type="text" placeholder="Go to ch. #" size="10"> <select id="selectRangeStartChapter" /></td>
-                        <td><input id="showChapterUrlsCheckbox" type="checkbox" name="showChapterUrlsCheckbox" value="false"></td>
-                        <td>__MSG_label_Show_Chapter_Urls__</td>
-                    </tr>
-                    <tr id="rangeEndChapterRow">
-                        <td>__MSG_label_Range_End_Chapter__</td>
-                        <td><input id="chapterSearchEnd" type="text" placeholder="Go to ch. #" size="10"> <select id="selectRangeEndChapter" /></td>
-                        <td colspan="2">&nbsp; <button id="viewFiltersButton">__MSG_button_View_Filters__</button></td>
-                    </tr>
-                    <tr id="volumeMappingRow">
-                        <td>__MSG_label_Import_Volumes__</td>
-                        <td colspan="3">
+                <div id="rangeSelectTable" class="rangeSelectGrid">
+                    <div id="rangeStartChapterRow" class="rangeRow">
+                        <span class="i18n">__MSG_label_Range_Start_Chapter__</span>
+                        <span><input id="chapterSearchStart" type="text" placeholder="Go to ch. #" size="10"> <select id="selectRangeStartChapter" /></span>
+                        <span><input id="showChapterUrlsCheckbox" type="checkbox" name="showChapterUrlsCheckbox" value="false"> <span class="i18n">__MSG_label_Show_Chapter_Urls__</span></span>
+                    </div>
+                    <div id="rangeEndChapterRow" class="rangeRow">
+                        <span class="i18n">__MSG_label_Range_End_Chapter__</span>
+                        <span><input id="chapterSearchEnd" type="text" placeholder="Go to ch. #" size="10"> <select id="selectRangeEndChapter" /></span>
+                        <span>&nbsp; <button id="viewFiltersButton">__MSG_button_View_Filters__</button></span>
+                    </div>
+                    <div id="volumeMappingRow" class="rangeRow">
+                        <span class="i18n">__MSG_label_Import_Volumes__</span>
+                        <span class="rangeRowWide">
                             <input id="volumeMappingUrl" type="text" placeholder="Paste webnovel.com URL" class="volumeMappingInput">
                             <button id="volumeMappingButton">__MSG_button_Import_Volumes__</button>
                             <span id="volumeMappingStatus"></span>
-                        </td>
-                    </tr>
-                    <tr id="rangeChapterCountRow">
-                        <td>__MSG_label_Chapter_Count__</td>
-                        <td colspan="3">
-                            <table width="100%">
-                                <tr>
-                                    <td width="30%"><span id="spanChapterCount" />0</td>
-                                    <td width="50%"><span id="spanParserName" /></td>
-                                    <td width="20%"><span id="spanDelayMs" />0 ms</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
+                        </span>
+                    </div>
+                    <div id="rangeChapterCountRow" class="rangeRow">
+                        <span class="i18n">__MSG_label_Chapter_Count__</span>
+                        <span class="rangeRowWide chapterCountInfo">
+                            <span id="spanChapterCount">0</span>
+                            <span id="spanParserName"></span>
+                            <span id="spanDelayMs">0 ms</span>
+                        </span>
+                    </div>
+                </div>
                 <div>
                     <button id="selectAllUrlsButton">__MSG_button_Select_All__</button>
                     <button id="unselectAllUrlsButton">__MSG_button_Unselect_All__</button>
