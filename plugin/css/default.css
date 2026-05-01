@@ -1,103 +1,128 @@
 /* ============================================================
-   WebToEpub Design System
-   OKLCH color tokens, 4pt spacing scale, system fonts
-   Base theme: light (warm). Dark tokens in autoDark/alwaysDark.
+   WebToEpub -- Bindery Design System
+   Literary aesthetic with warm paper tones, Spectral + Geist
+   Base theme: light (warm). Dark tokens via data-theme or media.
    ============================================================ */
+
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
 
 /* --- Design Tokens --- */
 :root {
-    /* Surface scale: warm light */
-    --surface-0: oklch(97% 0.005 65);
-    --surface-1: oklch(94% 0.006 65);
-    --surface-2: oklch(90% 0.008 65);
-    --surface-3: oklch(85% 0.01 65);
+    /* Surface / Paper */
+    --paper:        #f3ecdc;
+    --paper-deep:   #ebe2cd;
+    --ink:          #1a1411;
+    --ink-soft:     #4a3f36;
+    --ink-mute:     #8a7a6a;
+    --rule:         #c9bda3;
 
-    /* Primary accent: warm amber */
-    --primary: oklch(55% 0.16 75);
-    --primary-hover: oklch(50% 0.17 75);
-    --primary-active: oklch(45% 0.15 75);
-    --primary-subtle: oklch(92% 0.04 75);
+    /* Accent: Rust */
+    --rust:         #a8451a;
+    --rust-deep:    #7d3010;
+    --rust-tint:    #f0d8c5;
 
-    /* Text hierarchy */
-    --text-1: oklch(18% 0.01 65);
-    --text-2: oklch(40% 0.008 65);
-    --text-3: oklch(60% 0.006 65);
+    /* Secondary accents */
+    --moss:         #4a5d3a;
+    --signal-red:   #b34028;
 
-    /* Borders */
-    --border: oklch(82% 0.008 65);
-    --border-subtle: oklch(88% 0.006 65);
+    /* Semantic mapping to old token names for compatibility */
+    --surface-0:    var(--paper);
+    --surface-1:    var(--paper-deep);
+    --surface-2:    #e2d8c4;
+    --surface-3:    #d4c8af;
+    --primary:      var(--rust);
+    --primary-hover: var(--rust-deep);
+    --primary-active: #5f2008;
+    --primary-subtle: var(--rust-tint);
+    --text-1:       var(--ink);
+    --text-2:       var(--ink-soft);
+    --text-3:       var(--ink-mute);
+    --border:       var(--rule);
+    --border-subtle: #d8ceb8;
+    --error:        var(--signal-red);
+    --warning:      #b38020;
+    --success:      var(--moss);
+    --info:         #4a6a8a;
+    --on-primary:   #faf6ee;
 
-    /* Semantic */
-    --success: oklch(52% 0.14 155);
-    --error: oklch(55% 0.2 25);
-    --warning: oklch(62% 0.16 85);
-    --info: oklch(52% 0.1 240);
+    /* Volume header */
+    --volume-bg:    #f0e8d4;
+    --volume-border: var(--rule);
+    --volume-text:  var(--ink-soft);
+    --volume-hover-bg: #e8dfc8;
 
-    /* Volume header: jewel purple */
-    --volume-bg: oklch(92% 0.03 290);
-    --volume-border: oklch(82% 0.04 290);
-    --volume-text: oklch(30% 0.06 290);
-    --volume-hover-bg: oklch(88% 0.04 290);
-
-    /* Button text on primary */
-    --on-primary: oklch(98% 0.005 75);
-
-    /* Scroll track */
-    --scroll-track: var(--surface-1);
-    --scroll-thumb: var(--surface-3);
+    /* Scroll */
+    --scroll-track: var(--paper-deep);
+    --scroll-thumb: var(--rule);
 
     /* Selection */
-    --selection-bg: oklch(55% 0.16 75 / 0.2);
+    --selection-bg: rgba(168,69,26,0.18);
 
-    /* Spacing: 4pt base */
-    --space-xs: 4px;
-    --space-sm: 8px;
-    --space-md: 12px;
-    --space-lg: 16px;
-    --space-xl: 24px;
+    /* Shadows */
+    --shadow-card:  0 0 0 1px rgba(26,20,17,0.08), 0 1px 2px rgba(26,20,17,0.04);
+    --book-shadow:  0 1px 1px rgba(26,20,17,0.1),
+                    0 4px 6px -2px rgba(26,20,17,0.12),
+                    0 18px 32px -10px rgba(26,20,17,0.32),
+                    inset -1px 0 0 rgba(0,0,0,0.18),
+                    inset 1px 0 0 rgba(255,255,255,0.05);
+
+    /* Typography */
+    --font-serif:   'Spectral', 'Georgia', serif;
+    --font-sans:    'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --font-mono:    'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
+    --font-family:  var(--font-sans);
+
+    /* Sizes */
+    --text-xs:   0.6875rem;   /* 11px */
+    --text-sm:   0.8125rem;   /* 13px */
+    --text-base: 0.9375rem;   /* 15px */
+    --text-lg:   1.125rem;    /* 18px */
+    --text-xl:   1.5rem;      /* 24px */
+    --leading-tight:   1.3;
+    --leading-normal:  1.5;
+    --leading-relaxed: 1.6;
+
+    /* Spacing */
+    --space-xs:  4px;
+    --space-sm:  8px;
+    --space-md:  12px;
+    --space-lg:  16px;
+    --space-xl:  24px;
     --space-2xl: 32px;
     --space-3xl: 48px;
 
-    /* Typography */
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
-    --text-xs: 0.75rem;
-    --text-sm: 0.875rem;
-    --text-base: 1rem;
-    --text-lg: 1.25rem;
-    --text-xl: 1.5rem;
-    --leading-tight: 1.3;
-    --leading-normal: 1.5;
-    --leading-relaxed: 1.6;
-
     /* Radius */
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
+    --radius-sm: 3px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
 
     /* Motion */
     --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-    --duration-fast: 150ms;
+    --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast:   150ms;
     --duration-normal: 250ms;
-    --duration-slow: 400ms;
+    --duration-slow:   400ms;
 
     /* Z-index scale */
-    --z-base: 0;
-    --z-sticky: 100;
+    --z-base:    0;
+    --z-sticky:  100;
     --z-sidebar: 200;
     --z-tooltip: 300;
+    --z-modal:   10000;
 }
 
 @media (prefers-reduced-motion: reduce) {
     :root {
-        --duration-fast: 0.01ms;
+        --duration-fast:   0.01ms;
         --duration-normal: 0.01ms;
-        --duration-slow: 0.01ms;
+        --duration-slow:   0.01ms;
     }
 }
 
-/* --- Reset & Base --- */
+/* ============================================================
+   1. Reset & Base
+   ============================================================ */
 *,
 *::before,
 *::after {
@@ -106,132 +131,177 @@
 
 body {
     margin: 0;
-    font-family: var(--font-family);
-    font-size: var(--text-sm);
-    line-height: var(--leading-relaxed);
-    color: var(--text-1);
-    background: var(--surface-0);
+    min-width: 760px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink);
+    background:
+        radial-gradient(ellipse at 20% 0%, rgba(240,216,197,0.45) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 100%, rgba(201,189,163,0.3) 0%, transparent 60%),
+        var(--paper);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Paper texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
 }
 
 [hidden] {
     display: none !important;
 }
 
-/* --- Typography --- */
+::selection {
+    background: var(--selection-bg);
+    color: var(--ink);
+}
+
+/* ============================================================
+   2. Typography
+   ============================================================ */
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
+    font-family: var(--font-serif);
     line-height: var(--leading-tight);
-    color: var(--text-1);
+    color: var(--ink);
     text-wrap: balance;
 }
 
 p {
     margin: 0;
-    color: var(--text-2);
+    color: var(--ink-soft);
 }
 
 a {
-    color: var(--primary);
+    color: var(--rust);
     text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out-quart);
 }
 a:hover {
-    color: var(--primary-hover);
+    color: var(--rust-deep);
 }
 
-/* --- Layout: App Shell --- */
+/* ============================================================
+   3. Container
+   ============================================================ */
 .container {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    max-width: 780px;
+    max-width: 760px;
     margin: 0 auto;
-    padding: var(--space-xl);
+    padding: var(--space-xl) 28px;
     gap: var(--space-xl);
     position: relative;
+    z-index: 1;
 }
 
 section.minWidth {
     min-width: 0;
 }
 
-/* --- Form Controls --- */
-input[type=text],
-input[type=url],
-input[type=number],
-textarea,
-select,
-#manualDelayPerChapterTag {
-    font-family: var(--font-family);
-    font-size: var(--text-sm);
-    padding: var(--space-sm) var(--space-md);
-    background: var(--surface-0);
-    color: var(--text-1);
-    border: 1px solid var(--border);
+/* ============================================================
+   4. Source Bar (brandRow, urlRow)
+   ============================================================ */
+.brandRow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
+}
+
+.brandMark {
+    width: 28px;
+    height: 28px;
+    background: var(--ink);
+    border-radius: var(--radius-sm);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.brandMark::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 6px;
+    height: 6px;
+    background: var(--rust);
+    border-radius: 50%;
+}
+
+.wordmark {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+}
+
+.tagline {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.parserChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--rust);
+    background: var(--rust-tint);
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.urlRow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.urlField {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 7px 10px;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
     outline: none;
     transition: border-color var(--duration-fast) var(--ease-out-quart);
-    max-width: 420px;
-    min-width: 280px;
 }
 
-input[type=text]:focus,
-input[type=url]:focus,
-input[type=number]:focus,
-textarea:focus,
-select:focus {
-    border-color: var(--primary);
+.urlField:focus {
+    border-color: var(--rust);
 }
 
-input[type=text]::placeholder,
-input[type=url]::placeholder {
-    color: var(--text-3);
-}
-
-input[type=checkbox] {
-    accent-color: var(--primary);
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-}
-
-input[type=file] {
-    font-family: var(--font-family);
-    font-size: var(--text-sm);
-    color: var(--text-2);
-}
-
-textarea.allSpace {
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    min-width: 0;
-}
-
-#advancedOptionsSection textarea,
-#advancedOptionsSection select,
-#manualDelayPerChapterTag {
-    min-width: 0 !important;
-}
-
-#compressImagesMaxResolutionTag,
-#manualDelayPerChapterTag {
-    width: 61px;
-}
-
-select {
-    cursor: pointer;
-}
-
-/* --- Buttons --- */
-button {
-    font-family: var(--font-family);
-    font-size: var(--text-sm);
-    padding: var(--space-sm) var(--space-lg);
-    background: var(--surface-1);
-    color: var(--text-1);
-    border: 1px solid var(--border);
+/* ============================================================
+   5. Buttons -- .btn system with variants
+   ============================================================ */
+button,
+.btn {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    background: var(--paper-deep);
+    color: var(--ink);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
     cursor: pointer;
     display: inline-flex;
@@ -239,53 +309,109 @@ button {
     justify-content: center;
     gap: var(--space-sm);
     white-space: nowrap;
+    line-height: 1;
+    text-decoration: none;
     transition:
         background var(--duration-fast) var(--ease-out-quart),
         border-color var(--duration-fast) var(--ease-out-quart),
-        color var(--duration-fast) var(--ease-out-quart);
-    text-decoration: none;
-    line-height: 1;
+        color var(--duration-fast) var(--ease-out-quart),
+        box-shadow var(--duration-fast) var(--ease-out-quart);
 }
 
-button:hover {
+button:hover,
+.btn:hover {
     background: var(--surface-2);
-    border-color: var(--border);
-    color: var(--text-1);
+    border-color: var(--rule);
+    color: var(--ink);
 }
 
-button:active {
+button:active,
+.btn:active {
     background: var(--surface-3);
 }
 
-button:focus-visible {
-    outline: 2px solid var(--primary);
+button:focus-visible,
+.btn:focus-visible {
+    outline: 2px solid var(--rust);
     outline-offset: 2px;
 }
 
-button:disabled {
+button:disabled,
+.btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
 }
 
+/* Bare variant: no border, no bg */
+.btn.bare {
+    background: transparent;
+    border-color: transparent;
+    padding: 4px 8px;
+}
+.btn.bare:hover {
+    background: rgba(26,20,17,0.05);
+}
+
+/* Ghost variant: outlined only */
+.btn.ghost {
+    background: transparent;
+}
+.btn.ghost:hover {
+    background: var(--paper-deep);
+}
+
+/* Small */
+.btn.sm,
+button.sm {
+    font-size: 11px;
+    padding: 4px 10px;
+}
+
+/* Large */
+.btn.lg,
+button.lg {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 22px;
+}
+
+/* Primary (filled rust) */
+.btn.primary {
+    background: var(--rust);
+    color: var(--on-primary);
+    border-color: var(--rust);
+    font-weight: 600;
+}
+.btn.primary:hover {
+    background: var(--rust-deep);
+    border-color: var(--rust-deep);
+    color: var(--on-primary);
+}
+.btn.primary:active {
+    background: var(--primary-active);
+    border-color: var(--primary-active);
+}
+
+/* Expanded button (compat) */
 .expandedButton {
-    padding: var(--space-sm) var(--space-xl);
+    padding: 6px 20px;
     font-weight: 500;
 }
 
-/* Primary action button (Pack EPUB) */
+/* Pack EPUB primary action */
 #packEpubButton {
-    background: var(--primary);
+    background: var(--rust);
     color: var(--on-primary);
-    border-color: var(--primary);
+    border-color: var(--rust);
     font-weight: 600;
-    padding: var(--space-md) var(--space-2xl);
-    font-size: var(--text-base);
+    padding: 10px 28px;
+    font-size: 14px;
     border-radius: var(--radius-lg);
 }
 
 #packEpubButton:hover {
-    background: var(--primary-hover);
-    border-color: var(--primary-hover);
+    background: var(--rust-deep);
+    border-color: var(--rust-deep);
     color: var(--on-primary);
 }
 
@@ -300,7 +426,424 @@ button:disabled {
     font-weight: 500;
 }
 
-/* --- Tables --- */
+/* ============================================================
+   6. Section Heads
+   ============================================================ */
+.sectionHead {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: var(--space-lg);
+}
+
+.sectionHead .num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--rust);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.sectionHead .title {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.sectionHead .subtitle {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* ============================================================
+   7. Book Section -- 2-col grid, form fields
+   ============================================================ */
+.bookSection {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: var(--space-lg);
+    align-items: start;
+}
+
+.formGrid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.field {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: var(--space-sm);
+    align-items: center;
+    padding: 3px 0;
+}
+
+.field > label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+}
+
+/* ============================================================
+   8. Form Controls (inputs, selects, textareas)
+   ============================================================ */
+input[type=text],
+input[type=url],
+input[type=number],
+textarea,
+select,
+.input,
+#manualDelayPerChapterTag {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    padding: 6px 10px;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--duration-fast) var(--ease-out-quart),
+                box-shadow var(--duration-fast) var(--ease-out-quart);
+    max-width: 420px;
+    min-width: 200px;
+}
+
+input[type=text]:focus,
+input[type=url]:focus,
+input[type=number]:focus,
+textarea:focus,
+select:focus,
+.input:focus {
+    border-color: var(--rust);
+    box-shadow: 0 0 0 2px rgba(168,69,26,0.12);
+}
+
+input[type=text]::placeholder,
+input[type=url]::placeholder,
+.input::placeholder {
+    color: var(--ink-mute);
+}
+
+/* Mono variant */
+.input.mono,
+input.mono {
+    font-family: var(--font-mono);
+    font-size: 12px;
+}
+
+/* Select caret */
+.select,
+select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a7a6a'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+}
+
+input[type=checkbox] {
+    accent-color: var(--rust);
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+}
+
+input[type=file] {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-soft);
+}
+
+textarea.allSpace {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    max-width: none;
+    min-width: 0;
+}
+
+.fullWidth {
+    width: 100%;
+    max-width: none;
+}
+
+#advancedOptionsSection textarea,
+#advancedOptionsSection select,
+#manualDelayPerChapterTag {
+    min-width: 0 !important;
+}
+
+#compressImagesMaxResolutionTag,
+#manualDelayPerChapterTag {
+    width: 61px;
+}
+
+/* ============================================================
+   9. Custom Checkbox (.checkbox div)
+   ============================================================ */
+.checkbox {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background var(--duration-fast) var(--ease-out-quart),
+                border-color var(--duration-fast) var(--ease-out-quart);
+}
+
+.checkbox.on,
+.checkbox[data-checked="true"] {
+    background: var(--rust);
+    border-color: var(--rust);
+}
+
+.checkbox.on::after,
+.checkbox[data-checked="true"]::after {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 5l2.5 2.5L8 3' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+/* Check row pattern for settings */
+.checkRow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 3px 0;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--ink-soft);
+}
+
+.checkRow:hover {
+    color: var(--ink);
+}
+
+/* ============================================================
+   10. Cover Preview -- 3D book
+   ============================================================ */
+.coverWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.coverStage {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+.bookFrame {
+    perspective: 800px;
+}
+
+.book {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateY(-6deg);
+    border-radius: 2px;
+    box-shadow: var(--book-shadow);
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+}
+
+.book:hover {
+    transform: rotateY(-3deg);
+}
+
+/* Spine edge */
+.book::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.05));
+    border-radius: 2px 0 0 2px;
+    transform: translateZ(-1px);
+}
+
+/* Page edges */
+.book::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 2px;
+    bottom: 2px;
+    width: 6px;
+    background: repeating-linear-gradient(
+        to bottom,
+        var(--paper-deep) 0px,
+        var(--paper) 1px,
+        var(--paper-deep) 2px
+    );
+    border-radius: 0 1px 1px 0;
+    box-shadow: 1px 0 2px rgba(26,20,17,0.1);
+}
+
+.book img {
+    display: block;
+    max-height: 280px;
+    max-width: 200px;
+    border-radius: 2px;
+    object-fit: cover;
+}
+
+.placeholder {
+    width: 160px;
+    height: 220px;
+    background: var(--paper-deep);
+    border: 1px dashed var(--rule);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-mute);
+    font-family: var(--font-serif);
+    font-size: 13px;
+    font-style: italic;
+}
+
+.shelfShadow {
+    width: 80%;
+    height: 6px;
+    background: radial-gradient(ellipse at center, rgba(26,20,17,0.18) 0%, transparent 70%);
+    margin-top: -2px;
+}
+
+/* Cover image in production table layout */
+#coverUrlSection img,
+#sampleCoverImg {
+    display: block;
+    max-height: 200px;
+    max-width: 150px;
+    border-radius: 2px;
+    box-shadow: var(--book-shadow);
+    object-fit: cover;
+}
+
+/* ============================================================
+   11. Action Bar & Progress
+   ============================================================ */
+.actionBar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+}
+
+.progressColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.progressBar {
+    width: 100%;
+    height: 8px;
+    background: var(--surface-2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--rust);
+    border-radius: 4px;
+    transition: width var(--duration-normal) var(--ease-out-quart);
+}
+
+.progressMeta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+}
+
+/* Existing progress section (production) */
+.progressSection {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    position: relative;
+    width: 100%;
+}
+
+progress {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    border: none;
+    background: var(--surface-2);
+    overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+    background: var(--surface-2);
+    border-radius: 4px;
+    border: 0;
+    height: 8px;
+}
+
+progress::-webkit-progress-value {
+    background: var(--rust);
+    border-radius: 4px;
+    border: 0;
+    height: 8px;
+    transition: width var(--duration-normal) var(--ease-out-quart);
+}
+
+progress::-moz-progress-bar {
+    background: var(--rust);
+    border-radius: 4px;
+    border: 0;
+    height: 8px;
+}
+
+#progressString {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ============================================================
+   12. Tables (base)
+   ============================================================ */
 table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -317,17 +860,36 @@ td.disabled {
     opacity: 0.4;
 }
 
-/* --- Input Section (Zone Container) --- */
+/* ============================================================
+   13. Input Section (production layout)
+   ============================================================ */
 #inputSection {
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
 }
 
-/* --- Zone 1: Source --- */
+#inputSection table,
+#inputTable {
+    width: 100%;
+}
+
+#inputSection input {
+    width: 100%;
+}
+
+#inputSection tbody > tr > td:first-child {
+    width: 90px;
+    color: var(--ink-soft);
+    font-size: 12px;
+    white-space: nowrap;
+    padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+}
+
+/* Source zone (new markup compat) */
 .sourceZone {
     padding-bottom: var(--space-md);
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--rule);
 }
 
 .sourceRow {
@@ -338,8 +900,8 @@ td.disabled {
 
 .sourceRow > label {
     white-space: nowrap;
-    color: var(--text-2);
-    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    font-size: 12px;
     min-width: 90px;
     flex-shrink: 0;
 }
@@ -349,7 +911,7 @@ td.disabled {
     min-width: 0;
 }
 
-/* --- Zone 2: Book Identity --- */
+/* Book identity zone (new markup compat) */
 .bookIdentityZone {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -361,13 +923,17 @@ td.disabled {
     grid-column: 1;
 }
 
-/* --- Form Grid & Field/Option Rows --- */
-.formGrid {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
+.bookIdentityZone > #sampleCoverImg {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    margin-left: var(--space-lg);
 }
 
+.bookIdentityZone:has(#coverUrlSection[hidden]) > #sampleCoverImg {
+    display: none;
+}
+
+/* Field rows (new markup compat) */
 .fieldRow {
     display: flex;
     align-items: center;
@@ -377,8 +943,8 @@ td.disabled {
 
 .fieldRow > label {
     min-width: 90px;
-    color: var(--text-2);
-    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    font-size: 12px;
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -395,7 +961,7 @@ td.disabled {
     max-width: none;
 }
 
-/* Parser-specific option rows */
+/* Option rows */
 .optionRow {
     padding: var(--space-xs) 0;
 }
@@ -405,13 +971,13 @@ td.disabled {
     align-items: center;
     gap: var(--space-sm);
     cursor: pointer;
-    color: var(--text-2);
-    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    font-size: 13px;
     padding: var(--space-xs) 0;
     border-radius: var(--radius-sm);
 }
 
-/* --- Cover Section --- */
+/* Cover section */
 .coverSection {
     padding-top: var(--space-xs);
 }
@@ -420,83 +986,12 @@ td.disabled {
     flex: 1;
     min-width: 180px;
     max-width: none;
+    width: 68%;
 }
 
-/* Cover image: right column of bookIdentityZone grid */
-#sampleCoverImg {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    display: block;
-    max-height: 280px;
-    max-width: 200px;
-    margin-left: var(--space-lg);
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 24px oklch(0% 0 0 / 0.15);
-    object-fit: cover;
-}
-
-/* Hide cover image when cover URL section is hidden */
-.bookIdentityZone:has(#coverUrlSection[hidden]) > #sampleCoverImg {
-    display: none;
-}
-
-/* --- Progress Section --- */
-.progressSection {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-lg);
-    background: var(--surface-1);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    position: relative;
-    width: 100%;
-}
-
-progress {
-    flex: 1;
-    height: 28px;
-    border-radius: var(--radius-md);
-    border: none;
-    background: var(--surface-2);
-    overflow: hidden;
-}
-
-progress::-webkit-progress-bar {
-    background: var(--surface-2);
-    border-radius: var(--radius-md);
-    border: 0;
-    height: 28px;
-}
-
-progress::-webkit-progress-value {
-    background: var(--primary);
-    border-radius: var(--radius-md);
-    border: 0;
-    height: 28px;
-    transition: width var(--duration-normal) var(--ease-out-quart);
-}
-
-progress::-moz-progress-bar {
-    background: var(--primary);
-    border-radius: var(--radius-md);
-    border: 0;
-    height: 28px;
-}
-
-#progressString {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--text-1);
-    font-weight: 600;
-    font-size: var(--text-sm);
-    font-variant-numeric: tabular-nums;
-    z-index: 1;
-    pointer-events: none;
-}
-
-/* --- Action Buttons Row --- */
+/* ============================================================
+   14. Action Buttons Row
+   ============================================================ */
 .HiddenButtonSection {
     display: flex;
     justify-content: center;
@@ -504,107 +999,58 @@ progress::-moz-progress-bar {
     padding: var(--space-sm) 0;
 }
 
-/* --- Zone 5: Settings (Advanced Options) --- */
-#advancedOptionsSection {
-    margin-top: var(--space-sm);
-    margin-bottom: var(--space-xl);
-    padding-bottom: var(--space-xl);
-    border-bottom: 1px solid var(--border-subtle);
-}
-
-.settingsGroup,
-.settingsGroups {
+/* ============================================================
+   15. Chapters Section
+   ============================================================ */
+.chaptersSection {
     display: flex;
     flex-direction: column;
+    gap: var(--space-md);
 }
 
-/* Disclosure sections */
-#advancedOptionsSection details {
-    border-bottom: 1px solid var(--border-subtle);
+/* Range box */
+.rangeBox {
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
 }
 
-#advancedOptionsSection details:last-child {
-    border-bottom: none;
-}
-
-summary {
+.rangePicker {
     display: flex;
     align-items: center;
-    padding: var(--space-md) var(--space-xs);
-    cursor: pointer;
-    font-weight: 600;
-    font-size: var(--text-sm);
-    color: var(--text-1);
-    border-radius: var(--radius-sm);
-    user-select: none;
-    list-style: none;
-    transition: background var(--duration-fast) var(--ease-out-quart);
+    gap: var(--space-sm);
 }
 
-summary::-webkit-details-marker {
-    display: none;
-}
-
-summary::before {
-    content: '\25B8';
-    display: inline-block;
-    margin-right: var(--space-sm);
-    transition: transform var(--duration-fast) var(--ease-out-quart);
-    font-size: 0.7em;
-    color: var(--text-3);
-}
-
-details[open] > summary::before {
-    transform: rotate(90deg);
-}
-
-summary:hover {
-    background: var(--surface-1);
-}
-
-details[open] > summary {
-    margin-bottom: var(--space-xs);
-}
-
-/* Content inside disclosure sections */
-details .fieldRow,
-details .optionRow {
-    padding-left: var(--space-lg);
-}
-
-details .subOptions {
-    padding-left: var(--space-2xl);
-}
-
-.subOptions {
+.rangePicker .field-shell {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
 }
 
-/* Standalone toggle above settings groups (e.g. Show More Metadata) */
-.settingsGroups > .optionRow:first-child {
-    padding: var(--space-sm) 0 var(--space-md);
-    border-bottom: 1px solid var(--border-subtle);
-    margin-bottom: var(--space-xs);
+.rangeDropdown {
+    position: absolute;
+    max-height: 260px;
+    overflow-y: auto;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 16px rgba(26,20,17,0.15);
+    z-index: var(--z-tooltip);
 }
 
-/* --- Zone 4: Chapter Workspace --- */
-#outputSection {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-    flex: 1;
+.goToInput {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    width: 80px;
+    padding: 4px 8px;
 }
 
-/* Chapter select controls */
-#chapterSelectControlsDiv {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-}
-
-/* Range select grid */
+/* Range select grid (production) */
 .rangeSelectGrid {
     display: flex;
     flex-direction: column;
@@ -621,8 +1067,8 @@ details .subOptions {
 .rangeRow > span:first-child {
     min-width: 100px;
     white-space: nowrap;
-    color: var(--text-2);
-    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    font-size: 12px;
     flex-shrink: 0;
 }
 
@@ -643,7 +1089,34 @@ details .subOptions {
     flex-wrap: wrap;
 }
 
+/* Production table-based range layout */
+#rangeSelectTable td {
+    padding: var(--space-xs) var(--space-sm);
+    color: var(--ink-soft);
+}
+
+#rangeSelectTable td:first-child {
+    white-space: nowrap;
+    width: 100px;
+    font-size: 12px;
+}
+
+#rangeSelectTable select {
+    min-width: 200px;
+}
+
+#rangeSelectTable input[type=text] {
+    min-width: 100px;
+    max-width: 120px;
+}
+
 /* Chapter button bar */
+#chapterSelectControlsDiv {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
 #chapterSelectControlsDiv > div {
     display: flex;
     flex-wrap: wrap;
@@ -654,14 +1127,63 @@ details .subOptions {
 .volumeMappingInput {
     flex: 1;
     min-width: 200px;
+    width: 60%;
 }
 
-/* --- Scrolling Chapter Table --- */
+/* ============================================================
+   16. Chapter Table
+   ============================================================ */
+.chapterTable {
+    width: 100%;
+}
+
+.chapterTable .head {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    position: sticky;
+    top: 0;
+    background: var(--paper-deep);
+    z-index: var(--z-sticky);
+}
+
+.chapterTable .row {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    padding: var(--space-xs) var(--space-md);
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 13px;
+    transition: background var(--duration-fast) var(--ease-out-quart);
+    align-items: center;
+}
+
+.chapterTable .row:hover {
+    background: var(--surface-2);
+}
+
+.chapterTable .body {
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.chapterTable.showUrls .head,
+.chapterTable.showUrls .row {
+    grid-template-columns: 32px 1fr 1fr;
+}
+
+/* Production table-based chapter list */
 .scrollingtable {
     overflow: auto;
     height: max(300px, calc(100vh - 420px));
-    background: var(--surface-1);
-    border: 1px solid var(--border-subtle);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
     scrollbar-width: thin;
     scrollbar-color: var(--scroll-thumb) var(--scroll-track);
@@ -678,34 +1200,40 @@ table.chapterList,
     float: left;
 }
 
-#chapterUrlsTable tbody > tr > th {
+#chapterUrlsTable tbody > tr > th,
+#chapterUrlsTable > tr > th {
     text-align: left;
     padding: var(--space-sm) var(--space-md);
-    border-bottom: 1px solid var(--border);
-    color: var(--text-2);
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
     font-weight: 500;
-    font-size: var(--text-xs);
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     position: sticky;
     top: 0;
-    background: var(--surface-1);
+    background: var(--paper-deep);
     z-index: var(--z-sticky);
 }
 
-#chapterUrlsTable tbody > tr > td {
+#chapterUrlsTable tbody > tr > td,
+#chapterUrlsTable > tr > td {
     padding: var(--space-xs) var(--space-md);
     border-bottom: 1px solid var(--border-subtle);
-    font-size: var(--text-sm);
+    font-size: 13px;
     transition: background var(--duration-fast) var(--ease-out-quart);
 }
 
-#chapterUrlsTable tbody > tr:hover > td {
+#chapterUrlsTable tbody > tr:hover > td,
+#chapterUrlsTable > tr:hover > td {
     background: var(--surface-2);
 }
 
 #chapterUrlsTable > tbody > tr > td:first-child,
-#chapterUrlsTable > tbody > tr > td:nth-child(2) {
+#chapterUrlsTable > tbody > tr > td:nth-child(2),
+#chapterUrlsTable > tr > td:first-child,
+#chapterUrlsTable > tr > td:nth-child(2) {
     width: 3px;
 }
 
@@ -718,8 +1246,9 @@ table.chapterList,
 
 /* Volume headers */
 .volumeHeader td {
+    font-family: var(--font-serif);
     font-weight: 600;
-    font-size: var(--text-sm);
+    font-size: 13px;
     padding: var(--space-md);
     background: var(--volume-bg);
     color: var(--volume-text);
@@ -727,7 +1256,6 @@ table.chapterList,
     letter-spacing: 0.02em;
 }
 
-/* Clickable volume headers */
 .volumeHeader[data-volume-start] {
     cursor: pointer;
 }
@@ -751,7 +1279,7 @@ img.downloadState {
     visibility: hidden;
     width: 120px;
     background: var(--surface-3);
-    color: var(--text-1);
+    color: var(--ink);
     text-align: center;
     padding: var(--space-sm);
     border-radius: var(--radius-sm);
@@ -760,14 +1288,132 @@ img.downloadState {
     top: -5px;
     left: 105%;
     font-size: var(--text-xs);
-    box-shadow: 0 4px 12px oklch(0% 0 0 / 0.15);
+    box-shadow: 0 4px 12px rgba(26,20,17,0.15);
 }
 
 .downloadStateDiv:hover .tooltipText {
     visibility: visible;
 }
 
-/* --- Pagination --- */
+/* ============================================================
+   17. Import Volumes
+   ============================================================ */
+.importVolumes {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+}
+
+/* ============================================================
+   18. Chapter Count Line
+   ============================================================ */
+.chapterCountLine {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+}
+
+.chapterCountInfo {
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+#spanChapterCount {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+#spanParserName {
+    color: var(--rust);
+    font-weight: 500;
+}
+
+#spanDelayMs {
+    color: var(--ink-mute);
+}
+
+/* Production chapter count row */
+#rangeChapterCountRow td table {
+    width: 100%;
+}
+
+#rangeChapterCountRow td table td {
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   19. List Toolbar & Filter
+   ============================================================ */
+.listToolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+}
+
+.listFilter {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    padding: 5px 10px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    outline: none;
+    flex: 1;
+    max-width: 280px;
+}
+
+.listFilter:focus {
+    border-color: var(--rust);
+}
+
+/* ============================================================
+   20. URLs Toggle
+   ============================================================ */
+.urlsToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 12px;
+    color: var(--ink-mute);
+    cursor: pointer;
+}
+
+/* ============================================================
+   21. Edit URLs Block
+   ============================================================ */
+#editChaptersUrlsInput {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: var(--paper-deep);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+/* ============================================================
+   22. Filters Dialog
+   ============================================================ */
+.filtersDialog {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-card);
+}
+
+/* ============================================================
+   23. Pagination
+   ============================================================ */
+.pagination,
 .paginationBar {
     display: flex;
     align-items: center;
@@ -776,18 +1422,22 @@ img.downloadState {
     padding: var(--space-md) 0;
 }
 
-.paginationBar button {
+.paginationBar button,
+.pagination button {
     padding: var(--space-xs) var(--space-md);
     min-width: 32px;
+    font-family: var(--font-serif);
 }
 
-.paginationBar button:disabled {
+.paginationBar button:disabled,
+.pagination button:disabled {
     cursor: default;
 }
 
 #paginationInfo {
-    color: var(--text-2);
-    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 11px;
     font-variant-numeric: tabular-nums;
     padding: 0 var(--space-sm);
 }
@@ -797,10 +1447,340 @@ img.downloadState {
     min-width: auto;
 }
 
-/* --- Error Section --- */
+/* ============================================================
+   24. Panels (collapsible)
+   ============================================================ */
+.panelHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    user-select: none;
+    border-radius: var(--radius-sm);
+    transition: background var(--duration-fast) var(--ease-out-quart);
+}
+
+.panelHeader:hover {
+    background: var(--surface-2);
+}
+
+.panelHeader::before {
+    content: '\25B8';
+    display: inline-block;
+    font-size: 0.7em;
+    color: var(--ink-mute);
+    transition: transform var(--duration-fast) var(--ease-out-quart);
+}
+
+.panelHeader.open::before {
+    transform: rotate(90deg);
+}
+
+/* Details/summary (production) */
+.settingsGroup,
+.settingsGroups {
+    display: flex;
+    flex-direction: column;
+}
+
+#advancedOptionsSection details {
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+#advancedOptionsSection details:last-child {
+    border-bottom: none;
+}
+
+summary {
+    display: flex;
+    align-items: center;
+    padding: var(--space-md) var(--space-xs);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--ink);
+    border-radius: var(--radius-sm);
+    user-select: none;
+    list-style: none;
+    transition: background var(--duration-fast) var(--ease-out-quart);
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+summary::before {
+    content: '\25B8';
+    display: inline-block;
+    margin-right: var(--space-sm);
+    transition: transform var(--duration-fast) var(--ease-out-quart);
+    font-size: 0.7em;
+    color: var(--ink-mute);
+}
+
+details[open] > summary::before {
+    transform: rotate(90deg);
+}
+
+summary:hover {
+    background: var(--surface-2);
+}
+
+details[open] > summary {
+    margin-bottom: var(--space-xs);
+}
+
+details .fieldRow,
+details .optionRow {
+    padding-left: var(--space-lg);
+}
+
+details .subOptions {
+    padding-left: var(--space-2xl);
+}
+
+.subOptions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.settingsGroups > .optionRow:first-child {
+    padding: var(--space-sm) 0 var(--space-md);
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: var(--space-xs);
+}
+
+/* ============================================================
+   25. Library
+   ============================================================ */
+.libraryBody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.libraryToolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.shelfGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--space-md);
+}
+
+.tile {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    cursor: pointer;
+    transition: transform var(--duration-fast) var(--ease-out-quart),
+                box-shadow var(--duration-fast) var(--ease-out-quart);
+}
+
+.tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(26,20,17,0.12);
+}
+
+.tileBook {
+    border-radius: 2px;
+    box-shadow: var(--book-shadow);
+}
+
+.badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--rust-tint);
+    color: var(--rust);
+}
+
+.addTile {
+    border-style: dashed;
+    color: var(--ink-mute);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+}
+
+.addTile:hover {
+    border-color: var(--rust);
+    color: var(--rust);
+}
+
+/* Library cover images (production) */
+.LibCover {
+    max-height: 115.5px;
+    max-width: 106.5px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 2px;
+    box-shadow: var(--shadow-card);
+}
+
+.LibCoverCompact {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 2px;
+}
+
+#hiddenBibSection {
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+    margin-top: var(--space-lg);
+}
+
+#hiddenBibSection input {
+    width: 100%;
+}
+
+#LibRenderResult {
+    margin-top: var(--space-md);
+}
+
+/* ============================================================
+   26. Advanced Options (production table-based layout)
+   ============================================================ */
+#advancedOptionsSection {
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--rule);
+}
+
+#advancedOptionsSection table {
+    width: 100%;
+}
+
+#advancedOptionsSection td {
+    padding: var(--space-xs) var(--space-sm);
+}
+
+#advancedOptionsSection tr > td:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+/* Advanced body (new redesign classes) */
+.advancedBody {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: var(--space-lg);
+}
+
+.settingsNav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.settingsNav button {
+    text-align: left;
+    justify-content: flex-start;
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    border-radius: var(--radius-sm);
+    transition: background var(--duration-fast) var(--ease-out-quart),
+                color var(--duration-fast) var(--ease-out-quart);
+}
+
+.settingsNav button:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+}
+
+.settingsNav button.active {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.settingsPanel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.blockTitle {
+    font-family: var(--font-serif);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: var(--space-xs);
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+/* ============================================================
+   27. Colophon (footer)
+   ============================================================ */
+.colophon {
+    text-align: center;
+    padding: var(--space-lg) 0;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   28. Output Section (Chapter Workspace)
+   ============================================================ */
+#outputSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    flex: 1;
+}
+
+#findingChapterUrlsMessageRow {
+    color: var(--warning);
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    padding: var(--space-xl) 0;
+    text-align: center;
+}
+
+/* ============================================================
+   29. Error Section
+   ============================================================ */
 #errorSection {
-    background: oklch(96% 0.02 25);
-    border: 1px solid oklch(85% 0.06 25);
+    background: var(--rust-tint);
+    border: 1px solid rgba(168,69,26,0.25);
     border-radius: var(--radius-md);
     padding: var(--space-lg);
 }
@@ -811,8 +1791,8 @@ img.downloadState {
 }
 
 #errorMessageText {
-    color: var(--text-1);
-    font-size: var(--text-sm);
+    color: var(--ink);
+    font-size: 13px;
 }
 
 #errorMessageText pre {
@@ -820,12 +1800,13 @@ img.downloadState {
     word-break: break-word;
     margin: var(--space-sm) 0 0;
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    background: var(--surface-2);
+    font-size: 11px;
+    background: var(--paper);
     padding: var(--space-md);
     border-radius: var(--radius-sm);
     max-height: 200px;
     overflow: auto;
+    border: 1px solid var(--rule);
 }
 
 .errorLayout {
@@ -840,33 +1821,28 @@ img.downloadState {
     gap: var(--space-sm);
 }
 
+.errorMessageRow {
+    margin-top: var(--space-sm);
+}
+
 .warning {
-    color: var(--error);
+    color: var(--signal-red);
     font-size: var(--text-lg);
     font-weight: 600;
 }
 
-/* --- Image Section --- */
-#imageSection {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-}
-
-#imagesTableDiv {
-    border-radius: var(--radius-md);
-}
-
-/* --- Default Parser Section --- */
+/* ============================================================
+   30. Default Parser Section
+   ============================================================ */
 #defaultParserSection {
-    background: var(--surface-1);
-    border: 1px solid var(--border-subtle);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
     padding: var(--space-xl);
 }
 
 #defaultParserSection p.i18n {
-    color: var(--text-2);
+    color: var(--ink-soft);
     margin-bottom: var(--space-lg);
 }
 
@@ -878,11 +1854,13 @@ img.downloadState {
 #defaultParserInstructions {
     margin-top: var(--space-lg);
     padding: var(--space-lg);
-    background: var(--surface-2);
+    background: var(--paper);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
 }
 
 #defaultParserInstructions h3 {
+    font-family: var(--font-serif);
     font-size: var(--text-lg);
     margin-bottom: var(--space-md);
 }
@@ -893,7 +1871,7 @@ img.downloadState {
 }
 
 .withBorder {
-    border: 1px solid var(--border);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
 }
 
@@ -901,10 +1879,12 @@ img.downloadState {
     margin-left: var(--space-sm);
 }
 
-/* --- Reading List Section --- */
+/* ============================================================
+   31. Reading List Section
+   ============================================================ */
 #readingListSection {
-    background: var(--surface-1);
-    border: 1px solid var(--border-subtle);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
     padding: var(--space-xl);
 }
@@ -913,39 +1893,25 @@ img.downloadState {
     margin-bottom: var(--space-lg);
 }
 
-/* --- Library Section --- */
-#hiddenBibSection {
-    background: var(--surface-1);
-    border: 1px solid var(--border-subtle);
+/* ============================================================
+   32. Image Section
+   ============================================================ */
+#imageSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+#imagesTableDiv {
     border-radius: var(--radius-md);
-    padding: var(--space-xl);
-    margin-top: var(--space-lg);
 }
 
-#hiddenBibSection input {
-    width: 100%;
-}
-
-.LibCover {
-    max-height: 115.5px;
-    max-width: 106.5px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: var(--radius-sm);
-}
-
-.LibCoverCompact {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: var(--radius-sm);
-}
-
-/* --- Sidebar (Filters) --- */
+/* ============================================================
+   33. Sidebar (Filters)
+   ============================================================ */
 .sidebar {
-    background: var(--surface-1);
-    border-left: 1px solid var(--border);
+    background: var(--paper);
+    border-left: 1px solid var(--rule);
     height: 100%;
     width: 0;
     position: fixed;
@@ -967,13 +1933,13 @@ img.downloadState {
 .sidebar .closebtn {
     width: 100%;
     padding: var(--space-sm) var(--space-lg);
-    border: 1px solid var(--border);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
     text-align: center;
     cursor: pointer;
     background: var(--surface-2);
-    color: var(--text-1);
-    font-size: var(--text-sm);
+    color: var(--ink);
+    font-size: 13px;
     margin-bottom: var(--space-lg);
     transition: background var(--duration-fast) var(--ease-out-quart);
 }
@@ -984,15 +1950,16 @@ img.downloadState {
 
 .sidebar th {
     text-align: center;
-    color: var(--text-2);
-    font-size: var(--text-xs);
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     padding: var(--space-md) var(--space-sm);
 }
 
 .sidebar input.exclude {
-    accent-color: var(--error);
+    accent-color: var(--signal-red);
 }
 
 .sidebar input[type=text],
@@ -1000,23 +1967,23 @@ img.downloadState {
 .sidebar textarea,
 .sidebar select {
     padding: var(--space-sm);
-    background: var(--surface-0);
-    color: var(--text-1);
-    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--rule);
     border-radius: var(--radius-sm);
     max-width: 100%;
     min-width: 80px;
-    font-family: var(--font-family);
-    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    font-size: 13px;
 }
 
 .sidebar label {
     display: block;
     width: 100%;
-    font-size: var(--text-sm);
+    font-size: 13px;
     padding: var(--space-xs) var(--space-sm);
     user-select: none;
-    color: var(--text-2);
+    color: var(--ink-soft);
     cursor: pointer;
     border-radius: var(--radius-sm);
     transition: background var(--duration-fast) var(--ease-out-quart);
@@ -1038,50 +2005,11 @@ img.downloadState {
     width: calc(100% - 15px);
 }
 
-/* --- Textarea (Edit Chapter URLs) --- */
-#editChaptersUrlsInput {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    background: var(--surface-1);
-    color: var(--text-1);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-}
-
-/* --- Chapter count / parser info --- */
-.chapterCountInfo {
-    color: var(--text-2);
-    font-size: var(--text-sm);
-    font-variant-numeric: tabular-nums;
-}
-
-#spanChapterCount {
-    color: var(--text-1);
-    font-weight: 600;
-}
-
-#spanParserName {
-    color: var(--primary);
-    font-weight: 500;
-}
-
-#spanDelayMs {
-    color: var(--text-3);
-}
-
-/* --- Searching message --- */
-#findingChapterUrlsMessageRow {
-    color: var(--warning);
-    font-size: var(--text-lg);
-    font-weight: 600;
-    padding: var(--space-xl) 0;
-    text-align: center;
-}
-
-/* --- Scrollbar styling --- */
+/* ============================================================
+   34. Scrollbar Styling
+   ============================================================ */
 .scrollingtable::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 .scrollingtable::-webkit-scrollbar-track {
@@ -1090,43 +2018,41 @@ img.downloadState {
 
 .scrollingtable::-webkit-scrollbar-thumb {
     background: var(--scroll-thumb);
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
 .scrollingtable::-webkit-scrollbar-thumb:hover {
     background: var(--surface-3);
 }
 
-/* --- Selection --- */
-::selection {
-    background: var(--selection-bg);
-    color: var(--text-1);
-}
-
+/* ============================================================
+   35. Send to Kindle Modal
+   ============================================================ */
 .stk-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: oklch(0% 0 0 / 0.5);
+    background: rgba(26,20,17,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    z-index: var(--z-modal);
 }
 
 .stk-modal {
-    background: var(--surface-0);
-    border-radius: var(--radius-md);
+    background: var(--paper);
+    border-radius: var(--radius-lg);
     padding: var(--space-xl);
     max-width: 400px;
     width: 90%;
-    box-shadow: 0 4px 20px oklch(0% 0 0 / 0.3);
-    color: var(--text-1);
+    box-shadow: 0 4px 32px rgba(26,20,17,0.3);
+    color: var(--ink);
 }
 
 .stk-modal-title {
+    font-family: var(--font-serif);
     font-size: var(--text-lg);
     font-weight: 600;
     margin-bottom: var(--space-md);
@@ -1138,8 +2064,8 @@ img.downloadState {
 }
 
 .stk-modal-note {
-    font-size: var(--text-sm);
-    color: var(--text-3);
+    font-size: 12px;
+    color: var(--ink-mute);
 }
 
 .stk-modal-buttons {
@@ -1150,26 +2076,168 @@ img.downloadState {
 }
 
 .stk-modal-btn {
-    padding: var(--space-sm) var(--space-lg);
-    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border: 1px solid var(--rule);
     border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: var(--text-sm);
-    background: var(--surface-1);
-    color: var(--text-1);
-}
-
-.stk-modal-btn-primary {
-    background: var(--primary);
-    color: var(--on-primary);
-    border-color: var(--primary);
-}
-
-.stk-modal-btn-primary:hover {
-    background: var(--primary-hover);
-    border-color: var(--primary-hover);
+    font-size: 12px;
+    background: var(--paper-deep);
+    color: var(--ink);
+    transition: background var(--duration-fast) var(--ease-out-quart);
 }
 
 .stk-modal-btn:hover {
     background: var(--surface-2);
+}
+
+.stk-modal-btn-primary {
+    background: var(--rust);
+    color: var(--on-primary);
+    border-color: var(--rust);
+}
+
+.stk-modal-btn-primary:hover {
+    background: var(--rust-deep);
+    border-color: var(--rust-deep);
+}
+
+/* ============================================================
+   36. Utility Classes
+   ============================================================ */
+.fullWidth {
+    width: 100%;
+    max-width: none;
+}
+
+.gridTwo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.empty {
+    text-align: center;
+    padding: var(--space-2xl);
+    color: var(--ink-mute);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* ============================================================
+   37. Dark Mode -- [data-theme="dark"]
+   ============================================================ */
+[data-theme="dark"] {
+    --paper:        #1a1714;
+    --paper-deep:   #211e19;
+    --ink:          #e8e0d0;
+    --ink-soft:     #a89a88;
+    --ink-mute:     #6a5f52;
+    --rule:         #3a332a;
+    --rust:         #d4734a;
+    --rust-deep:    #e8845a;
+    --rust-tint:    #2a1f18;
+    --moss:         #6a8a56;
+    --signal-red:   #d4604a;
+
+    --surface-0:    var(--paper);
+    --surface-1:    var(--paper-deep);
+    --surface-2:    #2a261f;
+    --surface-3:    #3a342a;
+    --primary:      var(--rust);
+    --primary-hover: var(--rust-deep);
+    --primary-active: #f0956a;
+    --primary-subtle: var(--rust-tint);
+    --text-1:       var(--ink);
+    --text-2:       var(--ink-soft);
+    --text-3:       var(--ink-mute);
+    --border:       var(--rule);
+    --border-subtle: #2e281f;
+    --error:        var(--signal-red);
+    --warning:      #d4a840;
+    --success:      var(--moss);
+    --on-primary:   #1a1411;
+
+    --volume-bg:    #252018;
+    --volume-border: var(--rule);
+    --volume-text:  var(--ink-soft);
+    --volume-hover-bg: #302a20;
+
+    --scroll-track: var(--paper-deep);
+    --scroll-thumb: var(--rule);
+
+    --selection-bg: rgba(212,115,74,0.25);
+
+    --shadow-card:  0 0 0 1px rgba(255,255,255,0.05), 0 1px 2px rgba(0,0,0,0.2);
+    --book-shadow:  0 1px 1px rgba(0,0,0,0.2),
+                    0 4px 6px -2px rgba(0,0,0,0.25),
+                    0 18px 32px -10px rgba(0,0,0,0.5),
+                    inset -1px 0 0 rgba(255,255,255,0.05),
+                    inset 1px 0 0 rgba(255,255,255,0.02);
+}
+
+[data-theme="dark"] body {
+    background:
+        radial-gradient(ellipse at 20% 0%, rgba(42,31,24,0.6) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 100%, rgba(58,51,42,0.4) 0%, transparent 60%),
+        var(--paper);
+}
+
+[data-theme="dark"] body::before {
+    opacity: 0.02;
+}
+
+[data-theme="dark"] #errorSection {
+    background: var(--rust-tint);
+    border-color: rgba(212,115,74,0.2);
+}
+
+[data-theme="dark"] #errorMessageText pre {
+    background: var(--paper);
+    border-color: var(--rule);
+}
+
+[data-theme="dark"] .downloadStateDiv .tooltipText {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+[data-theme="dark"] summary:hover {
+    background: var(--surface-2);
+}
+
+[data-theme="dark"] .volumeHeader[data-volume-start]:hover td {
+    background: var(--volume-hover-bg);
+}
+
+[data-theme="dark"] .stk-modal {
+    box-shadow: 0 4px 32px rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   38. Auto Dark Mode (prefers-color-scheme)
+   ============================================================ */
+.autoDark {
+    /* Marker class for JS toggling */
+}
+
+/* ============================================================
+   39. Always Dark Mode (class-based override)
+   ============================================================ */
+.alwaysDark {
+    /* Marker class for JS toggling */
+}
+
+/* ============================================================
+   40. Reduced Motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .tile:hover {
+        transform: none;
+    }
+    .book {
+        transition: none;
+    }
+    .book:hover {
+        transform: rotateY(-6deg);
+    }
 }
