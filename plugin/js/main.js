@@ -311,27 +311,31 @@ var main = (function() {
     }
 
     function onAdvancedOptionsClick() {
-        let section =  getAdvancedOptionsSection();
+        let section = getAdvancedOptionsSection();
         section.hidden = !section.hidden;
-        section = getAdditionalMetadataSection();
-        section.hidden = !userPreferences.ShowMoreMetadataOptions.value;
-        section =  getLibrarySection();
-        section.hidden = true;
+        let header = document.getElementById("advancedOptionsButton");
+        header.classList.toggle("open", !section.hidden);
+        let metaSection = getAdditionalMetadataSection();
+        if (metaSection) {
+            metaSection.hidden = !userPreferences.ShowMoreMetadataOptions.value;
+        }
     }
 
     function onShowMoreMetadataOptionsClick() {
         let section = getAdditionalMetadataSection();
-        section.hidden = !section.hidden;
+        if (section) {
+            section.hidden = !section.hidden;
+        }
     }
 
     function onLibraryClick() {
-        let section =  getLibrarySection();
+        let section = getLibrarySection();
         section.hidden = !section.hidden;
+        let header = document.getElementById("hiddenBibButton");
+        header.classList.toggle("open", !section.hidden);
         if (!section.hidden) {
             Library.LibRenderSavedEpubs();
         }
-        section =  getAdvancedOptionsSection();
-        section.hidden = true;
     }
 
     function onStylesheetToDefaultClick() {
@@ -419,7 +423,7 @@ var main = (function() {
 
     function localizeHtmlPage() {
         // can't use a single select, because there are buttons in td elements
-        for (let selector of ["button, option", "td, th", ".i18n"]) {
+        for (let selector of ["button, option", "td, th", "label", "span", ".i18n"]) {
             for (let element of [...document.querySelectorAll(selector)]) {
                 if (element.textContent.startsWith("__MSG_")) {
                     UIText.localizeElement(element);
@@ -623,8 +627,14 @@ var main = (function() {
         if (isRunningInTabMode()) {
             ErrorLog.SuppressErrorLog =  false;
             localizeHtmlPage();
-            getAdvancedOptionsSection().hidden = !userPreferences.advancedOptionsVisibleByDefault.value;
-            getAdditionalMetadataSection().hidden = !userPreferences.ShowMoreMetadataOptions.value;
+            let advVisible = userPreferences.advancedOptionsVisibleByDefault.value;
+            getAdvancedOptionsSection().hidden = !advVisible;
+            let advHeader = document.getElementById("advancedOptionsButton");
+            if (advHeader) advHeader.classList.toggle("open", advVisible);
+            let metaSection = getAdditionalMetadataSection();
+            if (metaSection) {
+                metaSection.hidden = !userPreferences.ShowMoreMetadataOptions.value;
+            }
             addEventHandlers();
             populateControls();
             if (SendToKindlePrompt.shouldShow()) {

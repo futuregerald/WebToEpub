@@ -2,155 +2,429 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>WebToEpub</title>
+    <title>web2epub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link href="css/default.css" rel="stylesheet" type="text/css" />
-    <link href="css/autoDark.css" rel="stylesheet" type="text/css"  id="autoDark" />
+    <link href="css/autoDark.css" rel="stylesheet" type="text/css" id="autoDark" />
     <link href="css/alwaysDark.css" rel="stylesheet" type="text/css" id="alwaysDark" disabled="true"/>
     <base />
 </head>
 <body>
-    <div class="container">
-        <section id="readingListSection" hidden="true">
-            <button id="closeReadingList">__MSG_button_Close_ReadingList__</button>
-            <table id="readingListTable">
-            </table>
-        </section>
-        <section id="errorSection" class="minWidth" hidden="true">
-            <div id="errorSectionTable" class="errorLayout">
-                <div class="errorButtons">
+<div class="container">
+
+    <!-- ═══ Reading list section (hidden) ═══ -->
+    <section id="readingListSection" hidden="true">
+        <button id="closeReadingList">__MSG_button_Close_ReadingList__</button>
+        <table id="readingListTable">
+        </table>
+    </section>
+
+    <!-- ═══ Error section (hidden) ═══ -->
+    <section id="errorSection" class="minWidth" hidden="true">
+        <table id="errorSectionTable">
+            <tr>
+                <td>
                     <button class="expandedButton" id="errorButtonOk">__MSG_button_error_OK__</button>
                     <button class="expandedButton" id="errorButtonRetry">__MSG_button_error_Retry__</button>
                     <button class="expandedButton" id="errorButtonCancel">__MSG_button_error_Cancel__</button>
                     <button class="expandedButton" id="errorButtonOpenURL">__MSG_button_error_Open_URL__</button>
                     <button class="expandedButton" id="errorButtonBlockURL">__MSG_button_error_Block_URL__</button>
-                </div>
-                <div id="errorMessageRow" class="errorMessageRow">
-                    <div id="errorMessageText"><pre></pre></div>
-                </div>
-            </div>
-        </section>
-        <section id="defaultParserSection" hidden="true">
-            <p class="i18n">__MSG_label_Using_Default_Parser__</p>
-            <div class="formGrid">
-                <div class="fieldRow">
-                    <label class="i18n" for="defaultParserHostName">__MSG_label_Default_Parser_HostName__</label>
+                </td>
+            </tr>
+            <tr id="errorMessageRow">
+                <td id="errorMessageText"><pre></pre></td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- ═══ Default parser section (hidden) ═══ -->
+    <section id="defaultParserSection" hidden="true">
+        <p class="i18n">__MSG_label_Using_Default_Parser__</p>
+        <table>
+            <tr>
+                <td>__MSG_label_Default_Parser_HostName__</td>
+                <td>
                     <input id="defaultParserHostName" type="text" name="defaultParserHostNameInput" size="30" value="" />
-                </div>
-                <div class="fieldRow">
-                    <label class="i18n" for="defaultParserTestChapterUrl">__MSG_label_Default_Parser_Test_Chapter_Url__</label>
+                </td>
+            </tr>
+            <tr>
+                <td>__MSG_label_Default_Parser_Test_Chapter_Url__</td>
+                <td>
                     <input id="defaultParserTestChapterUrl" type="text" name="defaultParserTestChapterUrlInput" size="30" value="" />
-                </div>
-                <div class="fieldRow">
-                    <label class="i18n" for="defaultParserContentCss">__MSG_label_Default_Parser_Content_CSS__</label>
+                </td>
+            </tr>
+            <tr>
+                <td>__MSG_label_Default_Parser_Content_CSS__</td>
+                <td>
                     <input id="defaultParserContentCss" type="text" name="defaultParserContentCssInput" size="30" value="" />
-                </div>
-                <div class="fieldRow">
-                    <label class="i18n" for="defaultParserChapterTitleCss">__MSG_label_Default_Parser_Chapter_Title_CSS__</label>
+                </td>
+            </tr>
+            <tr>
+                <td>__MSG_label_Default_Parser_Chapter_Title_CSS__</td>
+                <td>
                     <input id="defaultParserChapterTitleCss" type="text" name="defaultParserChapterTitleCssInput" size="30" value="" />
-                </div>
-                <div class="fieldRow">
-                    <label class="i18n" for="defaultParserUnwantedElementsCss">__MSG_label_Default_Parser_Unwanted_Elements_CSS__</label>
+                </td>
+            </tr>
+            <tr>
+                <td>__MSG_label_Default_Parser_Unwanted_Elements_CSS__</td>
+                <td>
                     <input id="defaultParserUnwantedElementsCss" type="text" name="defaultParserUnwantedElementsCssInput" size="30" value="" />
+                </td>
+            </tr>
+        </table>
+        <button id="testDefaultParserButton">__MSG_button_test_default_parser__</button>
+        <button id="finisheddefaultParserButton">__MSG_button_finished_default_parser__</button>
+        <button id="defaultParserHelpButton">__MSG_button_Help__</button>
+        <br />
+        <br />
+        <div class="withBorder">
+            <div class="scrollingtable withMargin" id="defaultParserVewResult"></div>
+        </div>
+        <div id="defaultParserInstructions" hidden="true">
+            <h3>Instructions</h3>
+            <p>WebToEpub does not know what content on each web page (chapter) to put into the EPUB.</p>
+            <p>Use this screen to tell WebToEpub which element on the web page has the wanted content.</p>
+            <p>Give a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors">CSS Selector</a> for the wanted element.</p>
+            <p>After providing the CSS Selector, test it works by clicking the "Test" button. Which will make this box show you what will be packed into the first chapter of the EPUB.</p>
+            <br />
+            <p class="warning"><strong>For more details, and a worked example, click the "Help" button above.</strong></p>
+        </div>
+    </section>
+
+    <!-- ═══ Main input section ═══ -->
+    <section id="inputSection">
+
+        <!-- ─── Source bar ─── -->
+        <section class="sourceBar">
+            <div class="brandRow">
+                <div class="brand">
+                    <div class="brandMark">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <rect x="2.5" y="2" width="11" height="13" rx="0.5" stroke="currentColor" stroke-width="1.4" fill="none" />
+                            <line x1="2.5" y1="5" x2="13.5" y2="5" stroke="currentColor" stroke-width="1.4" />
+                            <circle cx="5" cy="3.5" r="0.6" fill="currentColor" />
+                            <circle cx="6.8" cy="3.5" r="0.6" fill="currentColor" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="wordmark">web<em>2</em>epub</div>
+                        <div class="tagline">__MSG_label_Tagline__</div>
+                    </div>
                 </div>
+                <span class="parserChip" id="parserChip"><span id="spanParserName"></span> <span id="spanDelayMs"></span></span>
             </div>
-            <button id="testDefaultParserButton">__MSG_button_test_default_parser__</button>
-            <button id="finisheddefaultParserButton">__MSG_button_finished_default_parser__</button>
-            <button id="defaultParserHelpButton">__MSG_button_Help__</button>
-            <br />
-            <br />
-            <div class="withBorder">
-                <div class="scrollingtable withMargin" id="defaultParserVewResult"></div>
-            </div>
-            <div id="defaultParserInstructions" hidden="true">
-                <h3>Instructions</h3>
-                <p>WebToEpub does not know what content on each web page (chapter) to put into the EPUB.</p>
-                <p>Use this screen to tell WebToEpub which element on the web page has the wanted content.</p>
-                <p>Give a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors">CSS Selector</a> for the wanted element.</p>
-                <p>After providing the CSS Selector, test it works by clicking the "Test" button. Which will make this box show you what will be packed into the first chapter of the EPUB.</p>
-                <br />
-                <p class="warning"><strong>For more details, and a worked example, click the "Help" button above.</strong></p>
+            <div class="urlRow">
+                <div class="urlField">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6.5 9.5 9.5 6.5" />
+                        <path d="M7 4.5 8.5 3a2.5 2.5 0 0 1 3.5 3.5L10.5 8" />
+                        <path d="M5.5 8 4 9.5a2.5 2.5 0 0 0 3.5 3.5L9 11.5" />
+                    </svg>
+                    <input id="startingUrlInput" type="url" name="startingUrlInput" placeholder="Paste a chapter or table-of-contents URL..." />
+                </div>
+                <button class="btn" id="loadAndAnalyseButton">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" />
+                    </svg>
+                    __MSG_button_load_and_analyse__
+                </button>
             </div>
         </section>
-        <section id="inputSection">
-            <!-- Zone 1: Source -->
-            <div class="sourceZone">
-                <div class="fieldRow sourceRow">
-                    <label class="i18n" for="startingUrlInput">__MSG_label_Starting_URL__</label>
-                    <input id="startingUrlInput" type="url" name="startingUrlInput" />
-                    <button id="loadAndAnalyseButton">__MSG_button_load_and_analyse__</button>
-                </div>
-            </div>
 
-            <!-- Zone 2: Book Identity -->
-            <div class="bookIdentityZone">
+        <!-- ─── Book identity + Cover + Action ─── -->
+        <section class="bookSection">
+            <!-- Left column: Book identity -->
+            <div>
+                <div class="sectionHead">
+                    <span class="num">&sect;01</span>
+                    <span class="title">__MSG_label_Book_Identity__</span>
+                    <span class="subtitle">__MSG_label_Book_Identity_Subtitle__</span>
+                </div>
                 <div class="formGrid">
-                    <div class="fieldRow">
-                        <label class="i18n" for="titleInput">__MSG_label_Title__</label>
-                        <input id="titleInput" type="text" name="titleInput" />
+                    <div class="field">
+                        <label>__MSG_label_Title__</label>
+                        <input class="input" id="titleInput" type="text" name="titleInput" />
                     </div>
-                    <div class="fieldRow">
-                        <label class="i18n" for="authorInput">__MSG_label_Author__</label>
-                        <input id="authorInput" type="text" name="authorInput" />
+                    <div class="field">
+                        <label>__MSG_label_Author__</label>
+                        <input class="input" id="authorInput" type="text" name="authorInput" />
                     </div>
-                    <div class="fieldRow">
-                        <label class="i18n" for="languageInput">__MSG_label_Language__</label>
-                        <input id="languageInput" type="text" name="languageInput" />
+                    <div class="gridTwo">
+                        <div class="field">
+                            <label>__MSG_label_Language__</label>
+                            <input class="input mono" id="languageInput" type="text" name="languageInput" />
+                        </div>
+                        <div class="field">
+                            <label>__MSG_label_Filename__</label>
+                            <input class="input mono" id="fileNameInput" type="text" name="fileNameInput" />
+                        </div>
                     </div>
-                    <div class="fieldRow">
-                        <label class="i18n" for="fileNameInput">__MSG_label_Filename__</label>
-                        <input id="fileNameInput" type="text" name="fileNameInput" />
-                    </div>
-                </div>
 
-                <!-- Parser-specific conditional rows -->
-                <div id="removeAuthorNotesRow" class="optionRow" hidden="true">
-                    <label><input id="removeAuthorNotesCheckbox" type="checkbox" name="removeAuthorNotesCheckbox" value="false"> <span class="i18n">__MSG_label_Remove_Author_Notes__</span></label>
-                </div>
-                <div id="removeChapterNumberRow" class="optionRow" hidden="true">
-                    <label><input id="removeChapterNumberCheckbox" type="checkbox" name="removeChapterNumberCheckbox" value="false"> <span class="i18n">__MSG_label_Remove_Chapter_Number__</span></label>
-                </div>
-                <div id="removeOriginalRow" class="optionRow" hidden="true">
-                    <label><input id="removeOriginalCheckbox" type="checkbox" name="removeOriginalCheckbox" value="true"> <span class="i18n">__MSG_label_Remove_Original__</span></label>
-                </div>
-                <div id="selectTranslationAiRow" class="optionRow" hidden="true">
-                    <label><input id="selectTranslationAiCheckbox" type="checkbox" name="selectTranslationAiCheckbox" value="false"> <span class="i18n">__MSG_label_Select_Translation_Google__</span></label>
-                </div>
-                <div id="selectRetryLongerRow" class="optionRow" hidden="true">
-                    <label><input id="selectRetryLongerCheckbox" type="checkbox" name="selectRetryLongerCheckbox" value="false"> <span class="i18n">__MSG_label_Select_Retry_Longer__</span></label>
-                </div>
-                <div id="removeTranslatedRow" class="optionRow" hidden="true">
-                    <label><input id="removeTranslatedCheckbox" type="checkbox" name="removeTranslatedCheckbox" value="false"> <span class="i18n">__MSG_label_Remove_Translated__</span></label>
-                </div>
-                <div id="passwordRow" class="fieldRow" hidden="true">
-                    <label class="i18n" for="passwordInput">__MSG_label_Password__</label>
-                    <input id="passwordInput" type="text" name="passwordInput" />
-                </div>
-
-                <!-- Cover image URL -->
-                <div id="coverUrlSection" class="coverSection">
-                    <div class="fieldRow">
-                        <label class="i18n" for="coverImageUrlInput">__MSG_label_Cover_Image_URL__</label>
-                        <input id="coverImageUrlInput" type="text" name="coverImageUrlInput">
-                        <button id="clearCoverImageUrlButton">__MSG_button_Clear_Url__</button>
+                    <!-- Parser-specific hidden rows -->
+                    <div id="removeAuthorNotesRow" class="field" hidden="true">
+                        <label class="checkRow">
+                            <input id="removeAuthorNotesCheckbox" type="checkbox" name="removeAuthorNotesCheckbox" value="false">
+                            <span class="checkbox"></span>
+                            <span><span class="label">__MSG_label_Remove_Author_Notes__</span></span>
+                        </label>
+                    </div>
+                    <div id="removeChapterNumberRow" class="field" hidden="true">
+                        <label class="checkRow">
+                            <input id="removeChapterNumberCheckbox" type="checkbox" name="removeChapterNumberCheckbox" value="false">
+                            <span class="checkbox"></span>
+                            <span><span class="label">__MSG_label_Remove_Chapter_Number__</span></span>
+                        </label>
+                    </div>
+                    <div id="removeOriginalRow" class="field" hidden="true">
+                        <label class="checkRow">
+                            <input id="removeOriginalCheckbox" type="checkbox" name="removeOriginalCheckbox" value="true">
+                            <span class="checkbox"></span>
+                            <span><span class="label">__MSG_label_Remove_Original__</span></span>
+                        </label>
+                    </div>
+                    <div id="selectTranslationAiRow" class="field" hidden="true">
+                        <label class="checkRow">
+                            <input id="selectTranslationAiCheckbox" type="checkbox" name="selectTranslationAiCheckbox" value="false">
+                            <span class="checkbox"></span>
+                            <span><span class="label">__MSG_label_Select_Translation_Google__</span></span>
+                        </label>
+                    </div>
+                    <div id="selectRetryLongerRow" class="field" hidden="true">
+                        <label class="checkRow">
+                            <input id="selectRetryLongerCheckbox" type="checkbox" name="selectRetryLongerCheckbox" value="false">
+                            <span class="checkbox"></span>
+                            <span><span class="label">__MSG_label_Select_Retry_Longer__</span></span>
+                        </label>
+                    </div>
+                    <div id="removeTranslatedRow" class="field" hidden="true">
+                        <label class="checkRow">
+                            <input id="removeTranslatedCheckbox" type="checkbox" name="removeTranslatedCheckbox" value="false">
+                            <span class="checkbox"></span>
+                            <span><span class="label">__MSG_label_Remove_Translated__</span></span>
+                        </label>
+                    </div>
+                    <div id="passwordRow" class="field" hidden="true">
+                        <label>__MSG_label_Password__</label>
+                        <input class="input" id="passwordInput" type="text" name="passwordInput" />
                     </div>
                 </div>
-
-                <img id="sampleCoverImg" />
             </div>
 
-            <!-- Zone 3: Action Bar -->
-            <div class="progressSection">
-                <button id="packEpubButton" class="expandedButton">__MSG_button_Pack_EPUB__</button>
-                <progress id="fetchProgress" value=" 0" max="1"></progress>
-                <span id="progressString"></span>
-                <button data-libclick="yes" id="LibAddToLibrary" class="expandedButton">__MSG_button_Add_to_Library__</button>
-                <button data-libclick="yes" id="LibPauseToLibrary" class="expandedButton" hidden="true">__MSG_button_Pause_to_Library__</button>
+            <!-- Right column: Cover -->
+            <div>
+                <div class="sectionHead">
+                    <span class="num">&sect;02</span>
+                    <span class="title">__MSG_label_Cover__</span>
+                    <span class="subtitle">__MSG_label_Front_Matter__</span>
+                </div>
+                <div class="coverWrap">
+                    <div class="coverStage">
+                        <div class="bookFrame">
+                            <div class="book" id="bookCover">
+                                <div class="placeholder" id="bookPlaceholder">
+                                    <div><div class="ph-mark">~</div></div>
+                                    <div>
+                                        <div class="ph-title" id="phTitle">__MSG_label_Untitled__</div>
+                                        <div class="ph-rule"></div>
+                                        <div class="ph-author" id="phAuthor">__MSG_label_Anonymous__</div>
+                                    </div>
+                                    <div class="ph-empty">__MSG_label_No_Cover__</div>
+                                </div>
+                            </div>
+                            <div class="shelfShadow"></div>
+                        </div>
+                    </div>
+                    <img id="sampleCoverImg" hidden="true" />
+                    <div id="coverUrlSection" class="coverInputRow">
+                        <input class="input mono" id="coverImageUrlInput" type="text" name="coverImageUrlInput" placeholder="https://...cover.jpg" />
+                        <button class="btn bare sm" id="clearCoverImageUrlButton" title="Clear cover URL">
+                            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                                <path d="M3 3l6 6M9 3l-6 6" />
+                            </svg>
+                            __MSG_button_Clear_Url__
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="HiddenButtonSection">
-                <button id="hiddenBibButton">__MSG_button_Lib_Library__</button>
-                <button id="advancedOptionsButton">__MSG_button_Advanced_Options__</button>
+
+            <!-- Action row (full width) -->
+            <div class="actionRow">
+                <div class="actionBar">
+                    <button class="btn primary lg" id="packEpubButton">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 2v9M4.5 7.5 8 11l3.5-3.5M3 13h10" />
+                        </svg>
+                        __MSG_button_Pack_EPUB__
+                    </button>
+                    <div class="progressColumn">
+                        <progress id="fetchProgress" value="0" max="1" hidden="true"></progress>
+                        <div class="progressBar">
+                            <div id="progressFill" class="progressFill"></div>
+                        </div>
+                        <div class="progressMeta">
+                            <span id="progressLabel">__MSG_label_Progress_Ready__</span>
+                            <span id="progressPct"></span>
+                            <span id="progressString" hidden="true"></span>
+                        </div>
+                    </div>
+                    <button class="btn ghost" data-libclick="yes" id="LibAddToLibrary">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                            <path d="M8 3v10M3 8h10" />
+                        </svg>
+                        __MSG_button_Add_to_Library__
+                    </button>
+                    <button class="btn ghost" data-libclick="yes" id="LibPauseToLibrary" hidden="true">
+                        __MSG_button_Pause_to_Library__
+                    </button>
+                </div>
             </div>
-            <section id="hiddenBibSection" hidden="true">
+        </section>
+    </section><!-- /inputSection -->
+
+        <!-- ─── Chapters ─── -->
+        <section class="chaptersSection" id="outputSection">
+            <div class="sectionHead">
+                <span class="num">&sect;03</span>
+                <span class="title">__MSG_label_Chapters__</span>
+                <span class="subtitle" id="chapterSubtitle"><span id="spanChapterCount">0</span> __MSG_label_Chapters_Suffix__</span>
+            </div>
+
+            <div id="chapterSelectControlsDiv" class="rangeBox">
+                <!-- Range pickers -->
+                <div class="rangeRow" id="rangeStartChapterRow">
+                    <div class="rangePicker">
+                        <div class="row">
+                            <span class="lbl">__MSG_label_Range_Start_Chapter__</span>
+                            <input class="goToInput mono" id="chapterSearchStart" type="text" placeholder="Go to ch. #" size="10" />
+                            <select id="selectRangeStartChapter" class="select"></select>
+                        </div>
+                    </div>
+                    <label class="urlsToggle inlineRight">
+                        <input type="checkbox" id="showChapterUrlsCheckbox" name="showChapterUrlsCheckbox" value="false" /> __MSG_label_Show_Chapter_Urls__
+                    </label>
+                </div>
+                <div class="rangeRow" id="rangeEndChapterRow">
+                    <div class="rangePicker">
+                        <div class="row">
+                            <span class="lbl">__MSG_label_Range_End_Chapter__</span>
+                            <input class="goToInput mono" id="chapterSearchEnd" type="text" placeholder="Go to ch. #" size="10" />
+                            <select id="selectRangeEndChapter" class="select"></select>
+                        </div>
+                    </div>
+                    <button class="btn bare sm inlineRight" id="viewFiltersButton">
+                        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2.5 4h11M5 8h6M7 12h2"/>
+                        </svg>
+                        __MSG_button_View_Filters__
+                    </button>
+                </div>
+
+                <!-- Volume mapping -->
+                <div class="importVolumes" id="volumeMappingRow">
+                    <span class="importLbl">__MSG_label_Import_Volumes__</span>
+                    <input class="input mono volumeMappingInput" id="volumeMappingUrl" type="text" placeholder="Paste webnovel.com URL" />
+                    <button class="btn sm" id="volumeMappingButton">__MSG_button_Import_Volumes__</button>
+                    <span id="volumeMappingStatus"></span>
+                </div>
+
+                <!-- Chapter count line -->
+                <div class="chapterCountLine" id="rangeChapterCountRow">
+                    <span class="ccLbl">__MSG_label_Chapter_Count__</span>
+                    <span class="ccVal"><span id="spanChapterCount2"></span></span>
+                    <span class="ccParser"><span id="spanParserName2"></span></span>
+                    <span class="ccDelay"><span id="spanDelayMs2"></span></span>
+                </div>
+
+                <!-- List toolbar -->
+                <div class="listToolbar">
+                    <button class="btn sm" id="selectAllUrlsButton">__MSG_button_Select_All__</button>
+                    <button class="btn sm" id="unselectAllUrlsButton">__MSG_button_Unselect_All__</button>
+                    <button class="btn sm" id="reverseChapterUrlsOrderButton">__MSG_button_Reverse_Chapter_Urls_Order__</button>
+                    <button class="btn sm" id="editChaptersUrlsButton">__MSG_button_Edit_Chapter_Urls__</button>
+                    <button class="btn sm" id="copyUrlsToClipboardButton">__MSG_button_Copy_Urls_To_Clipboard__</button>
+                </div>
+            </div>
+
+            <!-- Edit URLs hint & textarea (hidden) -->
+            <p id="editURLsHint" class="i18n" hidden="true">__MSG_label_Edit_URLs_Hint__</p>
+
+            <!-- Finding chapters message -->
+            <div id="findingChapterUrlsMessageRow" class="i18n warning">__MSG_Searching_For_URLs_Please_Wait__</div>
+
+            <!-- Chapter table -->
+            <div id="chapterUrlsScrollDiv" class="scrollingtable chapterTable">
+                <table id="chapterUrlsTable" class="chapterlist">
+                    <tr>
+                        <th align="left">__MSG_column_Include__</th>
+                        <th align="left">__MSG_column_Title__</th>
+                        <th align="left" hidden="true">__MSG_column_URL__</th>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div id="paginationControls" class="paginationBar pagination">
+                <button class="btn bare sm" id="paginationFirst" title="__MSG_label_First_Page__">&laquo;</button>
+                <button class="btn bare sm" id="paginationPrev" title="__MSG_label_Previous_Page__">&lsaquo;</button>
+                <span id="paginationInfo">__MSG_label_Page_1_of_1__</span>
+                <button class="btn bare sm" id="paginationNext" title="__MSG_label_Next_Page__">&rsaquo;</button>
+                <button class="btn bare sm" id="paginationLast" title="__MSG_label_Last_Page__">&raquo;</button>
+                <select id="paginationPageSize">
+                    <option value="50">50</option>
+                    <option value="100" selected>100</option>
+                    <option value="200">200</option>
+                    <option value="0">__MSG_label_All__</option>
+                </select>
+            </div>
+
+            <!-- Edit chapters textarea (hidden) -->
+            <div>
+                <textarea id="editChaptersUrlsInput" class="allSpace input mono" cols="200" rows="20" hidden="true"></textarea>
+            </div>
+            <button id="applyChangesButton" class="btn primary sm" hidden="true">__MSG_button_Apply_Changes__</button>
+            <button id="applyChangesButton2" class="btn primary sm" hidden="true">__MSG_button_Apply_Changes__</button>
+        </section>
+
+        <!-- ─── Image section (hidden) ─── -->
+        <section id="imageSection" hidden="true">
+            <table id="imageOptionsTable">
+                <tr id="duplicateImagesRow">
+                    <td>__MSG_label_Remove_Duplicate_Images__</td>
+                    <td><input id="removeDuplicateImages" type="checkbox" name="removeDuplicateImages" value="false"></td>
+                </tr>
+                <tr id="coverFromUrlRow">
+                    <td>__MSG_label_Cover_from_URL__</td>
+                    <td><input id="coverFromUrlCheckboxInput" type="checkbox" name="coverFromUrlCheckboxInput" value="false"></td>
+                </tr>
+            </table>
+            <div id="imagesTableDiv" class="scrollingtable">
+                <table id="imagesTable"></table>
+            </div>
+        </section>
+
+        <!-- ─── Test section ─── -->
+        <section id="testSection"></section>
+
+        <!-- ═══ Library panel (collapsible) ═══ -->
+        <button class="panelHeader" id="hiddenBibButton">
+            <span class="num">&sect;04</span>
+            <span class="icon">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="2" height="10" /><rect x="6" y="4" width="2" height="9" />
+                    <rect x="9" y="2" width="2" height="11" /><rect x="12" y="5" width="1.5" height="8" />
+                </svg>
+            </span>
+            <span class="title">__MSG_button_Lib_Library__</span>
+            <span class="chev">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 4.5 6 7.5l3-3" />
+                </svg>
+            </span>
+        </button>
+        <section id="hiddenBibSection" hidden="true">
+            <div class="libraryBody open">
                 <div id="LibraryTemplate" hidden="true">
                     <br>
                     <table>
@@ -228,343 +502,377 @@
                             <tr>
                                 <td id="LibTemplateMetadataDescription">__MSG_label_Metadata_description__</td>
                                 <td id="LibTemplateWarningInProgress">__MSG_label_Lib_Warning_In_Progress___</td>
-                                </tr>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <table>
-                    <tr>
-                        <td><input id="LibShowAdvancedOptionsCheckbox" type="checkbox" name="LibShowAdvancedOptionsCheckbox" checked="false"></td>
-                        <td><p>__MSG_label_Lib_Show_Advanced_Library_Options__</p></td>
-                    </tr>
-                    <tr id="LibShowCompactViewRow" hidden="true">
-                        <td><input id="LibShowCompactViewCheckbox" type="checkbox" name="LibShowCompactViewCheckbox" checked="false"></td>
-                        <td><p>__MSG_label_Lib_Compact_View__</p></td>
-                    </tr>
-                    <tr id="LibDownloadEpubAfterUpdateRow" hidden="true">
-                        <td><input id="LibDownloadEpubAfterUpdateCheckbox" type="checkbox" name="LibDownloadEpubAfterUpdateCheckbox" checked="true"></td>
-                        <td><p>__MSG_label_Lib_Download_Epub_After_Update__</p></td>
-                    </tr>
-                </table>
-                <div id="LibRenderResult">
-                </div>
-            </section>
 
-            <!-- Zone 5: Settings (Advanced Options) -->
-            <section id="advancedOptionsSection" hidden="true">
-                <div id="AdditionalMetadatatable" class="settingsGroup">
-                    <details open>
-                        <summary class="i18n">__MSG_label_Metadata_Settings__</summary>
-                        <div class="fieldRow">
-                            <label class="i18n" for="metadataUrlInput">__MSG_label_Metadata_URL__</label>
-                            <input id="metadataUrlInput" type="text" name="metadataUrlInput" />
-                            <button id="loadMetadataButton">__MSG_button_load_Metadata__</button>
-                        </div>
-                        <div class="optionRow">
-                            <label><input id="noAdditionalMetadataCheckbox" type="checkbox" name="noAdditionalMetadataCheckbox" checked="true"> <span class="i18n">__MSG_label_no_additional_metadata__</span></label>
-                        </div>
-                        <div class="optionRow">
-                            <label><input id="autosearchmetadataCheckbox" type="checkbox" name="autosearchmetadataCheckbox" value="true"> <span class="i18n">__MSG_label_auto_search_metadata__</span></label>
-                        </div>
-                        <div class="optionRow">
-                            <label><input id="lesstagsCheckbox" type="checkbox" name="lesstagsCheckbox" value="true"> <span class="i18n">__MSG_label_less_tags__</span></label>
-                        </div>
-                        <div class="fieldRow">
-                            <label class="i18n" for="subjectInput">__MSG_label_Metadata_subject__</label>
-                            <textarea rows="2" cols="60" id="subjectInput" type="text" name="subjectInput"></textarea>
-                        </div>
-                        <div class="fieldRow">
-                            <label class="i18n" for="descriptionInput">__MSG_label_Metadata_description__</label>
-                            <textarea rows="2" cols="60" id="descriptionInput" type="text" name="descriptionInput"></textarea>
-                        </div>
-                        <div id="seriesRow" class="fieldRow">
-                            <label class="i18n" for="seriesNameInput">__MSG_label_Series__</label>
-                            <input id="seriesNameInput" type="text" name="titleInput" />
-                        </div>
-                        <div id="volumeRow" class="fieldRow">
-                            <label class="i18n" for="seriesIndexInput">__MSG_label_Volume__</label>
-                            <input id="seriesIndexInput" type="text" name="titleInput" />
-                        </div>
-                        <div id="translatorRow" class="fieldRow" hidden="true">
-                            <label class="i18n" for="translatorInput">__MSG_label_Translator__</label>
-                            <input id="translatorInput" type="text" name="translatorInput" size="80" />
-                        </div>
-                        <div id="fileAuthorAsRow" class="fieldRow" hidden="true">
-                            <label class="i18n" for="fileAuthorAsInput">__MSG_label_File_Author_as__</label>
-                            <input id="fileAuthorAsInput" type="text" name="fileAuthorAsInput" size="80">
-                        </div>
-                    </details>
-                </div>
-
-                <div id="advancedOptionsTable" class="settingsGroups">
-                    <div class="optionRow">
-                        <label><input id="ShowMoreMetadataOptionsCheckbox" type="checkbox" name="ShowMoreMetadataOptionsCheckbox" value="true"> <span class="i18n">__MSG_label_Show_More_Metadata_Options__</span></label>
+                <!-- Library options -->
+                <div class="stack" style="margin-bottom: 14px;">
+                    <label class="checkRow">
+                        <input id="LibShowAdvancedOptionsCheckbox" type="checkbox" name="LibShowAdvancedOptionsCheckbox" checked="false">
+                        <span class="checkbox"></span>
+                        <span><span class="label">__MSG_label_Lib_Show_Advanced_Library_Options__</span></span>
+                    </label>
+                    <div id="LibShowCompactViewRow" hidden="true">
+                        <label class="checkRow">
+                            <input id="LibShowCompactViewCheckbox" type="checkbox" name="LibShowCompactViewCheckbox" checked="false">
+                            <span class="checkbox"></span>
+                            <span><span class="label">__MSG_label_Lib_Compact_View__</span></span>
+                        </label>
                     </div>
-
-                    <!-- Output -->
-                    <details>
-                        <summary class="i18n">__MSG_label_Output_Settings__</summary>
-                        <div class="fieldRow">
-                            <label class="i18n" for="CustomFilenameInput">__MSG_label_Custom_Filename__</label>
-                            <input id="CustomFilenameInput" type="text" name="CustomFilenameInput">
-                            <button id="CustomFilenameHelpButton">__MSG_button_Help__</button>
-                        </div>
-                        <div id="useFullTitleAsFileName" class="optionRow">
-                            <label><input id="useFullTitleAsFileNameCheckbox" type="checkbox" name="useFullTitleAsFileNameCheckbox" value="false"> <span class="i18n">__MSG_label_Use_Full_Title_As_File_Name__</span></label>
-                        </div>
-                        <div id="overwriteEpubWhenDuplicateFilename" class="optionRow">
-                            <label><input id="overwriteEpubWhenDuplicateFilenameCheckbox" type="checkbox" name="overwriteEpubWhenDuplicateFilenameCheckbox" value="false"> <span class="i18n">__MSG_label_Overwrite_Epub_When_Filename_Duplicte__</span></label>
-                        </div>
-                        <div id="maxChaptersPerEpub" class="fieldRow">
-                            <label class="i18n" for="maxChaptersPerEpubTag">__MSG_label_Max_chapters_per_epub__</label>
-                            <select id="maxChaptersPerEpubTag">
-                                <option value="100">100</option>
-                                <option value="200">200</option>
-                                <option value="500">500</option>
-                                <option value="1,000">1,000</option>
-                                <option value="2,000">2,000</option>
-                                <option value="5,000">5,000</option>
-                                <option value="10,000" selected>10,000</option>
-                            </select>
-                        </div>
-                        <div id="createEpub3FileRow" class="optionRow">
-                            <label><input id="createEpub3Checkbox" type="checkbox" name="createEpub3Checkbox" value="false"> <span class="i18n">__MSG_label_Create_Epub_3__</span></label>
-                        </div>
-                        <div id="addInformationPageToEpub" class="optionRow">
-                            <label><input id="addInformationPageToEpubCheckbox" type="checkbox" name="addInformationPageToEpubCheckbox" value="true"> <span class="i18n">__MSG_label_Add_Information_Page_To_Epub__</span></label>
-                        </div>
-                        <div id="noDownloadPopupFileRow" class="optionRow">
-                            <label><input id="noDownloadPopupCheckbox" type="checkbox" name="noDownloadPopupCheckbox" value="false"> <span class="i18n">__MSG_label_No_Download_Popup__</span></label>
-                        </div>
-                        <div id="sendToKindleRow" class="optionRow">
-                            <label><input id="sendToKindleCheckbox" type="checkbox" name="sendToKindleCheckbox" value="false"> <span class="i18n">__MSG_label_Send_To_Kindle__</span></label>
-                        </div>
-                    </details>
-
-                    <!-- Images -->
-                    <details>
-                        <summary class="i18n">__MSG_label_Images_Settings__</summary>
-                        <div id="skipImagesRow" class="optionRow">
-                            <label><input id="skipImagesCheckbox" type="checkbox" name="skipImagesCheckbox" value="true"> <span class="i18n">__MSG_label_Skip_Images__</span></label>
-                        </div>
-                        <div id="includeImageSourceUrlRow" class="optionRow">
-                            <label><input id="includeImageSourceUrlCheckboxInput" type="checkbox" name="includeImageSourceUrlCheckboxInput" value="true"> <span class="i18n">__MSG_label_Include_URL_of_Images__</span></label>
-                        </div>
-                        <div id="highestResolutionImagesRow" class="optionRow" hidden="true">
-                            <label><input id="highestResolutionImagesCheckboxInput" type="checkbox" name="highestResolutionImagesCheckboxInput" value="true"> <span class="i18n">__MSG_label_Fetch_Highest_Resolution_Images__</span></label>
-                        </div>
-                        <div id="compressImagesRow" class="optionRow">
-                            <label><input id="compressImagesCheckbox" type="checkbox" name="compressImagesCheckbox" value="false"> <span class="i18n">__MSG_label_Compress_Images__</span></label>
-                        </div>
-                        <div class="subOptions">
-                            <div class="fieldRow">
-                                <input id="compressImagesMaxResolutionTag" type="number" name="compressImagesMaxResolutionTag" value="1080" min="100">
-                                <span class="i18n">__MSG_label_Compress_Images_Resolution__</span>
-                            </div>
-                            <div class="fieldRow">
-                                <select id="compressImagesType" name="compressImagesType">
-                                    <option value="auto">__MSG_option_value_auto__</option>
-                                    <option value="jpg">jpg</option>
-                                    <option value="webp">webp</option>
-                                    <option value="png">png</option>
-                                </select>
-                                <span class="i18n">__MSG_label_Compress_Images_Format__</span>
-                            </div>
-                            <div class="optionRow">
-                                <label><input id="compressImagesJpgCoverCheckbox" type="checkbox" name="compressImagesJpgCover" value="false"> <span class="i18n">__MSG_label_Compress_Images_JPG_Cover__</span></label>
-                            </div>
-                        </div>
-                        <div id="useSvgForImages" class="optionRow">
-                            <label><input id="useSvgForImagesInput" type="checkbox" name="useSvgForImagesInput" value="true"> <span class="i18n">__MSG_label_Use_SVG_for_Images__</span></label>
-                        </div>
-                    </details>
-
-                    <!-- Content -->
-                    <details>
-                        <summary class="i18n">__MSG_label_Content_Settings__</summary>
-                        <div id="styleSheetRow" class="fieldRow">
-                            <label class="i18n" for="stylesheetInput">__MSG_label_Stylesheet__</label>
-                            <textarea id="stylesheetInput" rows="6" cols="60"></textarea>
-                        </div>
-                        <div id="stylesheetToDefaultRow" class="fieldRow">
-                            <button id="stylesheetToDefaultButton">__MSG_button_Reset_stylesheet__</button>
-                        </div>
-                        <div id="removeNextAndPreviousChapterHyperlinks" class="optionRow">
-                            <label><input id="removeNextAndPreviousChapterHyperlinksInput" type="checkbox" name="removeNextAndPreviousChapterHyperlinksInput" value="true"> <span class="i18n">__MSG_label_Remove_Next_and_Previous_Chapter_Hyperlinks__</span></label>
-                        </div>
-                        <div id="unSuperScriptAlternateTranslations" class="optionRow" hidden="true">
-                            <label><input id="unSuperScriptCheckboxInput" type="checkbox" name="unSuperScriptCheckboxInput" value="true"> <span class="i18n">__MSG_label_Remove_Superscript_From_Alternate_Translations__</span></label>
-                        </div>
-                        <div id="chaptersPageInChapterListRow" class="optionRow">
-                            <label><input id="chaptersPageInChapterListCheckbox" type="checkbox" name="chaptersPageInChapterListbox" value="false"> <span class="i18n">__MSG_label_Chapters_Page_In_Chapters_List__</span></label>
-                        </div>
-                        <div id="skipChaptersThatFailFetch" class="optionRow">
-                            <label><input id="skipChaptersThatFailFetchCheckbox" type="checkbox" name="skipChaptersThatFailFetchCheckbox" value="false"> <span class="i18n">__MSG_label_Skip_Chapters_That_Fail_Fetch__</span></label>
-                        </div>
-                        <div id="autoParserSelectIncludesBTSeriesPageRow" class="optionRow">
-                            <label><input id="autoParserSelectIncludesBTSeriesPageCheckbox" type="checkbox" name="autoParserSelectIncludesBTSeriesPage" value="false"> <span class="i18n">__MSG_label_Auto_Parser_Select_Includes_Baka_Tsuki_Series_Page_Parser__</span></label>
-                            <button id="seriesPageHelpButton">__MSG_button_Help__</button>
-                        </div>
-                    </details>
-
-                    <!-- Behavior -->
-                    <details>
-                        <summary class="i18n">__MSG_label_Behavior_Settings__</summary>
-                        <div id="manualDelayPerChapter" class="fieldRow">
-                            <label class="i18n" for="manualDelayPerChapterTag">__MSG_label_Manual_Delay_Per_Chapter__</label>
-                            <input id="manualDelayPerChapterTag" type="number" name="manualDelayPerChapterTag">
-                        </div>
-                        <div id="overrideParserDelayWithManualDelay" class="optionRow">
-                            <label><input id="overrideMinimumDelayCheckbox" type="checkbox" name="overrideMinimumDelayCheckbox" value="false"> <span class="i18n">__MSG_label_Override_Default_Minimum_Delay__</span></label>
-                        </div>
-                        <div id="IncludeInReadingListRow" class="optionRow">
-                            <label><input id="includeInReadingListCheckbox" type="checkbox" name="includeInReadingListCheckbox" value="false"> <span class="i18n">__MSG_label_Include_in_Reading_List__</span></label>
-                        </div>
-                        <div id="viewReadingListRow" class="fieldRow">
-                            <button id="viewReadingListButton">__MSG_button_View_Reading_List__</button>
-                        </div>
-                        <div id="disableShiftClickAlertRow" class="optionRow">
-                            <label><input id="disableShiftClickAlertCheckbox" type="checkbox" name="disableShiftClickAlertCheckbox" value="false"> <span class="i18n">__MSG_label_Disable_Shift_Click_Alert__</span></label>
-                        </div>
-                        <div id="disableImageResErrorRow" class="optionRow">
-                            <label><input id="disableImageResErrorCheckbox" type="checkbox" name="disableImageResErrorCheckbox" value="false"> <span class="i18n">__MSG_label_Disable_Image_Res_Error__</span></label>
-                        </div>
-                        <div id="disableWebpImageFormatErrorRow" class="optionRow">
-                            <label><input id="disableWebpImageFormatErrorCheckbox" type="checkbox" name="disableWebpImageFormatErrorCheckbox" value="false"> <span class="i18n">__MSG_label_Disable_Webp_Image_Format_Error__</span></label>
-                        </div>
-                    </details>
-
-                    <!-- Appearance -->
-                    <details>
-                        <summary class="i18n">__MSG_label_Appearance_Settings__</summary>
-                        <div class="fieldRow">
-                            <label class="i18n" for="themeColorTag">__MSG_label_Theme__</label>
-                            <select id="themeColorTag">
-                                <option class="i18n" value="LightMode">__MSG_option_ID_Theme_Always_Light__</option>
-                                <option class="i18n" value="DarkMode">__MSG_option_ID_Theme_Always_Dark__</option>
-                                <option class="i18n" selected="true" value="">__MSG_option_ID_Theme_OS_Selection__</option>
-                            </select>
-                        </div>
-                        <div id="advancedOptionsVisibleByDefaultRow" class="optionRow">
-                            <label><input id="advancedOptionsVisibleByDefaultCheckbox" type="checkbox" name="advancedOptionsVisibleByDefaultCheckbox" value="true"> <span class="i18n">__MSG_label_Advanced_Options_Visible_By_Default__</span></label>
-                        </div>
-                        <div class="fieldRow">
-                            <label class="i18n" for="manuallySelectParserTag">__MSG_label_Manually_Select_Parser__</label>
-                            <select id="manuallySelectParserTag"></select>
-                        </div>
-                    </details>
-
-                    <!-- Developer -->
-                    <details>
-                        <summary class="i18n">__MSG_label_Developer_Settings__</summary>
-                        <div id="developerStuffRow" class="fieldRow">
-                            <label class="i18n" for="diagnosticsCheckBoxInput">__MSG_label_Developer_Stuff__</label>
-                            <input id="diagnosticsCheckBoxInput" type="checkbox" name="diagnosticsCheckBoxInput" value="false">
-                            <button id="reloadButton" hidden="true">__MSG_button_Reload__</button>
-                        </div>
-                        <div id="writeOptionsRow" class="fieldRow">
-                            <button id="writeOptionsButton">__MSG_button_Write_Options_to_file__</button>
-                        </div>
-                        <div id="readOptionsRow" class="fieldRow">
-                            <label class="i18n" for="readOptionsInput">__MSG_label_Read_Options_from_file__</label>
-                            <input id="readOptionsInput" type="file" name="readOptionsInput">
-                        </div>
-                        <div id="writeErrorHistoryToFileRow" class="optionRow">
-                            <label><input id="writeErrorHistoryToFileCheckbox" type="checkbox" name="writeErrorHistoryToFileCheckbox" value="false"> <span class="i18n">__MSG_label_Write_Error_History_To_File__</span></label>
-                        </div>
-                        <div id="resetRow" class="fieldRow">
-                            <button id="resetButton">__MSG_button_Reset__</button>
-                        </div>
-                    </details>
+                    <div id="LibDownloadEpubAfterUpdateRow" hidden="true">
+                        <label class="checkRow">
+                            <input id="LibDownloadEpubAfterUpdateCheckbox" type="checkbox" name="LibDownloadEpubAfterUpdateCheckbox" checked="true">
+                            <span class="checkbox"></span>
+                            <span><span class="label">__MSG_label_Lib_Download_Epub_After_Update__</span></span>
+                        </label>
+                    </div>
                 </div>
-            </section>
-        </section>
-        <section id="testSection"></section>
-        <section id="imageSection" hidden="true">
-            <table id="imageOptionsTable">
-                <tr id="duplicateImagesRow">
-                    <td>__MSG_label_Remove_Duplicate_Images__</td>
-                    <td><input id="removeDuplicateImages" type="checkbox" name="removeDuplicateImages" value="false"></td>
-                </tr>
-                <tr id="coverFromUrlRow">
-                    <td>__MSG_label_Cover_from_URL__</td>
-                    <td><input id="coverFromUrlCheckboxInput" type="checkbox" name="coverFromUrlCheckboxInput" value="false"></td>
-                </tr>
-            </table>
-            <div id="imagesTableDiv" class="scrollingtable">
-                <table id="imagesTable"></table>
+
+                <!-- Library shelf grid -->
+                <div class="shelfGrid" id="LibRenderResult">
+                </div>
             </div>
         </section>
-        <section id="outputSection" class="minWidth">
-            <div id="chapterSelectControlsDiv">
-                <div id="rangeSelectTable" class="rangeSelectGrid">
-                    <div id="rangeStartChapterRow" class="rangeRow">
-                        <span class="i18n">__MSG_label_Range_Start_Chapter__</span>
-                        <span><input id="chapterSearchStart" type="text" placeholder="Go to ch. #" size="10"> <select id="selectRangeStartChapter"></select></span>
-                        <span><input id="showChapterUrlsCheckbox" type="checkbox" name="showChapterUrlsCheckbox" value="false"> <span class="i18n">__MSG_label_Show_Chapter_Urls__</span></span>
-                    </div>
-                    <div id="rangeEndChapterRow" class="rangeRow">
-                        <span class="i18n">__MSG_label_Range_End_Chapter__</span>
-                        <span><input id="chapterSearchEnd" type="text" placeholder="Go to ch. #" size="10"> <select id="selectRangeEndChapter"></select></span>
-                        <span>&nbsp; <button id="viewFiltersButton">__MSG_button_View_Filters__</button></span>
-                    </div>
-                    <div id="volumeMappingRow" class="rangeRow">
-                        <span class="i18n">__MSG_label_Import_Volumes__</span>
-                        <span class="rangeRowWide">
-                            <input id="volumeMappingUrl" type="text" placeholder="Paste volume source URL (webnovel.com, royalroad.com)" class="volumeMappingInput">
-                            <button id="volumeMappingButton">__MSG_button_Import_Volumes__</button>
-                            <span id="volumeMappingStatus"></span>
-                        </span>
-                    </div>
-                    <div id="rangeChapterCountRow" class="rangeRow">
-                        <span class="i18n">__MSG_label_Chapter_Count__</span>
-                        <span class="rangeRowWide chapterCountInfo">
-                            <span id="spanChapterCount">0</span>
-                            <span id="spanParserName"></span>
-                            <span id="spanDelayMs">0 ms</span>
-                        </span>
-                    </div>
-                </div>
+
+        <!-- ═══ Advanced options panel (collapsible) ═══ -->
+        <button class="panelHeader" id="advancedOptionsButton">
+            <span class="num">&sect;05</span>
+            <span class="icon">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="8" cy="8" r="2.2" />
+                    <path d="M8 1.5v2M8 12.5v2M14.5 8h-2M3.5 8h-2M12.6 3.4l-1.4 1.4M4.8 11.2l-1.4 1.4M12.6 12.6l-1.4-1.4M4.8 4.8 3.4 3.4" />
+                </svg>
+            </span>
+            <span class="title">__MSG_button_Advanced_Options__</span>
+            <span class="subtitle">__MSG_label_Advanced_Options_Subtitle__</span>
+            <span class="chev">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 4.5 6 7.5l3-3" />
+                </svg>
+            </span>
+        </button>
+        <section id="advancedOptionsSection" hidden="true">
+            <div class="advancedBody open">
+                <nav class="settingsNav" id="settingsNav">
+                    <button data-tab="metadata"><span>__MSG_label_Tab_Metadata__</span><span class="mono">/meta</span></button>
+                    <button data-tab="output" class="active"><span>__MSG_label_Tab_Output__</span><span class="mono">/out</span></button>
+                    <button data-tab="images"><span>__MSG_label_Tab_Images__</span><span class="mono">/img</span></button>
+                    <button data-tab="content"><span>__MSG_label_Tab_Content__</span><span class="mono">/doc</span></button>
+                    <button data-tab="behavior"><span>__MSG_label_Tab_Behavior__</span><span class="mono">/beh</span></button>
+                </nav>
                 <div>
-                    <button id="selectAllUrlsButton">__MSG_button_Select_All__</button>
-                    <button id="unselectAllUrlsButton">__MSG_button_Unselect_All__</button>
-                    <button id="reverseChapterUrlsOrderButton">__MSG_button_Reverse_Chapter_Urls_Order__</button>
-                    <button id="editChaptersUrlsButton">__MSG_button_Edit_Chapter_Urls__</button>
-                    <button id="copyUrlsToClipboardButton">__MSG_button_Copy_Urls_To_Clipboard__</button>
+                    <!-- ── Tab: Metadata /meta ── -->
+                    <div class="settingsPanel" data-panel="metadata" hidden>
+                        <div id="AdditionalMetadatatable">
+                        <div class="blockTitle">__MSG_label_Block_Additional_Metadata__</div>
+                        <div class="stack">
+                            <div class="field">
+                                <label>__MSG_label_Metadata_URL__</label>
+                                <div style="display:flex;gap:6px;align-items:center;">
+                                    <input class="input mono" id="metadataUrlInput" type="text" name="metadataUrlInput" />
+                                    <button class="btn sm" id="loadMetadataButton">__MSG_button_load_Metadata__</button>
+                                </div>
+                            </div>
+                            <label class="checkRow">
+                                <input id="noAdditionalMetadataCheckbox" type="checkbox" name="noAdditionalMetadataCheckbox" checked="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_no_additional_metadata__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="autosearchmetadataCheckbox" type="checkbox" name="autosearchmetadataCheckbox" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_auto_search_metadata__</span><span class="hint">__MSG_hint_Auto_Search_Metadata__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="lesstagsCheckbox" type="checkbox" name="lesstagsCheckbox" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_less_tags__</span></span>
+                            </label>
+                            <div class="field">
+                                <label>__MSG_label_Metadata_subject__</label>
+                                <textarea class="input" rows="2" cols="60" id="subjectInput" type="text" name="subjectInput"></textarea>
+                            </div>
+                            <div class="field">
+                                <label>__MSG_label_Metadata_description__</label>
+                                <textarea class="input" rows="2" cols="60" id="descriptionInput" type="text" name="descriptionInput"></textarea>
+                            </div>
+                            <div class="field" id="seriesRow">
+                                <label>__MSG_label_Series__</label>
+                                <input class="input" id="seriesNameInput" type="text" name="titleInput" />
+                            </div>
+                            <div class="field" id="volumeRow">
+                                <label>__MSG_label_Volume__</label>
+                                <input class="input mono" id="seriesIndexInput" type="text" name="titleInput" />
+                            </div>
+                            <div class="field" id="translatorRow" hidden="true">
+                                <label>__MSG_label_Translator__</label>
+                                <input class="input" id="translatorInput" type="text" name="translatorInput" size="80" />
+                            </div>
+                            <div class="field" id="fileAuthorAsRow" hidden="true">
+                                <label>__MSG_label_File_Author_as__</label>
+                                <input class="input" id="fileAuthorAsInput" type="text" name="fileAuthorAsInput" size="80">
+                            </div>
+                            <label class="checkRow">
+                                <input id="ShowMoreMetadataOptionsCheckbox" type="checkbox" name="ShowMoreMetadataOptionsCheckbox" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Show_More_Metadata_Options__</span></span>
+                            </label>
+                        </div>
+                        </div><!-- /AdditionalMetadatatable -->
+                    </div>
+
+                    <!-- ── Tab: Output /out (DEFAULT ACTIVE) ── -->
+                    <div class="settingsPanel active" data-panel="output">
+                        <div class="blockTitle">__MSG_label_Block_Output_Settings__</div>
+                        <div class="stack">
+                            <div class="field">
+                                <label>__MSG_label_Custom_Filename__</label>
+                                <div style="display:flex;gap:6px;align-items:center;">
+                                    <input class="input mono" id="CustomFilenameInput" type="text" name="CustomFilenameInput">
+                                    <button class="btn sm" id="CustomFilenameHelpButton">__MSG_button_Help__</button>
+                                </div>
+                            </div>
+                            <label class="checkRow">
+                                <input id="useFullTitleAsFileNameCheckbox" type="checkbox" name="useFullTitleAsFileNameCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Use_Full_Title_As_File_Name__</span></span>
+                            </label>
+                            <div class="field">
+                                <label>__MSG_label_Max_chapters_per_epub__</label>
+                                <select class="select mono" id="maxChaptersPerEpubTag">
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                    <option value="500">500</option>
+                                    <option value="1,000">1,000</option>
+                                    <option value="2,000">2,000</option>
+                                    <option value="5,000">5,000</option>
+                                    <option value="10,000" selected>10,000</option>
+                                </select>
+                            </div>
+                            <label class="checkRow">
+                                <input id="createEpub3Checkbox" type="checkbox" name="createEpub3Checkbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Create_Epub_3__</span><span class="hint">__MSG_hint_Create_Epub_3__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="addInformationPageToEpubCheckbox" type="checkbox" name="addInformationPageToEpubCheckbox" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Add_Information_Page_To_Epub__</span><span class="hint">__MSG_hint_Add_Information_Page__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="overwriteEpubWhenDuplicateFilenameCheckbox" type="checkbox" name="overwriteEpubWhenDuplicateFilenameCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Overwrite_Epub_When_Filename_Duplicte__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="noDownloadPopupCheckbox" type="checkbox" name="noDownloadPopupCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_No_Download_Popup__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="sendToKindleCheckbox" type="checkbox" name="sendToKindleCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Send_To_Kindle__</span></span>
+                            </label>
+                            <div class="field">
+                                <label>__MSG_label_Theme__</label>
+                                <select class="select" id="themeColorTag">
+                                    <option class="i18n" value="LightMode">__MSG_option_ID_Theme_Always_Light__</option>
+                                    <option class="i18n" value="DarkMode">__MSG_option_ID_Theme_Always_Dark__</option>
+                                    <option class="i18n" selected="true" value="">__MSG_option_ID_Theme_OS_Selection__</option>
+                                </select>
+                            </div>
+                            <label class="checkRow">
+                                <input id="advancedOptionsVisibleByDefaultCheckbox" type="checkbox" name="advancedOptionsVisibleByDefaultCheckbox" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Advanced_Options_Visible_By_Default__</span></span>
+                            </label>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                                <button class="btn sm" id="writeOptionsButton">__MSG_button_Write_Options_to_file__</button>
+                                <div class="field" style="flex:1;min-width:200px;">
+                                    <label>__MSG_label_Read_Options_from_file__</label>
+                                    <input class="input" id="readOptionsInput" type="file" name="readOptionsInput">
+                                </div>
+                            </div>
+                            <div style="margin-top:4px;">
+                                <button class="btn sm" id="resetButton">__MSG_button_Reset__</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Tab: Images /img ── -->
+                    <div class="settingsPanel" data-panel="images" hidden>
+                        <div class="blockTitle">__MSG_label_Block_Image_Settings__</div>
+                        <div class="stack">
+                            <label class="checkRow">
+                                <input id="skipImagesCheckbox" type="checkbox" name="skipImagesCheckbox" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Skip_Images__</span><span class="hint">__MSG_hint_Skip_Images__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="compressImagesCheckbox" type="checkbox" name="compressImagesCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Compress_Images__</span></span>
+                            </label>
+                            <div class="gridTwo" style="padding-left: 24px;">
+                                <div class="field">
+                                    <label>__MSG_label_Compress_Images_Resolution__</label>
+                                    <input class="input mono" id="compressImagesMaxResolutionTag" type="number" name="compressImagesMaxResolutionTag" value="1080" min="100" />
+                                </div>
+                                <div class="field">
+                                    <label>__MSG_label_Compress_Images_Format__</label>
+                                    <select class="select mono" id="compressImagesType" name="compressImagesType">
+                                        <option value="auto">__MSG_option_value_auto__</option>
+                                        <option value="jpg">jpg</option>
+                                        <option value="webp">webp</option>
+                                        <option value="png">png</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <label class="checkRow" style="padding-left: 24px;">
+                                <input id="compressImagesJpgCoverCheckbox" type="checkbox" name="compressImagesJpgCover" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Compress_Images_JPG_Cover__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="includeImageSourceUrlCheckboxInput" type="checkbox" name="includeImageSourceUrlCheckboxInput" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Include_URL_of_Images__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="useSvgForImagesInput" type="checkbox" name="useSvgForImagesInput" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Use_SVG_for_Images__</span><span class="hint">__MSG_hint_Use_SVG_Images__</span></span>
+                            </label>
+                            <div id="highestResolutionImagesRow" hidden="true">
+                                <label class="checkRow">
+                                    <input id="highestResolutionImagesCheckboxInput" type="checkbox" name="highestResolutionImagesCheckboxInput" value="true">
+                                    <span class="checkbox"></span>
+                                    <span><span class="label">__MSG_label_Fetch_Highest_Resolution_Images__</span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Tab: Content /doc ── -->
+                    <div class="settingsPanel" data-panel="content" hidden>
+                        <div class="blockTitle">__MSG_label_Block_Content_Settings__</div>
+                        <div class="stack">
+                            <div class="field" id="styleSheetRow">
+                                <label>__MSG_label_Stylesheet__</label>
+                                <textarea class="input mono" id="stylesheetInput" rows="6" style="resize:vertical;line-height:1.5;"></textarea>
+                            </div>
+                            <div id="stylesheetToDefaultRow">
+                                <button class="btn sm" id="stylesheetToDefaultButton">__MSG_button_Reset_stylesheet__</button>
+                            </div>
+                            <label class="checkRow">
+                                <input id="removeNextAndPreviousChapterHyperlinksInput" type="checkbox" name="removeNextAndPreviousChapterHyperlinksInput" value="true">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Remove_Next_and_Previous_Chapter_Hyperlinks__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="chaptersPageInChapterListCheckbox" type="checkbox" name="chaptersPageInChapterListbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Chapters_Page_In_Chapters_List__</span></span>
+                            </label>
+                            <div class="field" id="autoParserSelectIncludesBTSeriesPageRow">
+                                <label class="checkRow">
+                                    <input id="autoParserSelectIncludesBTSeriesPageCheckbox" type="checkbox" name="autoParserSelectIncludesBTSeriesPage" value="false">
+                                    <span class="checkbox"></span>
+                                    <span><span class="label">__MSG_label_Auto_Parser_Select_Includes_Baka_Tsuki_Series_Page_Parser__</span></span>
+                                </label>
+                                <button class="btn sm" id="seriesPageHelpButton">__MSG_button_Help__</button>
+                            </div>
+                            <div id="removeAuthorNotesRow2" hidden="true">
+                                <label class="checkRow">
+                                    <input type="checkbox" disabled>
+                                    <span class="checkbox"></span>
+                                    <span><span class="label">__MSG_label_Remove_Author_Notes__</span><span class="hint">__MSG_hint_Remove_Author_Notes__</span></span>
+                                </label>
+                            </div>
+                            <div id="unSuperScriptAlternateTranslations" hidden="true">
+                                <label class="checkRow">
+                                    <input id="unSuperScriptCheckboxInput" type="checkbox" name="unSuperScriptCheckboxInput" value="true">
+                                    <span class="checkbox"></span>
+                                    <span><span class="label">__MSG_label_Remove_Superscript_From_Alternate_Translations__</span></span>
+                                </label>
+                            </div>
+                            <label class="checkRow">
+                                <input id="skipChaptersThatFailFetchCheckbox" type="checkbox" name="skipChaptersThatFailFetchCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Skip_Chapters_That_Fail_Fetch__</span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- ── Tab: Behavior /beh ── -->
+                    <div class="settingsPanel" data-panel="behavior" hidden>
+                        <div class="blockTitle">__MSG_label_Block_Behavior_Settings__</div>
+                        <div class="stack">
+                            <div class="field">
+                                <label>__MSG_label_Manual_Delay_Per_Chapter__</label>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <input class="input mono" id="manualDelayPerChapterTag" type="number" name="manualDelayPerChapterTag" />
+                                    <span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-mute);letter-spacing:0.08em;text-transform:uppercase;">ms / chapter</span>
+                                </div>
+                            </div>
+                            <label class="checkRow">
+                                <input id="overrideMinimumDelayCheckbox" type="checkbox" name="overrideMinimumDelayCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Override_Default_Minimum_Delay__</span><span class="hint">__MSG_hint_Override_Minimum_Delay__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="includeInReadingListCheckbox" type="checkbox" name="includeInReadingListCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Include_in_Reading_List__</span></span>
+                            </label>
+                            <div>
+                                <button class="btn sm" id="viewReadingListButton">__MSG_button_View_Reading_List__</button>
+                            </div>
+                            <div class="field">
+                                <label>__MSG_label_Manually_Select_Parser__</label>
+                                <select class="select" id="manuallySelectParserTag"></select>
+                            </div>
+                            <label class="checkRow">
+                                <input id="disableShiftClickAlertCheckbox" type="checkbox" name="disableShiftClickAlertCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Disable_Shift_Click_Alert__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="disableImageResErrorCheckbox" type="checkbox" name="disableImageResErrorCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Disable_Image_Res_Error__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="disableWebpImageFormatErrorCheckbox" type="checkbox" name="disableWebpImageFormatErrorCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Disable_Webp_Image_Format_Error__</span></span>
+                            </label>
+                            <label class="checkRow">
+                                <input id="writeErrorHistoryToFileCheckbox" type="checkbox" name="writeErrorHistoryToFileCheckbox" value="false">
+                                <span class="checkbox"></span>
+                                <span><span class="label">__MSG_label_Write_Error_History_To_File__</span></span>
+                            </label>
+                            <div class="field">
+                                <label>__MSG_label_Developer_Stuff__</label>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <input id="diagnosticsCheckBoxInput" type="checkbox" name="diagnosticsCheckBoxInput" value="false">
+                                    <button class="btn sm" id="reloadButton" hidden="true">__MSG_button_Reload__</button>
+                                </div>
+                            </div>
+                            <div id="passwordRow2" class="field" hidden="true">
+                                <label>__MSG_label_Password__</label>
+                                <input class="input" id="passwordInput2" type="text" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button id="applyChangesButton" hidden="true">__MSG_button_Apply_Changes__</button>
-            <p id="editURLsHint" class="i18n" hidden="true">__MSG_label_Edit_URLs_Hint__</p>
-            <div id="findingChapterUrlsMessageRow" class="i18n warning">__MSG_Searching_For_URLs_Please_Wait__</div>
-            <div id="chapterUrlsScrollDiv" class="scrollingtable">
-                <table id="chapterUrlsTable" class="chapterlist">
-                    <tr>
-                        <th align="left">__MSG_column_Include__</th>
-                        <th align="left">__MSG_column_Title__</th>
-                        <th align="left" hidden="true">__MSG_column_URL__</th>
-                    </tr>
-                </table>
-            </div>
-            <div id="paginationControls" class="paginationBar">
-                <button id="paginationFirst" title="First page">&laquo;</button>
-                <button id="paginationPrev" title="Previous page">&lsaquo;</button>
-                <span id="paginationInfo">Page 1 of 1</span>
-                <button id="paginationNext" title="Next page">&rsaquo;</button>
-                <button id="paginationLast" title="Last page">&raquo;</button>
-                <select id="paginationPageSize">
-                    <option value="50">50</option>
-                    <option value="100" selected>100</option>
-                    <option value="200">200</option>
-                    <option value="0">All</option>
-                </select>
-            </div>
-            <div>
-                <textarea id="editChaptersUrlsInput" class="allSpace" cols="200" rows="20" hidden="true"></textarea>
-            </div>
-            <button id="applyChangesButton2" hidden="true">__MSG_button_Apply_Changes__</button>
         </section>
-    </div>
 
+    <!-- ═══ Sidebar for filters (off-screen) ═══ -->
     <div id="sbOptions" class="sidebar">
         <div width="100%" id="sbClose" class="closebtn">&#x274c;</div>
         <section id="sbFilters" hidden="true">
@@ -575,9 +883,15 @@
             </table>
             <form id="sbFiltersForm" disabled> </form>
         </section>
-        <!-- Create new sections for new or moved data such as Advanced Options or Reading List -->
     </div>
 
+    <!-- ═══ Colophon footer ═══ -->
+    <div class="colophon">
+        <span class="uppercase">WebToEpub</span>
+        <span class="status">__MSG_label_Progress_Ready_Period__</span>
+    </div>
+
+    <!-- ═══ ALL script imports ═══ -->
     <span id="scriptContainer">
         <!-- scripts go here -->
         <script src="js/UIText.js"></script>
@@ -986,7 +1300,9 @@
         <script src="js/CoverImageUI.js"></script>
         <script src="js/parsers/SonakoParser.js"></script>
         <script src="js/EpubPacker.js"></script>
+        <script src="js/popup-ui.js"></script>
         <script src="js/main.js"></script>
     </span>
+</div>
 </body>
 </html>
