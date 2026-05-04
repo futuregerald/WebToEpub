@@ -502,6 +502,11 @@ button.lg {
     grid-template-columns: 1fr 220px;
     gap: 32px;
     align-items: flex-start;
+    overflow: hidden;
+}
+
+.bookSection > * {
+    min-width: 0;
 }
 
 .actionRow {
@@ -515,12 +520,23 @@ button.lg {
     gap: 4px;
 }
 
+.formGrid input,
+.formGrid select,
+.formGrid textarea {
+    max-width: none;
+}
+
 .field {
     display: grid;
     grid-template-columns: 88px 1fr;
     align-items: center;
     gap: 10px;
     padding: 6px 0;
+    min-width: 0;
+}
+
+.field > * {
+    min-width: 0;
 }
 
 .field label {
@@ -555,7 +571,7 @@ textarea.input,
     transition: border-color .15s, background .15s, box-shadow .15s;
     font-family: inherit;
     max-width: 420px;
-    min-width: 200px;
+    min-width: 0;
 }
 
 input[type=text]:focus,
@@ -835,6 +851,12 @@ textarea.allSpace {
 .coverInputRow {
     display: flex;
     gap: 4px;
+}
+
+.coverInputRow input {
+    min-width: 0;
+    max-width: none;
+    flex: 1;
 }
 
 /* Cover image in production table layout */
