@@ -275,15 +275,20 @@ var PopupUI = (function() {  // eslint-disable-line no-unused-vars
     }
 
     function updateChapterSubtitle() {
-        let subtitle = document.getElementById("chapterSubtitle");
-        if (!subtitle) {
+        let chapterCountEl = document.getElementById("spanChapterCount");
+        if (!chapterCountEl) {
             return;
         }
 
-        let chapterCountEl = document.getElementById("spanChapterCount");
-        let countText = chapterCountEl ? chapterCountEl.textContent.trim() : "0";
+        let suffixText = ((typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Selected")) || "selected");
 
-        subtitle.textContent = countText + " " + ((typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getMessage("label_Selected")) || "selected");
+        // Update only the text node after spanChapterCount, preserving the element
+        let nextSibling = chapterCountEl.nextSibling;
+        if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE) {
+            nextSibling.textContent = " " + suffixText;
+        } else {
+            chapterCountEl.parentNode.appendChild(document.createTextNode(" " + suffixText));
+        }
     }
 
     // ── 7. Colophon Version ─────────────────────────────────────────
