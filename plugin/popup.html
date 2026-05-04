@@ -110,7 +110,7 @@
                     </div>
                     <div>
                         <div class="wordmark">web<em>2</em>epub</div>
-                        <div class="tagline">__MSG_label_Tagline__</div>
+                        <div class="tagline i18n">__MSG_label_Tagline__</div>
                     </div>
                 </div>
                 <span class="parserChip" id="parserChip"><span id="spanParserName"></span> <span id="spanDelayMs"></span></span>
@@ -128,7 +128,7 @@
                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" />
                     </svg>
-                    __MSG_button_load_and_analyse__
+                    <span>__MSG_button_load_and_analyse__</span>
                 </button>
             </div>
         </section>
@@ -226,11 +226,11 @@
                                 <div class="placeholder" id="bookPlaceholder">
                                     <div><div class="ph-mark">~</div></div>
                                     <div>
-                                        <div class="ph-title" id="phTitle">__MSG_label_Untitled__</div>
+                                        <div class="ph-title i18n" id="phTitle">__MSG_label_Untitled__</div>
                                         <div class="ph-rule"></div>
-                                        <div class="ph-author" id="phAuthor">__MSG_label_Anonymous__</div>
+                                        <div class="ph-author i18n" id="phAuthor">__MSG_label_Anonymous__</div>
                                     </div>
-                                    <div class="ph-empty">__MSG_label_No_Cover__</div>
+                                    <div class="ph-empty i18n">__MSG_label_No_Cover__</div>
                                 </div>
                             </div>
                             <div class="shelfShadow"></div>
@@ -243,7 +243,7 @@
                             <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                                 <path d="M3 3l6 6M9 3l-6 6" />
                             </svg>
-                            __MSG_button_Clear_Url__
+                            <span>__MSG_button_Clear_Url__</span>
                         </button>
                     </div>
                 </div>
@@ -256,7 +256,7 @@
                         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M8 2v9M4.5 7.5 8 11l3.5-3.5M3 13h10" />
                         </svg>
-                        __MSG_button_Pack_EPUB__
+                        <span>__MSG_button_Pack_EPUB__</span>
                     </button>
                     <div class="progressColumn">
                         <progress id="fetchProgress" value="0" max="1" hidden="true"></progress>
@@ -273,18 +273,18 @@
                         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                             <path d="M8 3v10M3 8h10" />
                         </svg>
-                        __MSG_button_Add_to_Library__
+                        <span>__MSG_button_Add_to_Library__</span>
                     </button>
                     <button class="btn ghost" data-libclick="yes" id="LibPauseToLibrary" hidden="true">
-                        __MSG_button_Pause_to_Library__
+                        <span>__MSG_button_Pause_to_Library__</span>
                     </button>
                 </div>
             </div>
         </section>
     </section><!-- /inputSection -->
 
-        <!-- ─── Chapters ─── -->
-        <section class="chaptersSection" id="outputSection">
+    <!-- ─── Chapters ─── -->
+    <section class="chaptersSection" id="outputSection">
             <div class="sectionHead">
                 <span class="num">&sect;03</span>
                 <span class="title">__MSG_label_Chapters__</span>
@@ -302,7 +302,7 @@
                         </div>
                     </div>
                     <label class="urlsToggle inlineRight">
-                        <input type="checkbox" id="showChapterUrlsCheckbox" name="showChapterUrlsCheckbox" value="false" /> __MSG_label_Show_Chapter_Urls__
+                        <input type="checkbox" id="showChapterUrlsCheckbox" name="showChapterUrlsCheckbox" value="false" /> <span>__MSG_label_Show_Chapter_Urls__</span>
                     </label>
                 </div>
                 <div class="rangeRow" id="rangeEndChapterRow">
@@ -317,7 +317,7 @@
                         <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M2.5 4h11M5 8h6M7 12h2"/>
                         </svg>
-                        __MSG_button_View_Filters__
+                        <span>__MSG_button_View_Filters__</span>
                     </button>
                 </div>
 
@@ -566,7 +566,7 @@
                     <!-- ── Tab: Metadata /meta ── -->
                     <div class="settingsPanel" data-panel="metadata" hidden>
                         <div id="AdditionalMetadatatable">
-                        <div class="blockTitle">__MSG_label_Block_Additional_Metadata__</div>
+                        <div class="blockTitle i18n">__MSG_label_Block_Additional_Metadata__</div>
                         <div class="stack">
                             <div class="field">
                                 <label>__MSG_label_Metadata_URL__</label>
@@ -625,7 +625,7 @@
 
                     <!-- ── Tab: Output /out (DEFAULT ACTIVE) ── -->
                     <div class="settingsPanel active" data-panel="output">
-                        <div class="blockTitle">__MSG_label_Block_Output_Settings__</div>
+                        <div class="blockTitle i18n">__MSG_label_Block_Output_Settings__</div>
                         <div class="stack">
                             <div class="field">
                                 <label>__MSG_label_Custom_Filename__</label>
@@ -704,7 +704,7 @@
 
                     <!-- ── Tab: Images /img ── -->
                     <div class="settingsPanel" data-panel="images" hidden>
-                        <div class="blockTitle">__MSG_label_Block_Image_Settings__</div>
+                        <div class="blockTitle i18n">__MSG_label_Block_Image_Settings__</div>
                         <div class="stack">
                             <label class="checkRow">
                                 <input id="skipImagesCheckbox" type="checkbox" name="skipImagesCheckbox" value="true">
@@ -758,7 +758,7 @@
 
                     <!-- ── Tab: Content /doc ── -->
                     <div class="settingsPanel" data-panel="content" hidden>
-                        <div class="blockTitle">__MSG_label_Block_Content_Settings__</div>
+                        <div class="blockTitle i18n">__MSG_label_Block_Content_Settings__</div>
                         <div class="stack">
                             <div class="field" id="styleSheetRow">
                                 <label>__MSG_label_Stylesheet__</label>
@@ -809,7 +809,7 @@
 
                     <!-- ── Tab: Behavior /beh ── -->
                     <div class="settingsPanel" data-panel="behavior" hidden>
-                        <div class="blockTitle">__MSG_label_Block_Behavior_Settings__</div>
+                        <div class="blockTitle i18n">__MSG_label_Block_Behavior_Settings__</div>
                         <div class="stack">
                             <div class="field">
                                 <label>__MSG_label_Manual_Delay_Per_Chapter__</label>

@@ -200,6 +200,7 @@ a:hover {
     gap: var(--space-xl);
     position: relative;
     z-index: 1;
+    overflow-x: hidden;
 }
 
 section.minWidth {
@@ -906,6 +907,7 @@ td.disabled {
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
+    min-width: 0;
 }
 
 #inputSection table,
