@@ -537,8 +537,12 @@ button.lg {
 
 .field > * {
     min-width: 0;
+}
+
+.field > label {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* In gridTwo, labels need less space since columns are narrower */
@@ -1242,7 +1246,7 @@ td.disabled {
     white-space: nowrap;
 }
 
-.goToInput {
+input.goToInput {
     width: 76px;
     padding: 6px 8px;
     border: 1px solid var(--rule);
@@ -1253,6 +1257,7 @@ td.disabled {
     color: var(--ink);
     outline: none;
     flex-shrink: 0;
+    max-width: 76px;
 }
 
 .goToInput::placeholder {
@@ -1337,11 +1342,10 @@ td.disabled {
     gap: var(--space-md);
 }
 
-#chapterSelectControlsDiv > div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-}
+/* Removed: #chapterSelectControlsDiv > div override was breaking
+   .rangeRow grid, .chapterCountLine baseline, .listToolbar center
+   alignment due to ID specificity (1,0,1) > class (0,1,0). Each
+   child element now uses its own display styles. */
 
 /* Volume mapping */
 .volumeMappingInput {
