@@ -537,8 +537,12 @@ button.lg {
 
 .field > * {
     min-width: 0;
+}
+
+.field > label {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* In gridTwo, labels need less space since columns are narrower */
@@ -1074,9 +1078,8 @@ td.disabled {
 
 #coverImageUrlInput {
     flex: 1;
-    min-width: 180px;
+    min-width: 0;
     max-width: none;
-    width: 68%;
 }
 
 /* ============================================================
@@ -1123,9 +1126,12 @@ td.disabled {
     text-transform: uppercase;
     min-width: 32px;
     flex-shrink: 0;
+    order: -2;
 }
 
-/* Production range pickers use <select> elements */
+/* Production range pickers use <select> elements.
+   In the design, the chapter picker appears before the goToInput,
+   so we reorder with CSS to match. */
 .rangePicker select {
     flex: 1;
     min-width: 0;
@@ -1137,6 +1143,7 @@ td.disabled {
     font-size: 12px;
     font-family: var(--font-serif);
     color: var(--ink);
+    order: -1;
 }
 
 .rangePicker .field-shell {
@@ -1242,7 +1249,7 @@ td.disabled {
     white-space: nowrap;
 }
 
-.goToInput {
+input.goToInput {
     width: 76px;
     padding: 6px 8px;
     border: 1px solid var(--rule);
@@ -1253,6 +1260,7 @@ td.disabled {
     color: var(--ink);
     outline: none;
     flex-shrink: 0;
+    max-width: 76px;
 }
 
 .goToInput::placeholder {
@@ -1337,11 +1345,10 @@ td.disabled {
     gap: var(--space-md);
 }
 
-#chapterSelectControlsDiv > div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-}
+/* Removed: #chapterSelectControlsDiv > div override was breaking
+   .rangeRow grid, .chapterCountLine baseline, .listToolbar center
+   alignment due to ID specificity (1,0,1) > class (0,1,0). Each
+   child element now uses its own display styles. */
 
 /* Volume mapping */
 .volumeMappingInput {
@@ -1484,11 +1491,14 @@ table.chapterList,
     background: rgba(168,69,26,0.04);
 }
 
+/* First column (checkbox) gets a fixed narrow width;
+   second column (title) fills the remaining space. */
 #chapterUrlsTable > tbody > tr > td:first-child,
-#chapterUrlsTable > tbody > tr > td:nth-child(2),
 #chapterUrlsTable > tr > td:first-child,
-#chapterUrlsTable > tr > td:nth-child(2) {
-    width: 3px;
+#chapterUrlsTable > tbody > tr > th:first-child,
+#chapterUrlsTable > tr > th:first-child {
+    width: 36px;
+    text-align: center;
 }
 
 #chapterUrlsTable input[type=text] {
@@ -1769,6 +1779,8 @@ img.downloadState {
 #paginationPageSize {
     margin-left: var(--space-md);
     min-width: auto;
+    width: auto;
+    max-width: 80px;
 }
 
 /* ============================================================

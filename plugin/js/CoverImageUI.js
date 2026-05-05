@@ -38,7 +38,7 @@ class CoverImageUI { // eslint-disable-line no-unused-vars
         }
     }
 
-    /** create table of images for user to pick from 
+    /** create table of images for user to pick from
     * @param {array of ImageInfo} images to populate table with
     */
     static populateImageTable(images) {
@@ -51,7 +51,7 @@ class CoverImageUI { // eslint-disable-line no-unused-vars
         else {
             images.forEach((imageInfo) => {
                 let row = document.createElement("tr");
-        
+
                 // add checkbox
                 let checkbox = CoverImageUI.createCheckBoxAndLabel(imageInfo.sourceUrl, checkBoxIndex);
                 CoverImageUI.appendColumnToRow(row, checkbox);
@@ -68,7 +68,7 @@ class CoverImageUI { // eslint-disable-line no-unused-vars
         }
     }
 
-    /** adds row to the images table 
+    /** adds row to the images table
     * @private
     */
     static createCheckBoxAndLabel(sourceUrl, checkBoxIndex) {
@@ -106,7 +106,7 @@ class CoverImageUI { // eslint-disable-line no-unused-vars
         } else {
             CoverImageUI.setCoverImageUrl(null);
         }
-    } 
+    }
 
     /**
     * @private
@@ -156,6 +156,7 @@ class CoverImageUI { // eslint-disable-line no-unused-vars
         }
         inputUrl.value = url;
         CoverImageUI.getSampleCoverImg().src = url;
+        inputUrl.dispatchEvent(new Event("input", { bubbles: true }));
     }
 
     /** @private */
