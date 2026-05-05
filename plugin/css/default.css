@@ -537,6 +537,13 @@ button.lg {
 
 .field > * {
     min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* In gridTwo, labels need less space since columns are narrower */
+.gridTwo .field {
+    grid-template-columns: 72px 1fr;
 }
 
 .field label {
@@ -999,7 +1006,6 @@ td.disabled {
 #inputSection {
     display: flex;
     flex-direction: column;
-    gap: var(--space-lg);
     min-width: 0;
 }
 
@@ -1008,7 +1014,7 @@ td.disabled {
     width: 100%;
 }
 
-#inputSection input {
+#inputSection .formGrid input {
     width: 100%;
 }
 
@@ -1116,6 +1122,21 @@ td.disabled {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     min-width: 32px;
+    flex-shrink: 0;
+}
+
+/* Production range pickers use <select> elements */
+.rangePicker select {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+    padding: 6px 28px 6px 10px;
+    background: #fffdf7;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: var(--font-serif);
+    color: var(--ink);
 }
 
 .rangePicker .field-shell {
@@ -1267,12 +1288,17 @@ td.disabled {
 }
 
 .rangeRow select {
-    min-width: 200px;
+    min-width: 0;
+    max-width: none;
 }
 
 .rangeRow input[type=text] {
-    min-width: 100px;
+    min-width: 0;
     max-width: 120px;
+}
+
+.rangeRow > * {
+    min-width: 0;
 }
 
 .rangeRowWide {
@@ -1408,9 +1434,10 @@ td.disabled {
 .scrollingtable {
     overflow: auto;
     height: max(300px, calc(100vh - 420px));
-    background: var(--paper-deep);
+    margin-top: 14px;
+    background: rgba(255,253,247,0.6);
     border: 1px solid var(--rule);
-    border-radius: var(--radius-md);
+    border-radius: 5px;
     scrollbar-width: thin;
     scrollbar-color: var(--scroll-thumb) var(--scroll-track);
 }
@@ -1429,31 +1456,32 @@ table.chapterList,
 #chapterUrlsTable tbody > tr > th,
 #chapterUrlsTable > tr > th {
     text-align: left;
-    padding: var(--space-sm) var(--space-md);
+    padding: 8px 12px;
     border-bottom: 1px solid var(--rule);
     color: var(--ink-mute);
     font-family: var(--font-mono);
     font-weight: 500;
-    font-size: 10px;
+    font-size: 9.5px;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.1em;
     position: sticky;
     top: 0;
-    background: var(--paper-deep);
+    background: rgba(26,20,17,0.025);
     z-index: var(--z-sticky);
 }
 
 #chapterUrlsTable tbody > tr > td,
 #chapterUrlsTable > tr > td {
-    padding: var(--space-xs) var(--space-md);
-    border-bottom: 1px solid var(--border-subtle);
-    font-size: 13px;
-    transition: background var(--duration-fast) var(--ease-out-quart);
+    padding: 7px 12px;
+    border-bottom: 1px solid rgba(201,189,163,0.4);
+    font-size: 12.5px;
+    font-family: var(--font-serif);
+    transition: background .1s;
 }
 
 #chapterUrlsTable tbody > tr:hover > td,
 #chapterUrlsTable > tr:hover > td {
-    background: var(--surface-2);
+    background: rgba(168,69,26,0.04);
 }
 
 #chapterUrlsTable > tbody > tr > td:first-child,
@@ -1525,13 +1553,19 @@ img.downloadState {
    17. Import Volumes
    ============================================================ */
 .importVolumes {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     align-items: center;
     margin-top: 12px;
     padding-top: 12px;
     border-top: 1px dashed var(--rule);
+}
+
+.importVolumes input {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
 }
 
 .importLbl {
@@ -1709,7 +1743,6 @@ img.downloadState {
 .paginationBar {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: var(--space-sm);
     padding: var(--space-md) 0;
 }
