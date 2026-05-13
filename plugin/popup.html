@@ -220,6 +220,7 @@
                     <span class="subtitle">__MSG_label_Front_Matter__</span>
                 </div>
                 <div class="coverWrap">
+                    <input type="file" id="coverFileInput" accept="image/*" hidden>
                     <div class="coverStage">
                         <div class="bookFrame">
                             <div class="book" id="bookCover">
@@ -235,6 +236,7 @@
                             </div>
                             <div class="shelfShadow"></div>
                         </div>
+                        <div id="coverDropOverlay" class="coverDropOverlay" hidden>Drop cover image</div>
                     </div>
                     <img id="sampleCoverImg" hidden="true" />
                     <div id="coverUrlSection" class="coverInputRow">
@@ -246,6 +248,7 @@
                             <span>__MSG_button_Clear_Url__</span>
                         </button>
                     </div>
+                    <a id="coverBrowseLink" class="coverBrowseLink">Browse file...</a>
                 </div>
             </div>
 

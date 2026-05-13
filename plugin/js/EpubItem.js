@@ -119,7 +119,7 @@ class EpubItem {
 }
 
 //==============================================================
-// Construct an Epub item from source where each chapter 
+// Construct an Epub item from source where each chapter
 // was a separate HTML file.
 class ChapterEpubItem extends EpubItem { // eslint-disable-line no-unused-vars
     constructor(chapter, content, index) {
@@ -158,7 +158,7 @@ class ChapterEpubItem extends EpubItem { // eslint-disable-line no-unused-vars
     mediaType: jpeg, png, etc.
     arrayBuffer: the image bytes
     isCover :  use this as the cover image?
-    height: "full size" image height 
+    height: "full size" image height
     width: "full size" image width
 */
 class ImageInfo extends EpubItem { // eslint-disable-line no-unused-vars
@@ -179,7 +179,10 @@ class ImageInfo extends EpubItem { // eslint-disable-line no-unused-vars
 
     getZipHref() {
         let suffix = util.getDefaultExtensionByMime(this.mediaType) || this.findImageSuffix(this.wrappingUrl);
-        return util.makeStorageFileName("OEBPS/Images/", this.index, this.getImageName(this.wrappingUrl), suffix);
+        let name = this.localFileName
+            ? this.localFileName.replace(/\.[^.]+$/, "")
+            : this.getImageName(this.wrappingUrl);
+        return util.makeStorageFileName("OEBPS/Images/", this.index, name, suffix);
     }
 
     getBase64(maxLength) {
@@ -254,12 +257,12 @@ class ImageInfo extends EpubItem { // eslint-disable-line no-unused-vars
         if (0 < fileNames.length) {
             return fileNames[fileNames.length - 1];
         }
-    
+
         // if get here, nothing found
         return undefined;
     }
 
-    // Crude. If string has '.' and is not a .php or .html, 
+    // Crude. If string has '.' and is not a .php or .html,
     // and there's at least 3 characters after the '.'
     // assume it's an image filename
     isImageFileNameCandidate(candidate) {
@@ -284,7 +287,7 @@ class ImageInfo extends EpubItem { // eslint-disable-line no-unused-vars
 
     createImageElement(userPreferences) {
         if (this.isSvgImageUsedHere(userPreferences)) {
-            return util.createSvgImageElement(this.getZipHref(), this.width, this.height, 
+            return util.createSvgImageElement(this.getZipHref(), this.width, this.height,
                 this.wrappingUrl, userPreferences.includeImageSourceUrl.value);
         } else {
             return this.createImgImageElement("div");

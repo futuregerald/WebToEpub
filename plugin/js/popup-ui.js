@@ -159,6 +159,9 @@ var PopupUI = (function() {  // eslint-disable-line no-unused-vars
             attributes: true
         }, onPlaceholderFieldChange);
 
+        // Wire up local file upload (drag-drop + browse).
+        CoverImageUI.setupLocalFileUpload(document.querySelector(".coverStage"));
+
         // Apply initial state.
         onCoverImageChange();
         onPlaceholderFieldChange();
