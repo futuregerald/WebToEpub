@@ -313,6 +313,30 @@ QUnit.test("stripCommonTitlePrefix_noCommonPrefix", function (assert) {
     assert.equal(chapters[1].title, "Chapter 1 - The Start");
 });
 
+QUnit.test("stripCommonTitlePrefix_enDash", function (assert) {
+    let parser = new PatreonParser();
+    let chapters = [
+        { title: "Path of Dragons 15 \u2013 Chapter 91 \u2013 Reveal", sourceUrl: "a" },
+        { title: "Path of Dragons 15 \u2013 Chapter 92 \u2013 Into the Wild", sourceUrl: "b" },
+        { title: "Path of Dragons 15 \u2013 Chapter 100 \u2013 Peace", sourceUrl: "c" },
+    ];
+    parser.stripCommonTitlePrefix(chapters);
+    assert.equal(chapters[0].title, "Chapter 91 \u2013 Reveal");
+    assert.equal(chapters[1].title, "Chapter 92 \u2013 Into the Wild");
+    assert.equal(chapters[2].title, "Chapter 100 \u2013 Peace");
+});
+
+QUnit.test("stripCommonTitlePrefix_emDash", function (assert) {
+    let parser = new PatreonParser();
+    let chapters = [
+        { title: "Book Name \u2014 Chapter 1 \u2014 Start", sourceUrl: "a" },
+        { title: "Book Name \u2014 Chapter 2 \u2014 Middle", sourceUrl: "b" },
+    ];
+    parser.stripCommonTitlePrefix(chapters);
+    assert.equal(chapters[0].title, "Chapter 1 \u2014 Start");
+    assert.equal(chapters[1].title, "Chapter 2 \u2014 Middle");
+});
+
 QUnit.test("extractAuthor_nonCollection", function (assert) {
     let dom = TestUtils.makeDomWithBody("<h1>Author Name</h1>");
     util.setBaseTag("https://www.patreon.com/c/nrsearcy/posts", dom);
