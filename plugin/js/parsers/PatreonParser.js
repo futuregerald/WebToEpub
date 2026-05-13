@@ -370,7 +370,12 @@ class PatreonParser extends Parser {
                 }
             }
         }
-        let lastDelim = prefix.lastIndexOf(" - ");
+        let delimPattern = / [-\u2013\u2014] /g;
+        let lastDelim = -1;
+        let match;
+        while ((match = delimPattern.exec(prefix)) !== null) {
+            lastDelim = match.index;
+        }
         if (lastDelim <= 0) {
             return chapters;
         }
