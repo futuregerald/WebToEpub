@@ -23,13 +23,13 @@ class PatreonParser extends Parser {
             try {
                 let chapters = await this.fetchCollectionFromApi(collectionId);
                 if (0 < chapters.length) {
-                    return chapters.reverse();
+                    return this.stripCommonTitlePrefix(chapters.reverse());
                 }
             } catch (e) {
                 console.log("Patreon API collection fetch failed, falling back to DOM parsing:", e);
             }
         }
-        return this.getCollectionLinks(dom).reverse();
+        return this.stripCommonTitlePrefix(this.getCollectionLinks(dom).reverse());
     }
 
     extractCollectionId(dom) {
@@ -355,6 +355,33 @@ class PatreonParser extends Parser {
             return null;
         }
         return divsWithPicutres[divsWithPicutres.length - 1].getAttribute("src");
+    }
+
+    stripCommonTitlePrefix(chapters) {
+        if (chapters.length < 2) {
+            return chapters;
+        }
+        let prefix = chapters[0].title;
+        for (let i = 1; i < chapters.length; i++) {
+            while (!chapters[i].title.startsWith(prefix)) {
+                prefix = prefix.slice(0, -1);
+                if (prefix.length === 0) {
+                    return chapters;
+                }
+            }
+        }
+        let lastDelim = prefix.lastIndexOf(" - ");
+        if (lastDelim <= 0) {
+            return chapters;
+        }
+        let stripLen = lastDelim + 3;
+        if (chapters.some(ch => ch.title.length <= stripLen)) {
+            return chapters;
+        }
+        for (let ch of chapters) {
+            ch.title = ch.title.slice(stripLen);
+        }
+        return chapters;
     }
 
     isCollectionList(dom) {

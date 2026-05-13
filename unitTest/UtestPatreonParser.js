@@ -269,6 +269,50 @@ QUnit.test("extractTitleImpl", function (assert) {
     assert.equal(title, "My Creator Patreon");
 });
 
+QUnit.test("stripCommonTitlePrefix_removesBookName", function (assert) {
+    let parser = new PatreonParser();
+    let chapters = [
+        { title: "Path of Dragons 15 - Chapter 91 - Reveal", sourceUrl: "a" },
+        { title: "Path of Dragons 15 - Chapter 92 - Into the Wild", sourceUrl: "b" },
+        { title: "Path of Dragons 15 - Chapter 93 - Peace", sourceUrl: "c" },
+    ];
+    parser.stripCommonTitlePrefix(chapters);
+    assert.equal(chapters[0].title, "Chapter 91 - Reveal");
+    assert.equal(chapters[1].title, "Chapter 92 - Into the Wild");
+    assert.equal(chapters[2].title, "Chapter 93 - Peace");
+});
+
+QUnit.test("stripCommonTitlePrefix_noDelimiter", function (assert) {
+    let parser = new PatreonParser();
+    let chapters = [
+        { title: "Chapter 1", sourceUrl: "a" },
+        { title: "Chapter 2", sourceUrl: "b" },
+    ];
+    parser.stripCommonTitlePrefix(chapters);
+    assert.equal(chapters[0].title, "Chapter 1");
+    assert.equal(chapters[1].title, "Chapter 2");
+});
+
+QUnit.test("stripCommonTitlePrefix_singleChapter", function (assert) {
+    let parser = new PatreonParser();
+    let chapters = [
+        { title: "Book Name - Chapter 1", sourceUrl: "a" },
+    ];
+    parser.stripCommonTitlePrefix(chapters);
+    assert.equal(chapters[0].title, "Book Name - Chapter 1");
+});
+
+QUnit.test("stripCommonTitlePrefix_noCommonPrefix", function (assert) {
+    let parser = new PatreonParser();
+    let chapters = [
+        { title: "Prologue - The Beginning", sourceUrl: "a" },
+        { title: "Chapter 1 - The Start", sourceUrl: "b" },
+    ];
+    parser.stripCommonTitlePrefix(chapters);
+    assert.equal(chapters[0].title, "Prologue - The Beginning");
+    assert.equal(chapters[1].title, "Chapter 1 - The Start");
+});
+
 QUnit.test("extractAuthor_nonCollection", function (assert) {
     let dom = TestUtils.makeDomWithBody("<h1>Author Name</h1>");
     util.setBaseTag("https://www.patreon.com/c/nrsearcy/posts", dom);
