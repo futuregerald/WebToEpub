@@ -174,6 +174,20 @@ QUnit.test("getCollectionLinks_titleFallback_lineClamp", function (assert) {
     assert.equal(chapters[0].title, "Chapter 1 Title");
 });
 
+QUnit.test("getCollectionLinks_titleIgnoresBodyPreview", function (assert) {
+    let html =
+        "<a class='somePrefix__gridCard__hash' href='https://www.patreon.com/posts/ch-1-111'>" +
+            "<span class='LineClamp-module__hash__lineClamp1'>Chapter 1 Title</span>" +
+            "<span class='LineClamp-module__hash__lineClamp2'>Body preview text that should not appear in title...</span>" +
+        "</a>";
+    let dom = TestUtils.makeDomWithBody(html);
+    util.setBaseTag("https://www.patreon.com/collection/123456", dom);
+    let parser = new PatreonParser();
+    let chapters = parser.getCollectionLinks(dom);
+    assert.equal(chapters.length, 1);
+    assert.equal(chapters[0].title, "Chapter 1 Title");
+});
+
 QUnit.test("cardToChapter", function (assert) {
     let html =
         "<div data-tag='post-card'>" +
