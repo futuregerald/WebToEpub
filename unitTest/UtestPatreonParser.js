@@ -280,6 +280,47 @@ QUnit.test("stripCommonTitlePrefix_removesBookName", function (assert) {
     assert.equal(chapters[0].title, "Chapter 91 - Reveal");
     assert.equal(chapters[1].title, "Chapter 92 - Into the Wild");
     assert.equal(chapters[2].title, "Chapter 93 - Peace");
+    assert.equal(parser.strippedTitlePrefix, "Path of Dragons 15 - ");
+});
+
+QUnit.test("stripCommonTitlePrefix_storesNullWhenNoStrip", function (assert) {
+    let parser = new PatreonParser();
+    let chapters = [
+        { title: "Chapter 1", sourceUrl: "a" },
+        { title: "Chapter 2", sourceUrl: "b" },
+    ];
+    parser.stripCommonTitlePrefix(chapters);
+    assert.equal(parser.strippedTitlePrefix, null);
+});
+
+QUnit.test("jsonToHtml_stripsStoredPrefix", function (assert) {
+    let parser = new PatreonParser();
+    parser.strippedTitlePrefix = "Path of Dragons 15 - ";
+    let json = { title: "Path of Dragons 15 - Chapter 91 - Reveal", content: "<p>text</p>" };
+    let dom = parser.jsonToHtml(json, "https://www.patreon.com/posts/test-123");
+    assert.equal(dom.querySelector("h1").textContent, "Chapter 91 - Reveal");
+});
+
+QUnit.test("jsonToHtml_noStripWhenNullPrefix", function (assert) {
+    let parser = new PatreonParser();
+    let json = { title: "Full Title Here", content: "<p>text</p>" };
+    let dom = parser.jsonToHtml(json, "https://www.patreon.com/posts/test-456");
+    assert.equal(dom.querySelector("h1").textContent, "Full Title Here");
+});
+
+QUnit.test("extractTitleImpl_usesStrippedPrefix", function (assert) {
+    let parser = new PatreonParser();
+    parser.strippedTitlePrefix = "Path of Dragons 15 - ";
+    let dom = TestUtils.makeDomWithBody("<h1>The Bound Sky (PoD 15)</h1>");
+    let title = parser.extractTitleImpl(dom);
+    assert.equal(title, "Path of Dragons 15 - The Bound Sky (PoD 15)");
+});
+
+QUnit.test("extractTitleImpl_fallbackWhenNoPrefix", function (assert) {
+    let parser = new PatreonParser();
+    let dom = TestUtils.makeDomWithBody("<h1>My Creator</h1>");
+    let title = parser.extractTitleImpl(dom);
+    assert.equal(title, "My Creator Patreon");
 });
 
 QUnit.test("stripCommonTitlePrefix_noDelimiter", function (assert) {
