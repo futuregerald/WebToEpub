@@ -5,6 +5,7 @@ parserFactory.register("patreon.com", () => new PatreonParser());
 class PatreonParser extends Parser {
     constructor() {
         super();
+        this.strippedTitlePrefix = null;
     }
 
     async getChapterUrls(dom) {
@@ -179,7 +180,11 @@ class PatreonParser extends Parser {
     jsonToHtml(json, url) {
         let newDoc = Parser.makeEmptyDocForContent(url);
         let header = newDoc.dom.createElement("h1");
-        header.textContent = json.title;
+        let title = json.title;
+        if (this.strippedTitlePrefix && title.startsWith(this.strippedTitlePrefix)) {
+            title = title.slice(this.strippedTitlePrefix.length);
+        }
+        header.textContent = title;
         newDoc.content.appendChild(header);
         if (json.image) {
             let img = new Image();
@@ -321,7 +326,13 @@ class PatreonParser extends Parser {
     }
 
     extractTitleImpl(dom) {
-        return dom.querySelector("h1").textContent + " Patreon"  ;
+        if (this.strippedTitlePrefix) {
+            let bookName = this.strippedTitlePrefix.replace(/ [-\u2013\u2014] $/, "");
+            let h1 = dom.querySelector("h1");
+            let collectionName = h1 ? h1.textContent.trim() : "";
+            return bookName + (collectionName ? " - " + collectionName : "");
+        }
+        return dom.querySelector("h1").textContent + " Patreon";
     }
 
     extractAuthor(dom) {
@@ -383,6 +394,7 @@ class PatreonParser extends Parser {
         if (chapters.some(ch => ch.title.length <= stripLen)) {
             return chapters;
         }
+        this.strippedTitlePrefix = prefix.slice(0, stripLen);
         for (let ch of chapters) {
             ch.title = ch.title.slice(stripLen);
         }
