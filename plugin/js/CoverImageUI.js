@@ -150,6 +150,10 @@ class CoverImageUI { // eslint-disable-line no-unused-vars
     * @public
     */
     static setCoverImageUrl(url) {
+        // When a non-blob URL is set (e.g. parser resets cover), clear local data
+        if (!url || !url.startsWith("blob:")) {
+            CoverImageUI.clearLocalCoverData();
+        }
         let inputUrl = CoverImageUI.getCoverImageUrlInput();
         if (inputUrl.onchange == null) {
             inputUrl.onchange = CoverImageUI.showSampleImg;
@@ -164,5 +168,140 @@ class CoverImageUI { // eslint-disable-line no-unused-vars
         let url = CoverImageUI.getCoverImageUrlInput().value;
         let sampleImg = CoverImageUI.getSampleCoverImg();
         sampleImg.src = url;
+    }
+
+    /** Stores local file data: { file, mediaType, fileName, blobUrl } or null */
+    static localCoverData = null;
+
+    /** Maximum allowed file size in bytes (10 MB) */
+    static MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+    /** Set up drag-drop and browse-file support on the cover stage
+    * @param {Element} coverStage - the .coverStage element
+    */
+    static setupLocalFileUpload(coverStage) {
+        if (!coverStage) return;
+
+        let overlay = document.getElementById("coverDropOverlay");
+        let browseLink = document.getElementById("coverBrowseLink");
+        let fileInput = document.getElementById("coverFileInput");
+        let dragCounter = 0;
+
+        function showOverlay() {
+            if (overlay) overlay.hidden = false;
+        }
+
+        function hideOverlay() {
+            if (overlay) overlay.hidden = true;
+        }
+
+        coverStage.addEventListener("dragenter", function(e) {
+            e.preventDefault();
+            dragCounter++;
+            if (dragCounter > 0) showOverlay();
+        });
+
+        coverStage.addEventListener("dragleave", function(e) {
+            e.preventDefault();
+            dragCounter--;
+            if (dragCounter <= 0) {
+                dragCounter = 0;
+                hideOverlay();
+            }
+        });
+
+        coverStage.addEventListener("dragover", function(e) {
+            e.preventDefault();
+        });
+
+        coverStage.addEventListener("drop", function(e) {
+            e.preventDefault();
+            dragCounter = 0;
+            hideOverlay();
+            let files = e.dataTransfer.files;
+            if (files.length > 0) {
+                let file = files[0];
+                if (!file.type.startsWith("image/")) {
+                    return; // silently reject non-image files
+                }
+                if (file.size > CoverImageUI.MAX_FILE_SIZE) {
+                    ErrorLog.showErrorMessage("Cover image file is too large (max 10 MB).");
+                    return;
+                }
+                CoverImageUI.loadLocalFile(file);
+            }
+        });
+
+        if (browseLink && fileInput) {
+            browseLink.addEventListener("click", function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener("change", function() {
+                if (fileInput.files.length > 0) {
+                    let file = fileInput.files[0];
+                    if (!file.type.startsWith("image/")) {
+                        return;
+                    }
+                    if (file.size > CoverImageUI.MAX_FILE_SIZE) {
+                        ErrorLog.showErrorMessage("Cover image file is too large (max 10 MB).");
+                        return;
+                    }
+                    CoverImageUI.loadLocalFile(file);
+                }
+            });
+        }
+    }
+
+    /** Load a local image file as the cover
+    * @param {File} file - the image file to use
+    */
+    static loadLocalFile(file) {
+        // Revoke any previous blob URL to prevent memory leaks
+        if (CoverImageUI.localCoverData && CoverImageUI.localCoverData.blobUrl) {
+            URL.revokeObjectURL(CoverImageUI.localCoverData.blobUrl);
+        }
+
+        let blobUrl = URL.createObjectURL(file);
+        CoverImageUI.localCoverData = {
+            file: file,
+            mediaType: file.type,
+            fileName: file.name,
+            blobUrl: blobUrl
+        };
+
+        // Set blob URL in the cover input (triggers preview update)
+        let inputUrl = CoverImageUI.getCoverImageUrlInput();
+        if (inputUrl.onchange == null) {
+            inputUrl.onchange = CoverImageUI.showSampleImg;
+        }
+        inputUrl.value = blobUrl;
+        inputUrl.readOnly = true;
+        inputUrl.title = file.name;
+        inputUrl.placeholder = file.name;
+        CoverImageUI.getSampleCoverImg().src = blobUrl;
+        inputUrl.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    /** Clear local cover data and re-enable URL input
+    * @public
+    */
+    static clearLocalCoverData() {
+        if (CoverImageUI.localCoverData) {
+            if (CoverImageUI.localCoverData.blobUrl) {
+                URL.revokeObjectURL(CoverImageUI.localCoverData.blobUrl);
+            }
+            CoverImageUI.localCoverData = null;
+        }
+        let inputUrl = CoverImageUI.getCoverImageUrlInput();
+        if (inputUrl) {
+            inputUrl.readOnly = false;
+            inputUrl.title = "";
+            inputUrl.placeholder = "https://...cover.jpg";
+        }
+        let fileInput = document.getElementById("coverFileInput");
+        if (fileInput) {
+            fileInput.value = "";
+        }
     }
 }

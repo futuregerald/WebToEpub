@@ -4,7 +4,7 @@
 
 "use strict";
 
-/** class that handles image tags 
+/** class that handles image tags
  * urlIndex - track URLs associated with an ImageInfo
  * bitmapIndex - hashes of the image bitmaps, to allow us to eliminate duplicate images
  * imagesToFetch - images that need to be fetched from internet
@@ -64,7 +64,7 @@ class ImageCollector {
             } else {
                 this.imagesToFetch.push(imageInfo);
             }
-        }           
+        }
         this.urlIndex.set(wrappingUrl, index);
         this.urlIndex.set(sourceUrl, index);
         if (dataOrigFileUrl != null) {
@@ -83,6 +83,12 @@ class ImageCollector {
                 info = this.addImageInfo(url, url, null, true);
             }
             info.isCover = true;
+            let localData = CoverImageUI.localCoverData;
+            if (localData) {
+                info.mediaType = localData.mediaType;
+                info.localFile = localData.file;
+                info.localFileName = localData.fileName;
+            }
             this.coverImageInfo = info;
         }
     }
@@ -146,7 +152,7 @@ class ImageCollector {
         return ImageCollector.toHex(byteArray.length) + ImageCollector.toHex(hash);
     }
 
-    
+
     /** Convert integer to 8 character Hex value
     * @private
     */
@@ -284,7 +290,7 @@ class ImageCollector {
         }
         return null;
     }
-    
+
     /**  Update image tags, point to image file in epub
     * @param {element} element containing <img> tags to update
     */
@@ -322,7 +328,7 @@ class ImageCollector {
 
     runCompression(imageInfo, img) {
         return new Promise((resolve, reject) => {
-            if (this.userPreferences.compressImages.value) 
+            if (this.userPreferences.compressImages.value)
             {
                 let outputType = "image/jpeg";
                 switch (this.userPreferences.compressImagesType.value) {
@@ -347,7 +353,7 @@ class ImageCollector {
                 }
                 let c = document.createElement("canvas");
                 let ctx = c.getContext("2d");
-                let maxResolution = this.userPreferences.compressImagesMaxResolution.value;            
+                let maxResolution = this.userPreferences.compressImagesMaxResolution.value;
                 if (imageInfo.height > maxResolution || imageInfo.width > maxResolution)
                 {
                     if (imageInfo.height > imageInfo.width)
@@ -389,6 +395,16 @@ class ImageCollector {
     async fetchImage(imageInfo, progressIndicator, parentPageUrl) {
         try
         {
+            if (imageInfo.localFile) {
+                imageInfo.arraybuffer = await imageInfo.localFile.arrayBuffer();
+                imageInfo.mediaType = imageInfo.mediaType || imageInfo.localFile.type;
+                this.fixupInvalidMediaType(imageInfo);
+                let img = await this.getImageDimensions(imageInfo);
+                await this.runCompression(imageInfo, img);
+                progressIndicator();
+                this.addToPackList(imageInfo);
+                return;
+            }
             let initialUrl = this.initialUrlToTry(imageInfo);
             this.urlIndex.set(initialUrl, imageInfo.index);
             let fetchOptions = {errorHandler: new FetchImageErrorHandler(parentPageUrl) };
@@ -460,7 +476,7 @@ class ImageCollector {
         let xhr = await HttpClient.wrapFetch(imageInfo.dataOrigFileUrl);
         await this.findImageFileUrl(xhr, imageInfo, null);
     }
-    
+
     imagesToPackInEpub() {
         return this.imagesToPack;
     }
@@ -470,7 +486,7 @@ class ImageCollector {
     */
     initialUrlToTry(imageInfo) {
         let urlToTry = imageInfo.sourceUrl;
-        if (!util.isNullOrEmpty(imageInfo.wrappingUrl) 
+        if (!util.isNullOrEmpty(imageInfo.wrappingUrl)
             && !ImageCollector.urlHasFragment(imageInfo.wrappingUrl)) {
             urlToTry = imageInfo.wrappingUrl;
         }
@@ -484,11 +500,11 @@ class ImageCollector {
             return false;
         }
     }
-    
+
     static removeSizeParamsFromWordPressQuery(originalUrl) {
         let url = new URL(originalUrl);
         let searchParams = url.searchParams;
-        if (!util.isNullOrEmpty(searchParams.toString()) && 
+        if (!util.isNullOrEmpty(searchParams.toString()) &&
             ImageCollector.isWordPressHostedFile(url.hostname) ) {
             ImageCollector.removeSizeParamsFromSearch(searchParams);
             return url.toString();
@@ -681,7 +697,7 @@ class ImageTagReplacer {
      * @private
      */
     isDuplicateImageToRemove(imageInfo) {
-        return this.userPreferences.removeDuplicateImages.value && 
+        return this.userPreferences.removeDuplicateImages.value &&
             this.isElementInImageGallery() && (imageInfo.isOutsideGallery || imageInfo.isCover);
     }
 
