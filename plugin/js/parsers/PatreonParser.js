@@ -75,20 +75,19 @@ class PatreonParser extends Parser {
 
     getCollectionLinks(dom) {
         let getTitle = (e) => {
-            // Try stable selectors first, then CSS module selectors
+            // Try stable selectors first
             let titleEl = e.querySelector("[data-tag='post-title']");
             if (titleEl) {
                 return titleEl.textContent.trim();
             }
-            // Fallback: look for the single-line-clamped heading text
-            let spans = [...e.querySelectorAll("span[class*='lineClamp1'], span[class*='LineClamp']")];
-            if (spans.length > 0) {
-                return spans.map(s => s.textContent.trim()).join(" ");
+            // Fallback: single-line-clamped text (title only, not body preview)
+            titleEl = e.querySelector("span[class*='lineClamp1']");
+            if (titleEl) {
+                return titleEl.textContent.trim();
             }
-            // Last resort: CSS module class
-            return [...e.querySelectorAll("span.LineClamp-module__N_eOMG__lineClamp1")]
-                .map(s => s.textContent.trim())
-                .join(" ");
+            // Last resort: exact CSS module class
+            titleEl = e.querySelector("span.LineClamp-module__N_eOMG__lineClamp1");
+            return titleEl ? titleEl.textContent.trim() : "";
         };
 
         let isLocked = (e) => e.querySelector("svg[data-tag='IconLock']") != null;
