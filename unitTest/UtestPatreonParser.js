@@ -385,3 +385,185 @@ QUnit.test("extractAuthor_nonCollection", function (assert) {
     let author = parser.extractAuthor(dom);
     assert.equal(author, "Author Name");
 });
+
+const PATREON_MEDIA_URL =
+    "https://c10.patreonusercontent.com/4/patreon-media/p/campaign/7835674/abc/image.jpg";
+
+QUnit.test("extractCampaignId_fromImgSrc", function (assert) {
+    let dom = TestUtils.makeDomWithBody(`<img src='${PATREON_MEDIA_URL}'>`);
+    let parser = new PatreonParser();
+    assert.equal(parser.extractCampaignId(dom), "7835674");
+});
+
+QUnit.test("extractCampaignId_fromSourceSrcset", function (assert) {
+    let dom = TestUtils.makeDomWithBody(`<picture><source srcset='${PATREON_MEDIA_URL} 1x'></picture>`);
+    let parser = new PatreonParser();
+    assert.equal(parser.extractCampaignId(dom), "7835674");
+});
+
+QUnit.test("extractCampaignId_fromPreloadLink", function (assert) {
+    let dom = TestUtils.makeDomWithBody(`<link rel='preload' as='image' href='${PATREON_MEDIA_URL}'>`);
+    let parser = new PatreonParser();
+    assert.equal(parser.extractCampaignId(dom), "7835674");
+});
+
+QUnit.test("extractCampaignId_fromDivSrc", function (assert) {
+    let dom = TestUtils.makeDomWithBody(`<div src='${PATREON_MEDIA_URL}'></div>`);
+    let parser = new PatreonParser();
+    assert.equal(parser.extractCampaignId(dom), "7835674");
+});
+
+QUnit.test("extractCampaignId_returnsNull", function (assert) {
+    let dom = TestUtils.makeDomWithBody("<img src='https://example.com/other.jpg'>");
+    let parser = new PatreonParser();
+    assert.equal(parser.extractCampaignId(dom), null);
+});
+
+QUnit.test("extractCampaignId_prefersMostFrequent", function (assert) {
+    // A foreign campaign id appears first, but the collection's own dominates.
+    let foreign = "https://c10.patreonusercontent.com/4/patreon-media/p/campaign/9999999/x/foreign.jpg";
+    let html =
+        `<img src='${foreign}'>` +
+        `<img src='${PATREON_MEDIA_URL}'>` +
+        `<img src='${PATREON_MEDIA_URL}'>`;
+    let dom = TestUtils.makeDomWithBody(html);
+    let parser = new PatreonParser();
+    assert.equal(parser.extractCampaignId(dom), "7835674");
+});
+
+QUnit.test("getCollectionLinks_titleFromH3_multipleChildren", function (assert) {
+    let html =
+        "<a class='CollectionPostList-module__IhO0fW__gridCard' href='https://www.patreon.com/posts/ch-1-111'>" +
+            "<h3 class='HeadingText-module__djfC6W__root'>\n    <div>Chapter 4 - The Reveal</div>\n</h3>" +
+        "</a>";
+    let dom = TestUtils.makeDomWithBody(html);
+    util.setBaseTag("https://www.patreon.com/collection/123456", dom);
+    let parser = new PatreonParser();
+    let chapters = parser.getCollectionLinks(dom);
+    assert.equal(chapters[0].title, "Chapter 4 - The Reveal");
+});
+
+QUnit.test("fetchCollectionFromApi_includesCampaignId", async function (assert) {
+    let capturedUrl = null;
+    let realFetchJson = HttpClient.fetchJson;
+    HttpClient.fetchJson = (url) => {
+        capturedUrl = url;
+        return Promise.resolve({ json: { data: [
+            { id: "1", attributes: { title: "Ch 1", url: "/posts/ch-1-1", current_user_can_view: true } }
+        ], links: {} } });
+    };
+    try {
+        let parser = new PatreonParser();
+        let chapters = await parser.fetchCollectionFromApi("1489199", "7835674");
+        assert.ok(capturedUrl.includes("filter%5Bcollection_id%5D=1489199"), "has collection_id");
+        assert.ok(capturedUrl.includes("filter%5Bcampaign_id%5D=7835674"), "has campaign_id");
+        assert.ok(capturedUrl.includes("sort=collection_order"), "has sort");
+        assert.equal(chapters.length, 1);
+        assert.equal(chapters[0].title, "Ch 1");
+    } finally {
+        HttpClient.fetchJson = realFetchJson;
+    }
+});
+
+QUnit.test("fetchCollectionFromApi_omitsCampaignIdWhenNull", async function (assert) {
+    let capturedUrl = null;
+    let realFetchJson = HttpClient.fetchJson;
+    HttpClient.fetchJson = (url) => {
+        capturedUrl = url;
+        return Promise.resolve({ json: { data: [], links: {} } });
+    };
+    try {
+        let parser = new PatreonParser();
+        await parser.fetchCollectionFromApi("1489199", null);
+        assert.notOk(capturedUrl.includes("campaign_id"), "omits campaign_id when null");
+    } finally {
+        HttpClient.fetchJson = realFetchJson;
+    }
+});
+
+QUnit.test("getCollectionLinks_titleFromH3", function (assert) {
+    let html =
+        "<a class='CollectionPostList-module__IhO0fW__gridCard' href='https://www.patreon.com/posts/ch-1-111'>" +
+            "<h3 class='HeadingText-module__djfC6W__root'><div>Chapter 1</div></h3>" +
+        "</a>";
+    let dom = TestUtils.makeDomWithBody(html);
+    util.setBaseTag("https://www.patreon.com/collection/123456", dom);
+    let parser = new PatreonParser();
+    let chapters = parser.getCollectionLinks(dom);
+    assert.equal(chapters.length, 1);
+    assert.equal(chapters[0].title, "Chapter 1");
+});
+
+QUnit.test("getCollectionLinks_titleFromH3_trimsWhitespace", function (assert) {
+    let html =
+        "<a class='CollectionPostList-module__IhO0fW__gridCard' href='https://www.patreon.com/posts/ch-1-111'>" +
+            "<h3 class='HeadingText-module__djfC6W__root'><div>  Chapter 2  </div></h3>" +
+        "</a>";
+    let dom = TestUtils.makeDomWithBody(html);
+    util.setBaseTag("https://www.patreon.com/collection/123456", dom);
+    let parser = new PatreonParser();
+    let chapters = parser.getCollectionLinks(dom);
+    assert.equal(chapters[0].title, "Chapter 2");
+});
+
+QUnit.test("getCollectionLinks_h3IgnoresBodyPreview", function (assert) {
+    let html =
+        "<a class='CollectionPostList-module__IhO0fW__gridCard' href='https://www.patreon.com/posts/ch-1-111'>" +
+            "<h3 class='HeadingText-module__djfC6W__root'><div>Chapter 3</div></h3>" +
+            "<p>Body preview text that should not appear in the title...</p>" +
+        "</a>";
+    let dom = TestUtils.makeDomWithBody(html);
+    util.setBaseTag("https://www.patreon.com/collection/123456", dom);
+    let parser = new PatreonParser();
+    let chapters = parser.getCollectionLinks(dom);
+    assert.equal(chapters[0].title, "Chapter 3");
+});
+
+QUnit.test("getCollectionLinks_dataTagWinsOverH3", function (assert) {
+    let html =
+        "<a class='CollectionPostList-module__IhO0fW__gridCard' href='https://www.patreon.com/posts/ch-1-111'>" +
+            "<span data-tag='post-title'>Real Title</span>" +
+            "<h3><div>Other</div></h3>" +
+        "</a>";
+    let dom = TestUtils.makeDomWithBody(html);
+    util.setBaseTag("https://www.patreon.com/collection/123456", dom);
+    let parser = new PatreonParser();
+    let chapters = parser.getCollectionLinks(dom);
+    assert.equal(chapters[0].title, "Real Title");
+});
+
+QUnit.test("getCollectionLinks_teaserContentFiltered", function (assert) {
+    let html =
+        "<a class='CollectionPostList-module__IhO0fW__gridCard' href='https://www.patreon.com/posts/ch-1-111'>" +
+            "<h3><div>Visible</div></h3>" +
+        "</a>" +
+        "<a class='CollectionPostList-module__IhO0fW__gridCard' href='https://www.patreon.com/posts/ch-2-222'>" +
+            "<h3><div>Locked</div></h3>" +
+            "<div data-tag='teaser-post-content'>preview text</div>" +
+        "</a>";
+    let dom = TestUtils.makeDomWithBody(html);
+    util.setBaseTag("https://www.patreon.com/collection/123456", dom);
+    let parser = new PatreonParser();
+    let chapters = parser.getCollectionLinks(dom);
+    assert.equal(chapters.length, 1);
+    assert.equal(chapters[0].title, "Visible");
+});
+
+QUnit.test("getCollectionLinks_condensedView_teaserContentFiltered", function (assert) {
+    let html =
+        "<div class='ListPost-module__d2AM5a__listPost'>" +
+            "<a href='https://www.patreon.com/posts/chapter-1-111'>Link</a>" +
+            "<h3><div>Chapter 1</div></h3>" +
+        "</div>" +
+        "<div class='ListPost-module__d2AM5a__listPost'>" +
+            "<a href='https://www.patreon.com/posts/chapter-2-222'>Link</a>" +
+            "<h3><div>Chapter 2</div></h3>" +
+            "<div data-tag='teaser-post-content'>preview text</div>" +
+        "</div>";
+    let dom = TestUtils.makeDomWithBody(html);
+    util.setBaseTag("https://www.patreon.com/collection/123456?view=condensed", dom);
+    let parser = new PatreonParser();
+    let chapters = parser.getCollectionLinks(dom);
+    assert.equal(chapters.length, 1);
+    assert.equal(chapters[0].title, "Chapter 1");
+});

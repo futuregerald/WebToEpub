@@ -20,9 +20,10 @@ class PatreonParser extends Parser {
 
     async getCollectionChapters(dom) {
         let collectionId = this.extractCollectionId(dom);
+        let campaignId = this.extractCampaignId(dom);
         if (collectionId) {
             try {
-                let chapters = await this.fetchCollectionFromApi(collectionId);
+                let chapters = await this.fetchCollectionFromApi(collectionId, campaignId);
                 if (0 < chapters.length) {
                     return this.stripCommonTitlePrefix(chapters.reverse());
                 }
@@ -39,10 +40,38 @@ class PatreonParser extends Parser {
         return match ? match[1] : null;
     }
 
-    async fetchCollectionFromApi(collectionId) {
+    // Patreon's posts API now requires filter[campaign_id] alongside
+    // filter[collection_id]. The campaign id isn't exposed via any API, but it
+    // appears in every patreon-media URL on the page (.../p/campaign/<id>/...).
+    // Cards can embed media from other creators, so we return the most
+    // frequently referenced campaign id (the collection's own dominates) rather
+    // than the first match, to avoid picking up a foreign campaign id.
+    extractCampaignId(dom) {
+        let elements = dom.querySelectorAll("img[src], source[srcset], link[href], div[src]");
+        let counts = new Map();
+        for (let el of elements) {
+            let value = el.getAttribute("src") || el.getAttribute("srcset") || el.getAttribute("href") || "";
+            let match = value.match(/\/campaign\/(\d+)\//);
+            if (match) {
+                counts.set(match[1], (counts.get(match[1]) || 0) + 1);
+            }
+        }
+        let best = null;
+        let bestCount = 0;
+        for (let [id, count] of counts) {
+            if (bestCount < count) {
+                best = id;
+                bestCount = count;
+            }
+        }
+        return best;
+    }
+
+    async fetchCollectionFromApi(collectionId, campaignId) {
         let chapters = [];
         let baseFields = "fields%5Bpost%5D=title%2Curl%2Cpublished_at%2Ccurrent_user_can_view";
-        let url = `https://www.patreon.com/api/posts?filter%5Bcollection_id%5D=${collectionId}&sort=collection_order&${baseFields}&page%5Bcount%5D=50`;
+        let campaignFilter = campaignId ? `&filter%5Bcampaign_id%5D=${campaignId}` : "";
+        let url = `https://www.patreon.com/api/posts?filter%5Bcollection_id%5D=${collectionId}${campaignFilter}&sort=collection_order&${baseFields}&page%5Bcount%5D=50`;
 
         while (url) {
             let response = await HttpClient.fetchJson(url);
@@ -81,6 +110,11 @@ class PatreonParser extends Parser {
             if (titleEl) {
                 return titleEl.textContent.trim();
             }
+            // New markup (2026): title is an <h3> heading inside the card
+            titleEl = e.querySelector("h3");
+            if (titleEl) {
+                return titleEl.textContent.trim();
+            }
             // Fallback: single-line-clamped text (title only, not body preview)
             titleEl = e.querySelector("span[class*='lineClamp1']");
             if (titleEl) {
@@ -91,7 +125,10 @@ class PatreonParser extends Parser {
             return titleEl ? titleEl.textContent.trim() : "";
         };
 
-        let isLocked = (e) => e.querySelector("svg[data-tag='IconLock']") != null;
+        // Locked posts no longer render an IconLock; they show a teaser preview instead.
+        let isLocked = (e) =>
+            e.querySelector("svg[data-tag='IconLock']") != null ||
+            e.querySelector("[data-tag='teaser-post-content']") != null;
 
         if (this.isCondensedView(dom))
         {
